@@ -31,12 +31,14 @@ var (
 	ErrExpRecVerticalLine = errors.New("aa2d: expected vertical line (|)")
 	// ErrExpRecLowCorn is returned when a lower corner was expected.
 	ErrExpRecLowCorn = errors.New("aa2d: expected lower corner")
-	// ErrNoRecUpRightCorn is return when the upper right corner of a rectangle could not be found.
+	// ErrNoRecUpRightCorn is returned when the upper right corner of a rectangle could not be found.
 	ErrNoRecUpRightCorn = errors.New("aa2d: could not find upper right rectangle corner")
-	// ErrNoRecLowRightCorn is return when the lower right corner of a rectangle could not be found.
+	// ErrNoRecLowRightCorn is returned when the lower right corner of a rectangle could not be found.
 	ErrNoRecLowRightCorn = errors.New("aa2d: could not find lower right rectangle corner")
-	// ErrNoRecLowLeftCorn is return when the lower left corner of a rectangle could not be found.
+	// ErrNoRecLowLeftCorn is returned when the lower left corner of a rectangle could not be found.
 	ErrNoRecLowLeftCorn = errors.New("aa2d: could not find lower left rectangle corner")
+	// ErrUnknownCharacter is returned when an unknown character was encountered.
+	ErrUnknownCharacter = errors.New("aa2d: unknown character encountered")
 )
 
 // ParseError defines a ASCII art parsing error.

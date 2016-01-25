@@ -6,6 +6,7 @@ package aa2d
 
 import (
 	"bytes"
+	//"fmt"
 )
 
 const (
@@ -125,20 +126,28 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 }
 
 func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
-outerLoop:
+	//outerLoop:
 	for y, line := range lines {
+	innerLoop:
 		for x, cell := range line {
 			switch cell {
 			case '#':
 				if err := p.parseRectangle(g, lines, x, y, false); err != nil {
 					return err
 				}
-				break outerLoop
+				goto innerLoop
+				//break outerLoop
 			case '.':
 				if err := p.parseRectangle(g, lines, x, y, true); err != nil {
 					return err
 				}
-				break outerLoop
+				goto innerLoop
+				//break outerLoop
+			case ' ':
+				continue
+			default:
+				//fmt.Printf("x=%d, y=%d, char=%c\n", x, y, cell)
+				return &ParseError{X: x, Y: y, Err: ErrUnknownCharacter}
 			}
 		}
 	}
@@ -234,6 +243,13 @@ loopDown:
 			return &ParseError{X: x, Y: y, Err: ErrExpRecVerticalLine}
 		}
 	}
+	// remove rectangle
+	r.remove(lines)
+	/*
+		for y := 0; y < len(lines); y++ {
+			fmt.Println(string(lines[y]))
+		}
+	*/
 	// scale
 	r.X *= p.xScale
 	r.Y *= p.yScale
@@ -242,4 +258,17 @@ loopDown:
 	// add rectangle to grid
 	g.Elems = append(g.Elems, r)
 	return nil
+}
+
+func (r *Rectangle) remove(lines [][]byte) {
+	// remove upper and lower line
+	for x := r.X; x < r.X+r.W; x++ {
+		lines[r.Y][x] = ' '
+		lines[r.Y+r.H-1][x] = ' '
+	}
+	// remove side lines
+	for y := r.Y + 1; y < r.Y+r.H-1; y++ {
+		lines[y][r.X] = ' '
+		lines[y][r.X+r.W-1] = ' '
+	}
 }

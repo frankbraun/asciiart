@@ -20,6 +20,16 @@ func testVectors() []vector {
 	return []vector{
 		{
 			aa: `
+?
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   1,
+				Err: ErrUnknownCharacter,
+			},
+		},
+		{
+			aa: `
 #?
 `,
 			res: &ParseError{
