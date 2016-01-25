@@ -116,8 +116,8 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 			maxLen = len(line)
 		}
 	}
-	g.W = maxLen
-	g.H = len(lines)
+	g.W = p.xScale * maxLen
+	g.H = p.yScale * len(lines)
 	g.Elems = make([]interface{}, 0)
 	if err := p.parseGrid(&g, lines); err != nil {
 		return nil, err

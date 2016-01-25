@@ -54,6 +54,7 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 }
 
 func drawRectangle(s *svg.SVG, r *aa2d.Rectangle) error {
+	s.Rect(r.X, r.Y, r.W, r.H, `fill="none"`, `stroke="black"`) //, `stroke-width="1"`)
 	return nil
 }
 

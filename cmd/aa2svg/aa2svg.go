@@ -41,7 +41,7 @@ func main() {
 	flag.IntVar(&yScale, "y", aa2d.YScale,
 		"number of pixels to scale each unit on the y-axis to")
 	flag.Parse()
-	if flag.NArg() == 0 {
+	if flag.NArg() != 0 {
 		usage()
 	}
 	// work around defer not working after os.Exit()
@@ -54,6 +54,7 @@ func aa2svgMain(out, in string, xScale, yScale int) error {
 	var (
 		outFP *os.File
 		inFP  *os.File
+		err   error
 	)
 	if out == "" || out == "-" {
 		outFP = os.Stdout
@@ -61,7 +62,7 @@ func aa2svgMain(out, in string, xScale, yScale int) error {
 		if _, err := os.Stat(out); err == nil {
 			return fmt.Errorf("output file '%s' exists already", out)
 		}
-		outFP, err := os.Create(out)
+		outFP, err = os.Create(out)
 		if err != nil {
 			return err
 		}
@@ -70,7 +71,7 @@ func aa2svgMain(out, in string, xScale, yScale int) error {
 	if in == "" || in == "-" {
 		inFP = os.Stdin
 	} else {
-		inFP, err := os.Open(in)
+		inFP, err = os.Open(in)
 		if err != nil {
 			return err
 		}
