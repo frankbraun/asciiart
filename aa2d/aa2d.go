@@ -53,12 +53,23 @@ type Line struct {
 type Polyline struct {
 	X      []int       // x-axis coordinates of points on polyline
 	Y      []int       // y-axis coordinates of points on polyline
-	Dotted []bool      // polyline segment is dotted
+	Dotted []bool      // polyline segment is dotted (len(Dotted) == len(X)-1)
 	Ref    interface{} // JSON reference of the polyline, if defined
 }
 
-type Polygon struct{}
-type Textline struct{}
+type Polygon struct {
+	Elems  []interface{} // contained elements
+	X      []int         // x-axis coordinates of points on polygon
+	Y      []int         // y-axis coordinates of points on polygon
+	Dotted []bool        // polygon segment is dotted (len(Dotted) == len(X))
+	Ref    interface{}   // JSON reference of the polygon, if defined
+}
+
+type Textline struct {
+	X    int    // x-axis coordinate of the start of the text
+	Y    int    // y-axis coordinate of the start of the text
+	Text string // the actual text string
+}
 
 func NewParser() *Parser {
 	return &Parser{

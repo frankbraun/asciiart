@@ -51,17 +51,34 @@ Polylines:
         |     |
         +-----+
 
-A polyline is a set of connected straight line segments (horizontal or
-vertical). The segments must be connected with (+).
-The shape must be open, otherwise it is a polygon (see below).
-The segments can be dotted.
+A polyline is an open set of connected straight line segments (horizontal or
+vertical). The segments must be connected with (+). The segments can be dotted.
+
+Polygons:
+
+     +---+
+     |   |
+ +---+   +---+
+ |           |
+ +---+   +---+
+     |   |
+     +---+
+
+A polygon is a closed set of connected straight line segments (horizontal or
+vertical). The segments must be connected with (+). The segments can be dotted.
+
+Text lines:
+
+  This is a text line.
+
+A text line is a single line of text (without newlines).
 
 
 References
 
-All elements can have up to one reference attached to them by providing it at
-the edge of the element and defining the reference somewhere in the document at
-the start of a line (usually at the bottom).
+All elements except text lines can have up to one reference attached to them
+by providing it at the edge of the element and defining the reference
+somewhere in the document at the start of a line (usually at the bottom).
 
 Reference names are set between square brackets ([ and ]) and defined by
 referencing the same name followed by a colon (:). After the colon a JSON object is expected.
