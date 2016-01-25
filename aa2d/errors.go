@@ -21,8 +21,22 @@ var (
 var (
 	// ErrExpRecLine is returned when a rectangle line was expected.
 	ErrExpRecLine = errors.New("aa2d: expected rectangle line (-)")
-	// ErrExpRecLineOrCorn is return when a rectangle line or corner was expected.
-	ErrExpRecLineOrCorn = errors.New("aa2d: expected rectangle line (-) or corner")
+	// ErrExpRecLineOrUpCorn is returned when a rectangle line or upper corner was expected.
+	ErrExpRecLineOrUpCorn = errors.New("aa2d: expected rectangle line (-) or upper corner (#, .)")
+	// ErrExpRecLineOrLowCorn is returned when a rectangle line or lower corner was expected.
+	ErrExpRecLineOrLowCorn = errors.New("aa2d: expected rectangle line (|) or lower corner (#, ')")
+	// ErrExpRecHorizontalLine is returned when a horizontal line was expected.
+	ErrExpRecHorizontalLine = errors.New("aa2d: expected horizontal line (-)")
+	// ErrExpRecVerticalLine is returned when a horizontal line was expected.
+	ErrExpRecVerticalLine = errors.New("aa2d: expected vertical line (|)")
+	// ErrExpRecLowCorn is returned when a lower corner was expected.
+	ErrExpRecLowCorn = errors.New("aa2d: expected lower corner")
+	// ErrNoRecUpRightCorn is return when the upper right corner of a rectangle could not be found.
+	ErrNoRecUpRightCorn = errors.New("aa2d: could not find upper right rectangle corner")
+	// ErrNoRecLowRightCorn is return when the lower right corner of a rectangle could not be found.
+	ErrNoRecLowRightCorn = errors.New("aa2d: could not find lower right rectangle corner")
+	// ErrNoRecLowLeftCorn is return when the lower left corner of a rectangle could not be found.
+	ErrNoRecLowLeftCorn = errors.New("aa2d: could not find lower left rectangle corner")
 )
 
 // ParseError defines a ASCII art parsing error.

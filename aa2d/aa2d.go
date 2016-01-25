@@ -6,7 +6,6 @@ package aa2d
 
 import (
 	"bytes"
-	"fmt"
 )
 
 const (
@@ -25,14 +24,13 @@ type Parser struct {
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
 // art which various elements.
 type Grid struct {
-	Elems []interface{} // list of elements on the grid
 	W     int           // size of grid in x-dimension (width)
 	H     int           // size of grid in y-dimension (height)
+	Elems []interface{} // list of elements on the grid
 }
 
 // The Rectangle element.
 type Rectangle struct {
-	Elems           []interface{} // contained elements
 	X               int           // x-axis coordinate
 	Y               int           // y-axis coordinate
 	W               int           // width of rectangle
@@ -42,6 +40,7 @@ type Rectangle struct {
 	RoundLowerLeft  bool          // rounded lower-left corner
 	RoundLowerRight bool          // rounded lower-right corner
 	Ref             interface{}   // JSON reference of the rectangle, if defined
+	Elems           []interface{} // contained elements
 }
 
 // The Line element.
@@ -66,11 +65,11 @@ type Polyline struct {
 
 // The Polygon element.
 type Polygon struct {
-	Elems  []interface{} // contained elements
 	X      []int         // x-axis coordinates of points on polygon
 	Y      []int         // y-axis coordinates of points on polygon
 	Dotted []bool        // polygon segment is dotted (len(Dotted) == len(X))
 	Ref    interface{}   // JSON reference of the polygon, if defined
+	Elems  []interface{} // contained elements
 }
 
 // The Textline element.
@@ -118,24 +117,25 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	}
 	g.W = maxLen
 	g.H = len(lines)
-	if err := g.parse(lines); err != nil {
+	g.Elems = make([]interface{}, 0)
+	if err := p.parseGrid(&g, lines); err != nil {
 		return nil, err
 	}
 	return &g, nil
 }
 
-func (g *Grid) parse(lines [][]byte) error {
+func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 outerLoop:
 	for y, line := range lines {
 		for x, cell := range line {
 			switch cell {
 			case '#':
-				if err := g.parseRectangle(lines, x, y, false); err != nil {
+				if err := p.parseRectangle(g, lines, x, y, false); err != nil {
 					return err
 				}
 				break outerLoop
 			case '.':
-				if err := g.parseRectangle(lines, x, y, true); err != nil {
+				if err := p.parseRectangle(g, lines, x, y, true); err != nil {
 					return err
 				}
 				break outerLoop
@@ -145,7 +145,8 @@ outerLoop:
 	return nil
 }
 
-func (g *Grid) parseRectangle(
+func (p *Parser) parseRectangle(
+	g *Grid,
 	lines [][]byte,
 	startX, startY int,
 	roundUpperLeft bool,
@@ -153,19 +154,92 @@ func (g *Grid) parseRectangle(
 	if startX+1 == len(lines[startY]) || lines[startY][startX+1] != '-' {
 		return &ParseError{X: startX + 1, Y: startY, Err: ErrExpRecLine}
 	}
-	for x := startX + 2; x < len(lines[startY]); x++ {
+	var r Rectangle
+	r.X = startX
+	r.Y = startY
+	r.RoundUpperLeft = roundUpperLeft
+	// go right
+	x := startX + 2
+	found := false
+loopRight:
+	for ; x < len(lines[startY]); x++ {
 		switch lines[startY][x] {
 		case '-':
 			continue
-		case '#':
-			fmt.Println("go down")
-			break
 		case '.':
-			fmt.Println("go down")
-			break
+			r.RoundUpperRight = true
+			fallthrough
+		case '#':
+			r.W = x - r.X + 1
+			found = true
+			break loopRight
 		default:
-			return &ParseError{X: x, Y: startY, Err: ErrExpRecLineOrCorn}
+			return &ParseError{X: x, Y: startY, Err: ErrExpRecLineOrUpCorn}
 		}
 	}
+	if !found {
+		return &ParseError{X: x, Y: startY, Err: ErrNoRecUpRightCorn}
+	}
+	// go down
+	y := startY + 1
+	found = false
+loopDown:
+	for ; y < len(lines); y++ {
+		if len(lines[y]) < x {
+			return &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
+		}
+		switch lines[y][x] {
+		case '|':
+			continue
+		case '\'':
+			r.RoundLowerRight = true
+			fallthrough
+		case '#':
+			r.H = y - r.Y + 1
+			found = true
+			break loopDown
+		default:
+			return &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
+		}
+	}
+	if !found {
+		return &ParseError{X: x, Y: y, Err: ErrNoRecLowRightCorn}
+	}
+	// go left
+	x--
+	for ; x > startX; x-- {
+		switch lines[y][x] {
+		case '-':
+			continue
+		default:
+			return &ParseError{X: x, Y: y, Err: ErrExpRecHorizontalLine}
+		}
+	}
+	switch lines[y][x] {
+	case '\'':
+		r.RoundLowerLeft = true
+		fallthrough
+	case '#':
+		break
+	default:
+		return &ParseError{X: 0, Y: y, Err: ErrExpRecLowCorn}
+	}
+	// go up
+	y--
+	for ; y > startY; y-- {
+		switch lines[y][startX] {
+		case '|':
+			continue
+		default:
+			return &ParseError{X: x, Y: y, Err: ErrExpRecVerticalLine}
+		}
+	}
+	// scale
+	r.X *= p.xScale
+	r.Y *= p.yScale
+	r.W *= p.xScale
+	r.H *= p.yScale
+	// add rectangle to grid
+	g.Elems = append(g.Elems, r)
 	return nil
 }

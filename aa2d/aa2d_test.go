@@ -5,6 +5,7 @@
 package aa2d
 
 import (
+	//"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -29,6 +30,83 @@ func testVectors() []vector {
 		},
 		{
 			aa: `
+#-
+`,
+			res: &ParseError{
+				X:   2,
+				Y:   1,
+				Err: ErrNoRecUpRightCorn,
+			},
+		},
+		{
+			aa: `
+#-#
+`,
+			res: &ParseError{
+				X:   2,
+				Y:   2,
+				Err: ErrExpRecLineOrLowCorn,
+			},
+		},
+		{
+			aa: `
+#-#
+  ?
+`,
+			res: &ParseError{
+				X:   2,
+				Y:   2,
+				Err: ErrExpRecLineOrLowCorn,
+			},
+		},
+		{
+			aa: `
+#-#
+  |`,
+			res: &ParseError{
+				X:   2,
+				Y:   3,
+				Err: ErrNoRecLowRightCorn,
+			},
+		},
+		{
+			aa: `
+#-#
+  |
+ ?#
+`,
+			res: &ParseError{
+				X:   1,
+				Y:   3,
+				Err: ErrExpRecHorizontalLine,
+			},
+		},
+		{
+			aa: `
+#-#
+  |
+?-#
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   3,
+				Err: ErrExpRecLowCorn,
+			},
+		},
+		{
+			aa: `
+#-#
+? |
+#-#
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   2,
+				Err: ErrExpRecVerticalLine,
+			},
+		},
+		{
+			aa: `
 .?
 `,
 			res: &ParseError{
@@ -44,7 +122,7 @@ func testVectors() []vector {
 			res: &ParseError{
 				X:   2,
 				Y:   1,
-				Err: ErrExpRecLineOrCorn,
+				Err: ErrExpRecLineOrUpCorn,
 			},
 		},
 		// smallest possible rectangle
@@ -57,6 +135,14 @@ func testVectors() []vector {
 			res: &Grid{
 				W: 3,
 				H: 5,
+				Elems: []interface{}{
+					Rectangle{
+						X: 0,
+						Y: 1,
+						W: 3,
+						H: 3,
+					},
+				},
 			},
 		},
 		{
@@ -69,6 +155,14 @@ func testVectors() []vector {
 			res: &Grid{
 				W: 7,
 				H: 6,
+				Elems: []interface{}{
+					Rectangle{
+						X: 0,
+						Y: 1,
+						W: 7,
+						H: 4,
+					},
+				},
 			},
 		},
 		{
@@ -81,6 +175,18 @@ func testVectors() []vector {
 			res: &Grid{
 				W: 7,
 				H: 6,
+				Elems: []interface{}{
+					Rectangle{
+						X:               0,
+						Y:               1,
+						W:               7,
+						H:               4,
+						RoundUpperLeft:  true,
+						RoundUpperRight: true,
+						RoundLowerLeft:  true,
+						RoundLowerRight: true,
+					},
+				},
 			},
 		},
 	}
@@ -92,6 +198,7 @@ func TestParser(t *testing.T) {
 	for _, vector := range testVectors() {
 		g, err := p.Parse(vector.aa)
 		if err != nil {
+			//fmt.Println(err)
 			assert.Equal(t, vector.res, err)
 		} else {
 			assert.Equal(t, vector.res, g)
