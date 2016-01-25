@@ -18,7 +18,7 @@ import (
 // written to w.
 // xScale denotes the number of pixels to scale each unit on the x-axis to.
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
-func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale int) error {
+func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale float64) error {
 	aa, err := ioutil.ReadAll(r)
 	if err != nil {
 		return err

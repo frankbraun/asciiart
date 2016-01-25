@@ -29,28 +29,30 @@ func main() {
 	var (
 		in     string
 		out    string
-		xScale int
-		yScale int
+		force  bool
+		xScale float64
+		yScale float64
 	)
 	flag.StringVar(&in, "i", "", "path to input text file. If unspecified or "+
 		"set to '-', stdin is used")
 	flag.StringVar(&out, "o", "", "path to output SVG file. If unspecified or "+
 		"set to '-', stdout is used")
-	flag.IntVar(&xScale, "x", aa2d.XScale,
+	flag.BoolVar(&force, "f", false, "overwrite existing output file")
+	flag.Float64Var(&xScale, "x", aa2d.XScale,
 		"number of pixels to scale each unit on the x-axis to")
-	flag.IntVar(&yScale, "y", aa2d.YScale,
+	flag.Float64Var(&yScale, "y", aa2d.YScale,
 		"number of pixels to scale each unit on the y-axis to")
 	flag.Parse()
 	if flag.NArg() != 0 {
 		usage()
 	}
 	// work around defer not working after os.Exit()
-	if err := aa2svgMain(out, in, xScale, yScale); err != nil {
+	if err := aa2svgMain(out, in, force, xScale, yScale); err != nil {
 		fatal(err)
 	}
 }
 
-func aa2svgMain(out, in string, xScale, yScale int) error {
+func aa2svgMain(out, in string, force bool, xScale, yScale float64) error {
 	var (
 		outFP *os.File
 		inFP  *os.File
@@ -59,8 +61,10 @@ func aa2svgMain(out, in string, xScale, yScale int) error {
 	if out == "" || out == "-" {
 		outFP = os.Stdout
 	} else {
-		if _, err := os.Stat(out); err == nil {
-			return fmt.Errorf("output file '%s' exists already", out)
+		if !force {
+			if _, err := os.Stat(out); err == nil {
+				return fmt.Errorf("output file '%s' exists already", out)
+			}
 		}
 		outFP, err = os.Create(out)
 		if err != nil {

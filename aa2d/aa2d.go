@@ -6,7 +6,6 @@ package aa2d
 
 import (
 	"bytes"
-	//"fmt"
 )
 
 const (
@@ -18,24 +17,24 @@ const (
 
 // A Parser for two-dimensional hierarchical ASCII art.
 type Parser struct {
-	xScale int
-	yScale int
+	xScale float64
+	yScale float64
 }
 
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
 // art which various elements.
 type Grid struct {
-	W     int           // size of grid in x-dimension (width)
-	H     int           // size of grid in y-dimension (height)
+	W     float64       // size of grid in x-dimension (width)
+	H     float64       // size of grid in y-dimension (height)
 	Elems []interface{} // list of elements on the grid
 }
 
 // The Rectangle element.
 type Rectangle struct {
-	X               int           // x-axis coordinate
-	Y               int           // y-axis coordinate
-	W               int           // width of rectangle
-	H               int           // height of rectangle
+	X               float64       // x-axis coordinate
+	Y               float64       // y-axis coordinate
+	W               float64       // width of rectangle
+	H               float64       // height of rectangle
 	RoundUpperLeft  bool          // rounded upper-left corner
 	RoundUpperRight bool          // rounded upper-right corner
 	RoundLowerLeft  bool          // rounded lower-left corner
@@ -46,10 +45,10 @@ type Rectangle struct {
 
 // The Line element.
 type Line struct {
-	X1         int         // x-axis coordinate of the start of the line
-	Y1         int         // y-axis coordinate of the start of the line
-	X2         int         // x-axis coordinate of the end of the line
-	Y2         int         // y-axis coordinate of the end of the line
+	X1         float64     // x-axis coordinate of the start of the line
+	Y1         float64     // y-axis coordinate of the start of the line
+	X2         float64     // x-axis coordinate of the end of the line
+	Y2         float64     // y-axis coordinate of the end of the line
 	ArrowStart bool        // arrow at the start of the line
 	ArrowEnd   bool        // arrow at the end of the line
 	Dotted     bool        // line is dotted
@@ -58,16 +57,16 @@ type Line struct {
 
 // The Polyline element.
 type Polyline struct {
-	X      []int       // x-axis coordinates of points on polyline
-	Y      []int       // y-axis coordinates of points on polyline
+	X      []float64   // x-axis coordinates of points on polyline
+	Y      []float64   // y-axis coordinates of points on polyline
 	Dotted []bool      // polyline segment is dotted (len(Dotted) == len(X)-1)
 	Ref    interface{} // JSON reference of the polyline, if defined
 }
 
 // The Polygon element.
 type Polygon struct {
-	X      []int         // x-axis coordinates of points on polygon
-	Y      []int         // y-axis coordinates of points on polygon
+	X      []float64     // x-axis coordinates of points on polygon
+	Y      []float64     // y-axis coordinates of points on polygon
 	Dotted []bool        // polygon segment is dotted (len(Dotted) == len(X))
 	Ref    interface{}   // JSON reference of the polygon, if defined
 	Elems  []interface{} // contained elements
@@ -75,9 +74,9 @@ type Polygon struct {
 
 // The Textline element.
 type Textline struct {
-	X    int    // x-axis coordinate of the start of the text
-	Y    int    // y-axis coordinate of the start of the text
-	Text string // the actual text string
+	X    float64 // x-axis coordinate of the start of the text
+	Y    float64 // y-axis coordinate of the start of the text
+	Text string  // the actual text string
 }
 
 // NewParser returns a new parser for two-dimensional hierarchical ASCII art.
@@ -91,7 +90,7 @@ func NewParser() *Parser {
 // SetScale sets the grid scale for parser p.
 // xScale denotes the number of pixels to scale each unit on the x-axis to.
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
-func (p *Parser) SetScale(xScale, yScale int) error {
+func (p *Parser) SetScale(xScale, yScale float64) error {
 	if xScale <= 0 {
 		return ErrWrongXScale
 	}
@@ -108,16 +107,16 @@ func (p *Parser) SetScale(xScale, yScale int) error {
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	var (
 		g      Grid
-		maxLen int
+		maxLen float64
 	)
 	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
 	for _, line := range lines {
-		if len(line) > maxLen {
-			maxLen = len(line)
+		if float64(len(line)) > maxLen {
+			maxLen = float64(len(line))
 		}
 	}
 	g.W = p.xScale * maxLen
-	g.H = p.yScale * len(lines)
+	g.H = p.yScale * float64(len(lines))
 	g.Elems = make([]interface{}, 0)
 	if err := p.parseGrid(&g, lines); err != nil {
 		return nil, err
@@ -146,7 +145,6 @@ func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 			case ' ':
 				continue
 			default:
-				//fmt.Printf("x=%d, y=%d, char=%c\n", x, y, cell)
 				return &ParseError{X: x, Y: y, Err: ErrUnknownCharacter}
 			}
 		}
@@ -164,8 +162,8 @@ func (p *Parser) parseRectangle(
 		return &ParseError{X: startX + 1, Y: startY, Err: ErrExpRecLine}
 	}
 	var r Rectangle
-	r.X = startX
-	r.Y = startY
+	r.X = float64(startX)
+	r.Y = float64(startY)
 	r.RoundUpperLeft = roundUpperLeft
 	// go right
 	x := startX + 2
@@ -179,7 +177,7 @@ loopRight:
 			r.RoundUpperRight = true
 			fallthrough
 		case '#':
-			r.W = x - r.X + 1
+			r.W = float64(x) - r.X + 1
 			found = true
 			break loopRight
 		default:
@@ -204,7 +202,7 @@ loopDown:
 			r.RoundLowerRight = true
 			fallthrough
 		case '#':
-			r.H = y - r.Y + 1
+			r.H = float64(y) - r.Y + 1
 			found = true
 			break loopDown
 		default:
@@ -245,16 +243,11 @@ loopDown:
 	}
 	// remove rectangle
 	r.remove(lines)
-	/*
-		for y := 0; y < len(lines); y++ {
-			fmt.Println(string(lines[y]))
-		}
-	*/
 	// scale
-	r.X *= p.xScale
-	r.Y *= p.yScale
-	r.W *= p.xScale
-	r.H *= p.yScale
+	r.X = r.X*p.xScale + p.xScale/2
+	r.Y = r.Y*p.yScale + p.yScale/2
+	r.W = r.W*p.xScale - p.xScale
+	r.H = r.H*p.yScale - p.yScale
 	// add rectangle to grid
 	g.Elems = append(g.Elems, r)
 	return nil
@@ -262,13 +255,13 @@ loopDown:
 
 func (r *Rectangle) remove(lines [][]byte) {
 	// remove upper and lower line
-	for x := r.X; x < r.X+r.W; x++ {
-		lines[r.Y][x] = ' '
-		lines[r.Y+r.H-1][x] = ' '
+	for x := int(r.X); x < int(r.X)+int(r.W); x++ {
+		lines[int(r.Y)][x] = ' '
+		lines[int(r.Y)+int(r.H)-1][x] = ' '
 	}
 	// remove side lines
-	for y := r.Y + 1; y < r.Y+r.H-1; y++ {
-		lines[y][r.X] = ' '
-		lines[y][r.X+r.W-1] = ' '
+	for y := int(r.Y) + 1; y < int(r.Y)+int(r.H)-1; y++ {
+		lines[y][int(r.X)] = ' '
+		lines[y][int(r.X)+int(r.W)-1] = ' '
 	}
 }
