@@ -26,24 +26,30 @@ func usage() {
 
 func main() {
 	var (
-		in  string
-		out string
+		in     string
+		out    string
+		xScale int
+		yScale int
 	)
 	flag.StringVar(&in, "i", "", "path to input text file. If unspecified or "+
 		"set to '-', stdin is used")
 	flag.StringVar(&out, "o", "", "path to output SVG file. If unspecified or "+
 		"set to '-', stdout is used")
+	flag.IntVar(&xScale, "x", 9,
+		"number of pixels to scale each unit on the x-axis to")
+	flag.IntVar(&yScale, "y", 16,
+		"number of pixels to scale each unit on the y-axis to")
 	flag.Parse()
 	if flag.NArg() == 0 {
 		usage()
 	}
 	// work around defer not working after os.Exit()
-	if err := aa2svgMain(out, in); err != nil {
+	if err := aa2svgMain(out, in, xScale, yScale); err != nil {
 		fatal(err)
 	}
 }
 
-func aa2svgMain(out, in string) error {
+func aa2svgMain(out, in string, xScale, yScale int) error {
 	var (
 		outFP *os.File
 		inFP  *os.File
@@ -69,5 +75,5 @@ func aa2svgMain(out, in string) error {
 		}
 		defer inFP.Close()
 	}
-	return convert.ASCIIArt2SVG(outFP, inFP)
+	return convert.ASCIIArt2SVG(outFP, inFP, xScale, yScale)
 }

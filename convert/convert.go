@@ -11,6 +11,8 @@ import (
 
 // ASCIIArt2SVG converts two-dimensional ASCII art read from r to a SVG
 // written to w.
-func ASCIIArt2SVG(w io.Writer, r io.Reader) error {
+// xScale denotes the number of pixels to scale each unit on the x-axis to.
+// yScale denotes the number of pixels to scale each unit on the y-axis to.
+func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale int) error {
 	return nil
 }
