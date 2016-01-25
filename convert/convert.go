@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 
 	"github.com/frankbraun/asciiart/aa2d"
+	"github.com/frankbraun/asciiart/svg"
 )
 
 // ASCIIArt2SVG converts two-dimensional ASCII art read from r to a SVG
@@ -24,8 +25,11 @@ func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale int) error {
 	}
 	p := aa2d.NewParser()
 	p.SetScale(xScale, yScale)
-	_, err = p.Parse(string(aa))
+	grid, err := p.Parse(string(aa))
 	if err != nil {
+		return err
+	}
+	if svg.Generate(w, grid); err != nil {
 		return err
 	}
 	return nil
