@@ -2,7 +2,8 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-// Package convert implements converters for two-dimensional ASCII art.
+// Package convert implements converters for two-dimensional hierarchical
+// ASCII art.
 package convert
 
 import (
