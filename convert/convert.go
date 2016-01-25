@@ -7,6 +7,9 @@ package convert
 
 import (
 	"io"
+	"io/ioutil"
+
+	"github.com/frankbraun/asciiart/aa2d"
 )
 
 // ASCIIArt2SVG converts two-dimensional ASCII art read from r to a SVG
@@ -14,5 +17,15 @@ import (
 // xScale denotes the number of pixels to scale each unit on the x-axis to.
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
 func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale int) error {
+	aa, err := ioutil.ReadAll(r)
+	if err != nil {
+		return err
+	}
+	p := aa2d.NewParser()
+	p.SetScale(xScale, yScale)
+	_, err = p.Parse(string(aa))
+	if err != nil {
+		return err
+	}
 	return nil
 }
