@@ -36,18 +36,27 @@ type Rectangle struct {
 	RoundUpperRight bool          // rounded upper-right corner
 	RoundLowerLeft  bool          // rounded lower-left corner
 	RoundLowerRight bool          // rounded lower-right corner
+	Ref             interface{}   // JSON reference of the rectangle, if defined
 }
 
 type Line struct {
-	X1         int  // x-axis coordinate of the start of the line
-	Y1         int  // y-axis coordinate of the start of the line
-	X2         int  // x-axis coordinate of the end of the line
-	Y2         int  // y-axis coordinate of the end of the line
-	ArrowStart bool // arrow at the start of the line
-	ArrowEnd   bool // arrow at the end of the line
+	X1         int         // x-axis coordinate of the start of the line
+	Y1         int         // y-axis coordinate of the start of the line
+	X2         int         // x-axis coordinate of the end of the line
+	Y2         int         // y-axis coordinate of the end of the line
+	ArrowStart bool        // arrow at the start of the line
+	ArrowEnd   bool        // arrow at the end of the line
+	Dotted     bool        // line is dotted
+	Ref        interface{} // JSON reference of the line, if defined
 }
 
-type Polyline struct{}
+type Polyline struct {
+	X      []int       // x-axis coordinates of points on polyline
+	Y      []int       // y-axis coordinates of points on polyline
+	Dotted []bool      // polyline segment is dotted
+	Ref    interface{} // JSON reference of the polyline, if defined
+}
+
 type Polygon struct{}
 type Textline struct{}
 
