@@ -15,17 +15,21 @@ const (
 	YScale = 16
 )
 
+// A Parser for two-dimensional hierarchical ASCII art.
 type Parser struct {
 	xScale int
 	yScale int
 }
 
+// A Grid is an abstract representation of two-dimensional hierarchical ASCII
+// art which various elements.
 type Grid struct {
 	Elems []interface{} // list of elements on the grid
 	W     int           // size of grid in x-dimension (width)
 	H     int           // size of grid in y-dimension (height)
 }
 
+// The Rectangle element.
 type Rectangle struct {
 	Elems           []interface{} // contained elements
 	X               int           // x-axis coordinate
@@ -39,6 +43,7 @@ type Rectangle struct {
 	Ref             interface{}   // JSON reference of the rectangle, if defined
 }
 
+// The Line element.
 type Line struct {
 	X1         int         // x-axis coordinate of the start of the line
 	Y1         int         // y-axis coordinate of the start of the line
@@ -50,6 +55,7 @@ type Line struct {
 	Ref        interface{} // JSON reference of the line, if defined
 }
 
+// The Polyline element.
 type Polyline struct {
 	X      []int       // x-axis coordinates of points on polyline
 	Y      []int       // y-axis coordinates of points on polyline
@@ -57,6 +63,7 @@ type Polyline struct {
 	Ref    interface{} // JSON reference of the polyline, if defined
 }
 
+// The Polygon element.
 type Polygon struct {
 	Elems  []interface{} // contained elements
 	X      []int         // x-axis coordinates of points on polygon
@@ -65,12 +72,14 @@ type Polygon struct {
 	Ref    interface{}   // JSON reference of the polygon, if defined
 }
 
+// The Textline element.
 type Textline struct {
 	X    int    // x-axis coordinate of the start of the text
 	Y    int    // y-axis coordinate of the start of the text
 	Text string // the actual text string
 }
 
+// NewParser returns a new parser for two-dimensional hierarchical ASCII art.
 func NewParser() *Parser {
 	return &Parser{
 		xScale: XScale,
@@ -78,6 +87,7 @@ func NewParser() *Parser {
 	}
 }
 
+// SetScale sets the scale for parser p.
 // xScale denotes the number of pixels to scale each unit on the x-axis to.
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
 func (p *Parser) SetScale(xScale, yScale int) {
@@ -85,6 +95,7 @@ func (p *Parser) SetScale(xScale, yScale int) {
 	p.yScale = yScale
 }
 
+// Parse parses asciiArt with parser p and returns a grid.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	_ = bytes.Split([]byte(asciiArt), []byte("\n"))
 	return nil, nil
