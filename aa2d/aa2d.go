@@ -6,12 +6,14 @@ package aa2d
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 )
 
 const (
-	// XScale is the default scale for the x-axis.
+	// XScale is the default scale for the x-axis of a grid.
 	XScale = 9
-	// YScale is the default scale for the y-axis.
+	// YScale is the default scale for the y-axis of a grid.
 	YScale = 16
 )
 
@@ -87,16 +89,82 @@ func NewParser() *Parser {
 	}
 }
 
-// SetScale sets the scale for parser p.
+// SetScale sets the grid scale for parser p.
 // xScale denotes the number of pixels to scale each unit on the x-axis to.
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
-func (p *Parser) SetScale(xScale, yScale int) {
+func (p *Parser) SetScale(xScale, yScale int) error {
+	if xScale <= 0 {
+		return errors.New("aa2d: xScale must be at least one")
+	}
+	if yScale <= 0 {
+		return errors.New("aa2d: yScale must be at least one")
+	}
 	p.xScale = xScale
 	p.yScale = yScale
+	return nil
 }
 
 // Parse parses asciiArt with parser p and returns a grid.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
-	_ = bytes.Split([]byte(asciiArt), []byte("\n"))
-	return nil, nil
+	var (
+		g      Grid
+		maxLen int
+	)
+	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
+	for _, line := range lines {
+		if len(line) > maxLen {
+			maxLen = len(line)
+		}
+	}
+	g.W = maxLen
+	g.H = len(lines)
+	if err := g.parse(lines); err != nil {
+		return nil, err
+	}
+	return &g, nil
+}
+
+func (g *Grid) parse(lines [][]byte) error {
+outerLoop:
+	for y, line := range lines {
+		for x, cell := range line {
+			switch cell {
+			case '#':
+				if err := g.parseRectangle(lines, x, y, false); err != nil {
+					return err
+				}
+				break outerLoop
+			case '.':
+				if err := g.parseRectangle(lines, x, y, true); err != nil {
+					return err
+				}
+				break outerLoop
+			}
+		}
+	}
+	return nil
+}
+
+func (g *Grid) parseRectangle(
+	lines [][]byte,
+	startX, startY int,
+	roundUpperLeft bool,
+) error {
+	if startX+1 == len(lines[startY]) || lines[startY][startX+1] != '-' {
+		return fmt.Errorf("aa2d: expected rectangle line (-) at (%d,%d)",
+			startX+1, startY)
+	}
+	for x := startX + 2; x < len(lines[startY]); x++ {
+		switch lines[startY][x] {
+		case '-':
+			continue
+		case '#':
+			fmt.Println("go down")
+			break
+		default:
+			return fmt.Errorf("aa2d expected rectangle line (-) or corner at (%d,%d)",
+				x, startY)
+		}
+	}
+	return nil
 }

@@ -24,7 +24,9 @@ func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale int) error {
 		return err
 	}
 	p := aa2d.NewParser()
-	p.SetScale(xScale, yScale)
+	if err := p.SetScale(xScale, yScale); err != nil {
+		return err
+	}
 	grid, err := p.Parse(string(aa))
 	if err != nil {
 		return err

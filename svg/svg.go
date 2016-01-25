@@ -15,10 +15,10 @@ import (
 	"github.com/frankbraun/asciiart/aa2d"
 )
 
-// Generate generates a SVG from g and writes it to w.
+// Generate generates a SVG from grid g and writes it to w.
 func Generate(w io.Writer, g *aa2d.Grid) error {
 	var buf bytes.Buffer
-	s := svg.New(&buf) // don't write to w in case of error
+	s := svg.New(&buf) // generate SVG completely before we write it to w
 	s.Start(g.W, g.H)
 	for _, elem := range g.Elems {
 		switch t := elem.(type) {
@@ -47,7 +47,9 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 		}
 	}
 	s.End()
-	io.Copy(w, &buf)
+	if _, err := io.Copy(w, &buf); err != nil {
+		return err
+	}
 	return nil
 }
 

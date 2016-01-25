@@ -5,8 +5,34 @@
 package aa2d
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 )
 
+/* smallest possible rectangle
+#-#
+| |
+#-#
+*/
+
+const rectangle = `
+#-----#
+|     |
+|     |
+#-----#
+`
+
 func TestRectangle(t *testing.T) {
+	p := NewParser()
+	p.SetScale(1, 1)
+	g, err := p.Parse(rectangle)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Printf("%#v\n", g)
+	r := &Grid{W: 7, H: 6}
+	if !reflect.DeepEqual(g, r) {
+		t.Error("wrong grid")
+	}
 }
