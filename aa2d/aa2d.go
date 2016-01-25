@@ -6,7 +6,6 @@ package aa2d
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 )
 
@@ -94,10 +93,10 @@ func NewParser() *Parser {
 // yScale denotes the number of pixels to scale each unit on the y-axis to.
 func (p *Parser) SetScale(xScale, yScale int) error {
 	if xScale <= 0 {
-		return errors.New("aa2d: xScale must be at least one")
+		return ErrWrongXScale
 	}
 	if yScale <= 0 {
-		return errors.New("aa2d: yScale must be at least one")
+		return ErrWrongYScale
 	}
 	p.xScale = xScale
 	p.yScale = yScale
@@ -105,6 +104,7 @@ func (p *Parser) SetScale(xScale, yScale int) error {
 }
 
 // Parse parses asciiArt with parser p and returns a grid.
+// If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	var (
 		g      Grid
@@ -151,8 +151,7 @@ func (g *Grid) parseRectangle(
 	roundUpperLeft bool,
 ) error {
 	if startX+1 == len(lines[startY]) || lines[startY][startX+1] != '-' {
-		return fmt.Errorf("aa2d: expected rectangle line (-) at (%d,%d)",
-			startX+1, startY)
+		return &ParseError{X: startX + 1, Y: startY, Err: ErrExpRecLine}
 	}
 	for x := startX + 2; x < len(lines[startY]); x++ {
 		switch lines[startY][x] {
@@ -161,9 +160,11 @@ func (g *Grid) parseRectangle(
 		case '#':
 			fmt.Println("go down")
 			break
+		case '.':
+			fmt.Println("go down")
+			break
 		default:
-			return fmt.Errorf("aa2d expected rectangle line (-) or corner at (%d,%d)",
-				x, startY)
+			return &ParseError{X: x, Y: startY, Err: ErrExpRecLineOrCorn}
 		}
 	}
 	return nil
