@@ -10,13 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-/* smallest possible rectangle
-
-#-#   .-.
-| |   | |
-#-#   '-'
-*/
-
 type vector struct {
 	aa  string      // ASCII art
 	res interface{} // result: *Grid or *ParseError
@@ -52,6 +45,18 @@ func testVectors() []vector {
 				X:   2,
 				Y:   1,
 				Err: ErrExpRecLineOrCorn,
+			},
+		},
+		// smallest possible rectangle
+		{
+			aa: `
+#-#
+| |
+#-#
+`,
+			res: &Grid{
+				W: 3,
+				H: 5,
 			},
 		},
 		{
