@@ -2,8 +2,6 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-// Package aa2d parses two-dimensional hierarchical ASCII art into an abstract
-// representation.
 package aa2d
 
 import (
@@ -23,15 +21,32 @@ type Parser struct {
 }
 
 type Grid struct {
-	Rectangles []*Rectangle
-	Lines      []*Line
-	Polylines  []*Polyline
-	Polygons   []*Polygon
-	Textlines  []*Textline
+	Elems []interface{} // list of elements on the grid
+	W     int           // size of grid in x-dimension (width)
+	H     int           // size of grid in y-dimension (height)
 }
 
-type Rectangle struct{}
-type Line struct{}
+type Rectangle struct {
+	Elems           []interface{} // contained elements
+	X               int           // x-axis coordinate
+	Y               int           // y-axis coordinate
+	W               int           // width of rectangle
+	H               int           // height of rectangle
+	RoundUpperLeft  bool          // rounded upper-left corner
+	RoundUpperRight bool          // rounded upper-right corner
+	RoundLowerLeft  bool          // rounded lower-left corner
+	RoundLowerRight bool          // rounded lower-right corner
+}
+
+type Line struct {
+	X1         int  // x-axis coordinate of the start of the line
+	Y1         int  // y-axis coordinate of the start of the line
+	X2         int  // x-axis coordinate of the end of the line
+	Y2         int  // y-axis coordinate of the end of the line
+	ArrowStart bool // arrow at the start of the line
+	ArrowEnd   bool // arrow at the end of the line
+}
+
 type Polyline struct{}
 type Polygon struct{}
 type Textline struct{}
