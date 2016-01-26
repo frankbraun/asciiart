@@ -119,7 +119,7 @@ const styleJSON = `
     ]
   },
   "rect": {
-    "-fill": "#fff",
+    "-fill": "white",
   	"-filter": "url(#dsFilter)",
     "-stroke": "black",
     "-stroke-width": "2"

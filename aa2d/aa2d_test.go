@@ -51,7 +51,7 @@ func testVectors() []vector {
 		{
 			aa: `
 #-#
-`,
+ `,
 			res: &ParseError{
 				X:   2,
 				Y:   2,
@@ -143,7 +143,7 @@ func testVectors() []vector {
 #-#
 `,
 			res: &Grid{
-				W: 3,
+				W: 4,
 				H: 5,
 				Elems: []interface{}{
 					Rectangle{
@@ -163,7 +163,7 @@ func testVectors() []vector {
 #-----#
 `,
 			res: &Grid{
-				W: 7,
+				W: 8,
 				H: 6,
 				Elems: []interface{}{
 					Rectangle{
@@ -183,7 +183,7 @@ func testVectors() []vector {
 '-----'
 `,
 			res: &Grid{
-				W: 7,
+				W: 8,
 				H: 6,
 				Elems: []interface{}{
 					Rectangle{

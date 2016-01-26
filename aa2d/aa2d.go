@@ -115,8 +115,21 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 			maxLen = float64(len(line))
 		}
 	}
+	// remove empty lines at the end
+	var rem int
+	for i := len(lines) - 1; i >= 0; i-- {
+		if len(lines[i]) == 0 {
+			rem++
+		} else {
+			break
+		}
+	}
+	lines = lines[:len(lines)-rem]
 	g.W = p.xScale * maxLen
 	g.H = p.yScale * float64(len(lines))
+	// add some extra space at the side for effects
+	g.W += p.xScale
+	g.H += p.yScale
 	g.Elems = make([]interface{}, 0)
 	if err := p.parseGrid(&g, lines); err != nil {
 		return nil, err
