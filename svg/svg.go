@@ -24,6 +24,11 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	}
 	s := svg.New(&buf) // generate SVG completely before we write it to w
 	s.Start(g.W, g.H)
+	s.Def()
+	if err := setFilter(s); err != nil {
+		return err
+	}
+	s.DefEnd()
 	for _, elem := range g.Elems {
 		switch t := elem.(type) {
 		case aa2d.Rectangle:
