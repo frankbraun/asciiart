@@ -18,7 +18,10 @@ import (
 // Generate generates a SVG from grid g and writes it to w.
 func Generate(w io.Writer, g *aa2d.Grid) error {
 	var buf bytes.Buffer
-	rectStyle := rectStyle()
+	rectStyle, err := rectStyle()
+	if err != nil {
+		return err
+	}
 	s := svg.New(&buf) // generate SVG completely before we write it to w
 	s.Start(g.W, g.H)
 	for _, elem := range g.Elems {
