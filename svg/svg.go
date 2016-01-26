@@ -18,12 +18,13 @@ import (
 // Generate generates a SVG from grid g and writes it to w.
 func Generate(w io.Writer, g *aa2d.Grid) error {
 	var buf bytes.Buffer
+	rectStyle := rectStyle()
 	s := svg.New(&buf) // generate SVG completely before we write it to w
 	s.Start(g.W, g.H)
 	for _, elem := range g.Elems {
 		switch t := elem.(type) {
 		case aa2d.Rectangle:
-			if err := drawRectangle(s, &t); err != nil {
+			if err := drawRectangle(s, &t, rectStyle); err != nil {
 				return err
 			}
 		case aa2d.Line:
@@ -53,12 +54,8 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	return nil
 }
 
-func drawRectangle(s *svg.SVG, r *aa2d.Rectangle) error {
-	s.Rect(r.X, r.Y, r.W, r.H,
-		`fill="none"`,
-		`stroke="black"`,
-		`stroke-width="2"`,
-	)
+func drawRectangle(s *svg.SVG, r *aa2d.Rectangle, style []string) error {
+	s.Rect(r.X, r.Y, r.W, r.H, style...)
 	return nil
 }
 
