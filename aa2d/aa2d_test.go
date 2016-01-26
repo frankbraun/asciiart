@@ -147,10 +147,10 @@ func testVectors() []vector {
 				H: 5,
 				Elems: []interface{}{
 					Rectangle{
-						X: 0,
-						Y: 1,
-						W: 3,
-						H: 3,
+						X: 0.5,
+						Y: 1.5,
+						W: 2,
+						H: 2,
 					},
 				},
 			},
@@ -167,10 +167,10 @@ func testVectors() []vector {
 				H: 6,
 				Elems: []interface{}{
 					Rectangle{
-						X: 0,
-						Y: 1,
-						W: 7,
-						H: 4,
+						X: 0.5,
+						Y: 1.5,
+						W: 6,
+						H: 3,
 					},
 				},
 			},
@@ -187,10 +187,10 @@ func testVectors() []vector {
 				H: 6,
 				Elems: []interface{}{
 					Rectangle{
-						X:               0,
-						Y:               1,
-						W:               7,
-						H:               4,
+						X:               0.5,
+						Y:               1.5,
+						W:               6,
+						H:               3,
 						RoundUpperLeft:  true,
 						RoundUpperRight: true,
 						RoundLowerLeft:  true,
