@@ -94,6 +94,6 @@ Example:
 
 Reference names starting with an underscore (_) are reserved. For example:
 
-  [_ROOT]: {}
+  [_SVG]: {"blur": false}
 */
 package aa2d
