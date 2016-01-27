@@ -6,7 +6,6 @@ package aa2d
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -47,7 +46,6 @@ func (p *Parser) parseLine(
 	lines [][]byte,
 	startX, startY int,
 ) error {
-	fmt.Printf("parseLine x=%d, y=%d\n", startX, startY)
 	var l Line
 	l.X1 = float64(startX)
 	l.Y1 = float64(startY)
@@ -88,7 +86,6 @@ func (p *Parser) parseLine(
 forLoop:
 	for x >= 0 && y < len(lines) && x < len(lines[y]) {
 		cell := lines[y][x]
-		fmt.Printf("for-loop x=%d, y=%d, cell='%c'\n", x, y, cell)
 		lines[y][x] = ' ' // nom nom nom
 		// save last position
 		l.X2 = float64(x)
