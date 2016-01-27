@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"strconv"
+	"strings"
 
 	"github.com/frankbraun/asciiart/aa2d"
 	"github.com/frankbraun/asciiart/svg"
@@ -54,41 +56,40 @@ func ASCIIArt2Txt(w io.Writer, r io.Reader) error {
 
 func generateTxt(w io.Writer, aa string) error {
 	p := aa2d.NewParser()
+	p.SetScale(1, 1)
 	grid, err := p.Parse(aa)
 	if err != nil {
 		return err
 	}
+	fmtFlt := func(f float64) string { return strconv.FormatFloat(f, 'f', -1, 64) }
 	var traverse func(w io.Writer, elems []interface{}, indent string)
 	traverse = func(w io.Writer, elems []interface{}, indent string) {
 		for _, elem := range elems {
 			switch t := elem.(type) {
 			case *aa2d.Rectangle:
-				fmt.Fprintf(w, "%s[rect x=%.2f y=%.2f w=%.2f h=%.2f]\n",
-					indent, t.X, t.Y, t.W, t.H)
-				traverse(w, t.Elems, indent+"  ")
+				fmt.Fprintln(w, indent, "rect", t.X, t.Y, t.W, t.H)
+				traverse(w, t.Elems, indent+"  ") // recursion
 			case *aa2d.Line:
-				fmt.Fprintf(w, "%s[line x1=%.2f y1=%.2f x2=%.2f y2=%.2f]\n",
-					indent, t.X1, t.Y1, t.X2, t.Y2)
+				fmt.Fprintln(w, indent, "line", t.X1, t.Y1, t.X2, t.Y2)
 			case *aa2d.Polyline:
-				fmt.Fprintf(w, "%s[polyline", indent)
+				var p []string
 				for i := 0; i < len(t.X); i++ {
-					fmt.Fprintf(w, " x%d=%.2f y%d=%.2f",
-						i+1, t.X[i], i+1, t.Y[i])
+					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
-				fmt.Fprintf(w, "]\n")
+				fmt.Fprintln(w, indent, "polyline", strings.Join(p, " "))
 			case *aa2d.Polygon:
-				fmt.Fprintf(w, "%s[polygon", indent)
+				var p []string
 				for i := 0; i < len(t.X); i++ {
-					fmt.Fprintf(w, " x%d=%.2f y%d=%.2f",
-						i+1, t.X[i], i+1, t.Y[i])
+					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
-				traverse(w, t.Elems, indent+"  ")
+				fmt.Fprintln(w, indent, "polygon", strings.Join(p, " "))
+				traverse(w, t.Elems, indent+"  ") // recursion
 			case *aa2d.Textline:
-				fmt.Fprintf(w, "%s[text x=%.2f y=%.2f t=%q]",
-					indent, t.X, t.Y, t.Text)
+				fmt.Fprintln(w, indent, "textline", t.X, t.Y, t.Text)
 			}
 		}
 	}
-	traverse(w, grid.Elems, "")
+	fmt.Fprintln(w, "grid", grid.W, grid.H)
+	traverse(w, grid.Elems, " ")
 	return nil
 }
