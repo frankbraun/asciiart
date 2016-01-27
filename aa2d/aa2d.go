@@ -85,6 +85,14 @@ type Textline struct {
 	Text string  // the actual text string
 }
 
+type elem interface {
+	addElem(interface{})
+}
+
+func (g *Grid) addElem(e interface{}) {
+	g.Elems = append(g.Elems, e)
+}
+
 // NewParser returns a new parser for two-dimensional hierarchical ASCII art.
 func NewParser() *Parser {
 	return &Parser{
@@ -188,7 +196,7 @@ func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 }
 
 func (p *Parser) parseRectangle(
-	g *Grid,
+	parent elem,
 	lines [][]byte,
 	startX, startY int,
 	roundUpperLeft bool,
@@ -283,8 +291,8 @@ loopDown:
 	r.Y = r.Y*p.yScale + p.yScale/2
 	r.W = r.W*p.xScale - p.xScale
 	r.H = r.H*p.yScale - p.yScale
-	// add rectangle to grid
-	g.Elems = append(g.Elems, r)
+	// add rectangle to parent
+	parent.addElem(r)
 	return nil
 }
 
