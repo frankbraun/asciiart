@@ -7,7 +7,6 @@ package aa2d
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"regexp"
 	"strings"
 )
@@ -180,8 +179,7 @@ func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 		if len(line) > 0 {
 			switch line[0] {
 			case '[':
-				return fmt.Errorf("aa2d: reference on line %d defined in the "+
-					"middle of document: %s", y, line)
+				return &ParseError{X: 0, Y: y, Err: ErrRefMiddle}
 			}
 		}
 	innerLoop:
@@ -370,8 +368,7 @@ var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
 func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 	m := matchReference.FindStringSubmatch(string(lines[startY]))
 	if m == nil {
-		return fmt.Errorf("aa2d: cannot parse reference on line %d: %s",
-			startY, string(lines[startY]))
+		return &ParseError{X: 0, Y: startY, Err: ErrRefParseError}
 	}
 	key := m[1]
 	jsn := m[2]
@@ -381,22 +378,19 @@ func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 	}
 	refMap, ok := ref.(map[string]interface{})
 	if !ok {
-		return fmt.Errorf("aa2d: reference on line %d is not a JSON object: %s",
-			startY, jsn)
+		return &ParseError{X: 0, Y: startY, Err: ErrRefJSONObj}
 	}
 	if strings.HasPrefix(key, "_") {
 		if g.Refs == nil {
 			g.Refs = make(map[string]map[string]interface{})
 		}
 		if g.Refs[key] != nil {
-			return fmt.Errorf("aa2d: reference on line %d defined twice: %s",
-				startY, key)
+			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
 		}
 		g.Refs[key] = refMap
 	} else {
 		if p.refs[key] != nil {
-			return fmt.Errorf("aa2d: reference on line %d defined twice: %s",
-				startY, key)
+			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
 		}
 		p.refs[key] = refMap
 	}

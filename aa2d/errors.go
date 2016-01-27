@@ -43,6 +43,14 @@ var (
 	ErrRightArrow = errors.New("aa2d: right arrow doesn't make sense here")
 	// ErrLeftArrow is returned when an left arrow is encountered that doesn't make sense.
 	ErrLeftArrow = errors.New("aa2d: left arrow doesn't make sense here")
+	// ErrRefParseError is returned when a reference could not be parsed.
+	ErrRefParseError = errors.New("aa2d: cannot parse reference on line starting")
+	// ErrRefJSONObj is returned when a reference definition is not a JSON object.
+	ErrRefJSONObj = errors.New("aa2d: cannot parse reference JSON object on line starting")
+	// ErrRefTwice is returned when a reference was defined twice.
+	ErrRefTwice = errors.New("aa2d: reference defined twice on line starting")
+	// ErrRefMiddle is returned when a reference was defined in the middle of the document.
+	ErrRefMiddle = errors.New("aa2d: reference defined in the middle of document on line starting")
 )
 
 // ParseError defines a ASCII art parsing error.
