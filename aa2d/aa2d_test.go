@@ -5,7 +5,6 @@
 package aa2d
 
 import (
-	//"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -235,7 +234,6 @@ func TestParser(t *testing.T) {
 	for _, vector := range testVectors() {
 		g, err := p.Parse(vector.aa)
 		if err != nil {
-			//fmt.Println(err)
 			assert.Equal(t, vector.res, err)
 		} else {
 			assert.Equal(t, vector.res, g)
