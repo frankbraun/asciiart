@@ -59,7 +59,7 @@ var (
 	ErrLineLeftArrow = errors.New("aa2d: unexpected left error encountered")
 )
 
-// ParseError defines a ASCII art parsing error.
+// ParseError defines an ASCII art parsing error.
 type ParseError struct {
 	X   int   // x-axis coordinate where the error occurred
 	Y   int   // y-axis coordinate where the error occured
