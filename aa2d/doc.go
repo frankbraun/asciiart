@@ -92,7 +92,8 @@ Example:
 
   [XB]: {fill: "none", stroke-width: 2}
 
-Reference names starting with an underscore (_) are reserved. For example:
+Reference names starting with an underscore (_) are attached to the top-level
+element (the grid). For example:
 
   [_SVG]: {"blur": false}
 */

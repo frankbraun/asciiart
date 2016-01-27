@@ -120,7 +120,6 @@ const styleJSON = `
   },
   "rect": {
     "-fill": "white",
-  	"-filter": "url(#dsFilter)",
     "-stroke": "black",
     "-stroke-width": "2"
   }
@@ -136,7 +135,7 @@ func init() {
 	}
 }
 
-func rectStyle() ([]string, error) {
+func rectStyle(blur bool) ([]string, error) {
 	paths, err := styleMap.ValuesForKey("rect")
 	if err != nil {
 		return nil, err
@@ -158,9 +157,14 @@ func rectStyle() ([]string, error) {
 		}
 	}
 	sort.Strings(keys)
-	s := make([]string, len(keys))
+	s := make([]string, len(keys)+1)
 	for i, k := range keys {
 		s[i] = fmt.Sprintf("%s=%q", strings.TrimPrefix(k, "-"), p[k].(string))
+	}
+	if blur {
+		s[len(keys)] = `filter="url(#dsFilter)"`
+	} else {
+		s[len(keys)] = `filter="url(#dsFilterNoBlur)"`
 	}
 	return s, nil
 }

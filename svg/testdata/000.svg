@@ -16,5 +16,5 @@
 <feBlend in="SourceGraphic" in2="blurOut"  mode="normal" />
 </filter>
 </defs>
-<rect x="4.50" y="8.00" width="54.00" height="48.00" fill="white" filter="url(#dsFilter)" stroke="black" stroke-width="2" />
+<rect x="4.50" y="8.00" width="54.00" height="48.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 </svg>

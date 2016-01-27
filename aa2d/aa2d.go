@@ -6,6 +6,11 @@ package aa2d
 
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"regexp"
+	"strings"
 )
 
 const (
@@ -24,9 +29,10 @@ type Parser struct {
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
 // art which various elements.
 type Grid struct {
-	W     float64       // size of grid in x-dimension (width)
-	H     float64       // size of grid in y-dimension (height)
-	Elems []interface{} // list of elements on the grid
+	W     float64                           // size of grid in x-dimension (width)
+	H     float64                           // size of grid in y-dimension (height)
+	Refs  map[string]map[string]interface{} // JSON references
+	Elems []interface{}                     // list of elements on the grid
 }
 
 // The Rectangle element.
@@ -39,37 +45,37 @@ type Rectangle struct {
 	RoundUpperRight bool          // rounded upper-right corner
 	RoundLowerLeft  bool          // rounded lower-left corner
 	RoundLowerRight bool          // rounded lower-right corner
-	Ref             interface{}   // JSON reference of the rectangle, if defined
+	Ref             interface{}   // JSON reference of the rectangle, if def
 	Elems           []interface{} // contained elements
 }
 
 // The Line element.
 type Line struct {
-	X1         float64     // x-axis coordinate of the start of the line
-	Y1         float64     // y-axis coordinate of the start of the line
-	X2         float64     // x-axis coordinate of the end of the line
-	Y2         float64     // y-axis coordinate of the end of the line
-	ArrowStart bool        // arrow at the start of the line
-	ArrowEnd   bool        // arrow at the end of the line
-	Dotted     bool        // line is dotted
-	Ref        interface{} // JSON reference of the line, if defined
+	X1         float64                // x-axis coordinate of the start of the line
+	Y1         float64                // y-axis coordinate of the start of the line
+	X2         float64                // x-axis coordinate of the end of the line
+	Y2         float64                // y-axis coordinate of the end of the line
+	ArrowStart bool                   // arrow at the start of the line
+	ArrowEnd   bool                   // arrow at the end of the line
+	Dotted     bool                   // line is dotted
+	Ref        map[string]interface{} // JSON reference of the line, if defined
 }
 
 // The Polyline element.
 type Polyline struct {
-	X      []float64   // x-axis coordinates of points on polyline
-	Y      []float64   // y-axis coordinates of points on polyline
-	Dotted []bool      // polyline segment is dotted (len(Dotted) == len(X)-1)
-	Ref    interface{} // JSON reference of the polyline, if defined
+	X      []float64              // x-axis coordinates of points on polyline
+	Y      []float64              // y-axis coordinates of points on polyline
+	Dotted []bool                 // polyline segment is dotted (len(Dotted) == len(X)-1)
+	Ref    map[string]interface{} // JSON reference of the polyline, if defined
 }
 
 // The Polygon element.
 type Polygon struct {
-	X      []float64     // x-axis coordinates of points on polygon
-	Y      []float64     // y-axis coordinates of points on polygon
-	Dotted []bool        // polygon segment is dotted (len(Dotted) == len(X))
-	Ref    interface{}   // JSON reference of the polygon, if defined
-	Elems  []interface{} // contained elements
+	X      []float64              // x-axis coordinates of points on polygon
+	Y      []float64              // y-axis coordinates of points on polygon
+	Dotted []bool                 // polygon segment is dotted (len(Dotted) == len(X))
+	Ref    map[string]interface{} // JSON reference of the polygon, if defined
+	Elems  []interface{}          // contained elements
 }
 
 // The Textline element.
@@ -138,8 +144,16 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 }
 
 func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
-	//outerLoop:
 	for y, line := range lines {
+		if len(line) > 0 {
+			switch line[0] {
+			case '[':
+				if err := g.parseReference(lines, y); err != nil {
+					return err
+				}
+				continue
+			}
+		}
 	innerLoop:
 		for x, cell := range line {
 			switch cell {
@@ -148,13 +162,11 @@ func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 					return err
 				}
 				goto innerLoop
-				//break outerLoop
 			case '.':
 				if err := p.parseRectangle(g, lines, x, y, true); err != nil {
 					return err
 				}
 				goto innerLoop
-				//break outerLoop
 			case ' ':
 				continue
 			default:
@@ -277,4 +289,33 @@ func (r *Rectangle) remove(lines [][]byte) {
 		lines[y][int(r.X)] = ' '
 		lines[y][int(r.X)+int(r.W)-1] = ' '
 	}
+}
+
+var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
+
+func (g *Grid) parseReference(lines [][]byte, startY int) error {
+	m := matchReference.FindStringSubmatch(string(lines[startY]))
+	if m == nil {
+		return fmt.Errorf("aa2d: cannot parse reference on line %d: %s",
+			startY, string(lines[startY]))
+	}
+	var ref interface{}
+	if err := json.Unmarshal([]byte(m[2]), &ref); err != nil {
+		return err
+	}
+	refMap, ok := ref.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("aa2d: reference on line %d is not a JSON object: %s",
+			startY, m[2])
+	}
+	if g.Refs == nil {
+		g.Refs = make(map[string]map[string]interface{})
+	}
+	if strings.HasPrefix(m[1], "_") {
+		g.Refs[m[1]] = refMap
+	} else {
+		// TODO
+		errors.New("aa2d: non-grid references not implemented yet")
+	}
+	return nil
 }
