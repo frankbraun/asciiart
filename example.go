@@ -10,13 +10,13 @@ import (
 )
 
 var asciiArt = `
-#--------------#
-|              |
-| #---#  #---# |
-| |   |  |   | |
-| #---#  #---# |
-|              |
-#--------------#
+#-----------------#
+|                 |
+| #---#     #---# |
+| |   | --> |   | |
+| #---#     #---# |
+|                 |
+#-----------------#
 `
 
 func main() {
@@ -26,8 +26,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmtFlt := func(f float64) string { return strconv.FormatFloat(f, 'f', -1, 64) }
 	var traverse func(elems []interface{}, indent string)
+	fmtFlt := func(f float64) string { return strconv.FormatFloat(f, 'f', -1, 64) }
 	fmt.Println("grid", grid.W, grid.H)
 	traverse = func(elems []interface{}, indent string) {
 		for _, elem := range elems {
