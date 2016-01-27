@@ -299,23 +299,29 @@ func (g *Grid) parseReference(lines [][]byte, startY int) error {
 		return fmt.Errorf("aa2d: cannot parse reference on line %d: %s",
 			startY, string(lines[startY]))
 	}
+	key := m[1]
+	jsn := m[2]
 	var ref interface{}
-	if err := json.Unmarshal([]byte(m[2]), &ref); err != nil {
+	if err := json.Unmarshal([]byte(jsn), &ref); err != nil {
 		return err
 	}
 	refMap, ok := ref.(map[string]interface{})
 	if !ok {
 		return fmt.Errorf("aa2d: reference on line %d is not a JSON object: %s",
-			startY, m[2])
+			startY, jsn)
 	}
 	if g.Refs == nil {
 		g.Refs = make(map[string]map[string]interface{})
 	}
-	if strings.HasPrefix(m[1], "_") {
-		g.Refs[m[1]] = refMap
+	if strings.HasPrefix(key, "_") {
+		if g.Refs[key] != nil {
+			return fmt.Errorf("aa2d: reference on line %d defined twice: %s",
+				startY, key)
+		}
+		g.Refs[key] = refMap
 	} else {
 		// TODO
-		errors.New("aa2d: non-grid references not implemented yet")
+		return errors.New("aa2d: non-grid references not implemented yet")
 	}
 	return nil
 }
