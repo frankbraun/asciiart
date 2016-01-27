@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
+var matchReference = regexp.MustCompile(`^\[(.+)\]:([ \t]+)(.*)$`)
 
 func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 	m := matchReference.FindStringSubmatch(string(lines[startY]))
@@ -18,10 +18,16 @@ func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 		return &ParseError{X: 0, Y: startY, Err: ErrRefParseError}
 	}
 	key := m[1]
-	jsn := m[2]
+	mid := m[2]
+	jsn := m[3]
 	var ref interface{}
 	if err := json.Unmarshal([]byte(jsn), &ref); err != nil {
-		return err
+		x := len(key) + 2 + len(mid)
+		se, ok := err.(*json.SyntaxError)
+		if ok {
+			x += int(se.Offset)
+		}
+		return &ParseError{X: x, Y: startY, Err: ErrRefJSONUnmarshal}
 	}
 	refMap, ok := ref.(map[string]interface{})
 	if !ok {

@@ -6,6 +6,7 @@ package aa2d
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -46,6 +47,7 @@ func (p *Parser) parseLine(
 	lines [][]byte,
 	startX, startY int,
 ) error {
+	fmt.Printf("parseLine x=%d, y=%d\n", startX, startY)
 	var l Line
 	l.X1 = float64(startX)
 	l.Y1 = float64(startY)
@@ -62,7 +64,7 @@ func (p *Parser) parseLine(
 	// follow line
 	x := startX
 	y := startY
-	cell = lines[y][y]
+	cell = lines[y][x]
 	// for arrows we need a head start
 	switch cell {
 	case '<':
@@ -73,9 +75,11 @@ func (p *Parser) parseLine(
 			if x < len(lines[y]) && (lines[y][x] == '|' || lines[y][x] == ':') {
 				break
 			} else if x+1 < len(lines[y]) && lines[y][x+1] == '\\' {
+				lines[y-1][x] = ' ' // nom nom nom
 				x++
 				break
 			} else if x > 0 && x-1 < len(lines[y]) && lines[y][x-1] == '/' {
+				lines[y-1][x] = ' ' // nom nom nom
 				x--
 				break
 			}
@@ -84,7 +88,11 @@ func (p *Parser) parseLine(
 forLoop:
 	for x >= 0 && y < len(lines) && x < len(lines[y]) {
 		cell := lines[y][x]
+		fmt.Printf("for-loop x=%d, y=%d, cell='%c'\n", x, y, cell)
 		lines[y][x] = ' ' // nom nom nom
+		// save last position
+		l.X2 = float64(x)
+		l.Y2 = float64(y)
 		// move
 		switch cell {
 		case '-':
@@ -113,11 +121,11 @@ forLoop:
 			return &ParseError{X: x, Y: y, Err: ErrLineLeftArrow}
 		}
 	}
-	l.X2 = float64(x)
-	l.Y2 = float64(y)
 	// check minimum length
-	if x == startX && y == startY {
-		return &ParseError{X: x, Y: y, Err: ErrLineTooShort}
+	if l.X1 == l.X2 && l.Y1 == l.Y2 {
+		return &ParseError{X: startX, Y: startY, Err: ErrLineTooShort}
 	}
+	// add line to parent
+	parent.addElem(&l)
 	return nil
 }

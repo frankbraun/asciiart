@@ -198,7 +198,6 @@ func testVectors() []vector {
 				},
 			},
 		},
-
 		{
 			aa: `
 #-----#
@@ -253,6 +252,340 @@ func testVectors() []vector {
 						},
 					},
 				},
+			},
+		},
+		{
+			aa: `--`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1: 0,
+						Y1: 0,
+						X2: 1,
+						Y2: 0,
+					},
+				},
+			},
+		},
+		{
+			aa: `==`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:     0,
+						Y1:     0,
+						X2:     1,
+						Y2:     0,
+						Dotted: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `=-`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:     0,
+						Y1:     0,
+						X2:     1,
+						Y2:     0,
+						Dotted: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `<-`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         0,
+						X2:         1,
+						Y2:         0,
+						ArrowStart: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `<=`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         0,
+						X2:         1,
+						Y2:         0,
+						ArrowStart: true,
+						Dotted:     true,
+					},
+				},
+			},
+		},
+		{
+			aa: `->`,
+			res: &Grid{
+				W: 3,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:       0,
+						Y1:       0,
+						X2:       1,
+						Y2:       0,
+						ArrowEnd: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `<=>`,
+			res: &Grid{
+				W: 4,
+				H: 2,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         0,
+						X2:         2,
+						Y2:         0,
+						ArrowStart: true,
+						ArrowEnd:   true,
+						Dotted:     true,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+|
+|
+`,
+			res: &Grid{
+				W: 2,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1: 0,
+						Y1: 1,
+						X2: 0,
+						Y2: 2,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+:
+:
+`,
+			res: &Grid{
+				W: 2,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1:     0,
+						Y1:     1,
+						X2:     0,
+						Y2:     2,
+						Dotted: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+^
+|
+`,
+			res: &Grid{
+				W: 2,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         1,
+						X2:         0,
+						Y2:         2,
+						ArrowStart: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+^
+:
+`,
+			res: &Grid{
+				W: 2,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         1,
+						X2:         0,
+						Y2:         2,
+						ArrowStart: true,
+						Dotted:     true,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+ /
+/
+`,
+			res: &Grid{
+				W: 3,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1: 1,
+						Y1: 1,
+						X2: 0,
+						Y2: 2,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+ ^
+/
+`,
+			res: &Grid{
+				W: 3,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1:         1,
+						Y1:         1,
+						X2:         0,
+						Y2:         2,
+						ArrowStart: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+\
+ \
+`,
+			res: &Grid{
+				W: 3,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1: 0,
+						Y1: 1,
+						X2: 1,
+						Y2: 2,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+^
+ \
+`,
+			res: &Grid{
+				W: 3,
+				H: 4,
+				Elems: []interface{}{
+					&Line{
+						X1:         0,
+						Y1:         1,
+						X2:         1,
+						Y2:         2,
+						ArrowStart: true,
+					},
+				},
+			},
+		},
+		{
+			aa: `>`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrRightArrow,
+			},
+		},
+		{
+			aa: `-<`,
+			res: &ParseError{
+				X:   1,
+				Y:   0,
+				Err: ErrLineLeftArrow,
+			},
+		},
+		{
+			aa: `-`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrLineTooShort,
+			},
+		},
+		{
+			aa: `[]`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrRefParseError,
+			},
+		},
+		{
+			aa: `[REF]: false`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrRefJSONObj,
+			},
+		},
+		{
+			aa: `
+[REF]: {"foo": "bar"}
+[REF]: {"foo": "baz"}
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   2,
+				Err: ErrRefTwice,
+			},
+		},
+		{
+			aa: `
+[_REF]: {"foo": "bar"}
+[_REF]: {"foo": "baz"}
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   2,
+				Err: ErrRefTwice,
+			},
+		},
+		{
+			aa: `[REF]: {`,
+			res: &ParseError{
+				X:   7,
+				Y:   0,
+				Err: ErrRefJSONUnmarshal,
 			},
 		},
 	}

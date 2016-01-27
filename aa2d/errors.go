@@ -47,6 +47,8 @@ var (
 	ErrRefParseError = errors.New("aa2d: cannot parse reference on line starting")
 	// ErrRefJSONObj is returned when a reference definition is not a JSON object.
 	ErrRefJSONObj = errors.New("aa2d: cannot parse reference JSON object on line starting")
+	// ErrRefJSONUnmarshal is returned when an error occured during JSON unmarshalling.
+	ErrRefJSONUnmarshal = errors.New("aa2d: cannot unmarshal JSON object")
 	// ErrRefTwice is returned when a reference was defined twice.
 	ErrRefTwice = errors.New("aa2d: reference defined twice on line starting")
 	// ErrRefMiddle is returned when a reference was defined in the middle of the document.
