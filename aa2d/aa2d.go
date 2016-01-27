@@ -7,7 +7,6 @@ package aa2d
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -24,6 +23,7 @@ const (
 type Parser struct {
 	xScale float64
 	yScale float64
+	refs   map[string]map[string]interface{}
 }
 
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
@@ -90,6 +90,7 @@ func NewParser() *Parser {
 	return &Parser{
 		xScale: XScale,
 		yScale: YScale,
+		refs:   make(map[string]map[string]interface{}),
 	}
 }
 
@@ -148,7 +149,7 @@ func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 		if len(line) > 0 {
 			switch line[0] {
 			case '[':
-				if err := g.parseReference(lines, y); err != nil {
+				if err := p.parseReference(g, lines, y); err != nil {
 					return err
 				}
 				continue
@@ -293,7 +294,7 @@ func (r *Rectangle) remove(lines [][]byte) {
 
 var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
 
-func (g *Grid) parseReference(lines [][]byte, startY int) error {
+func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 	m := matchReference.FindStringSubmatch(string(lines[startY]))
 	if m == nil {
 		return fmt.Errorf("aa2d: cannot parse reference on line %d: %s",
@@ -310,18 +311,21 @@ func (g *Grid) parseReference(lines [][]byte, startY int) error {
 		return fmt.Errorf("aa2d: reference on line %d is not a JSON object: %s",
 			startY, jsn)
 	}
-	if g.Refs == nil {
-		g.Refs = make(map[string]map[string]interface{})
-	}
 	if strings.HasPrefix(key, "_") {
+		if g.Refs == nil {
+			g.Refs = make(map[string]map[string]interface{})
+		}
 		if g.Refs[key] != nil {
 			return fmt.Errorf("aa2d: reference on line %d defined twice: %s",
 				startY, key)
 		}
 		g.Refs[key] = refMap
 	} else {
-		// TODO
-		return errors.New("aa2d: non-grid references not implemented yet")
+		if p.refs[key] != nil {
+			return fmt.Errorf("aa2d: reference on line %d defined twice: %s",
+				startY, key)
+		}
+		p.refs[key] = refMap
 	}
 	return nil
 }
