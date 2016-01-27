@@ -6,8 +6,6 @@ package aa2d
 
 import (
 	"bytes"
-	"encoding/json"
-	"regexp"
 	"strings"
 )
 
@@ -314,38 +312,4 @@ func (r *Rectangle) scale(p *Parser) {
 	r.Y = r.Y*p.yScale + p.yScale/2
 	r.W = r.W*p.xScale - p.xScale
 	r.H = r.H*p.yScale - p.yScale
-}
-
-var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
-
-func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
-	m := matchReference.FindStringSubmatch(string(lines[startY]))
-	if m == nil {
-		return &ParseError{X: 0, Y: startY, Err: ErrRefParseError}
-	}
-	key := m[1]
-	jsn := m[2]
-	var ref interface{}
-	if err := json.Unmarshal([]byte(jsn), &ref); err != nil {
-		return err
-	}
-	refMap, ok := ref.(map[string]interface{})
-	if !ok {
-		return &ParseError{X: 0, Y: startY, Err: ErrRefJSONObj}
-	}
-	if strings.HasPrefix(key, "_") {
-		if g.Refs == nil {
-			g.Refs = make(map[string]map[string]interface{})
-		}
-		if g.Refs[key] != nil {
-			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
-		}
-		g.Refs[key] = refMap
-	} else {
-		if p.refs[key] != nil {
-			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
-		}
-		p.refs[key] = refMap
-	}
-	return nil
 }
