@@ -581,13 +581,34 @@ func testVectors() []vector {
 			},
 		},
 		{
-			aa: `[REF]: {`,
+			aa: `[REF]: {`, // ' '
 			res: &ParseError{
 				X:   7,
 				Y:   0,
 				Err: ErrRefJSONUnmarshal,
 			},
 		},
+		{
+			aa: `[REF]:	{`, // '\t'
+			res: &ParseError{
+				X:   7,
+				Y:   0,
+				Err: ErrRefJSONUnmarshal,
+			},
+		},
+		/* TODO: fix test
+		   		{
+		   			aa: `
+		   [REF]: {}
+		   --
+		   `,
+		   			res: &ParseError{
+		   				X:   7,
+		   				Y:   0,
+		   				Err: ErrRefMiddle,
+		   			},
+		   		},
+		*/
 	}
 }
 
