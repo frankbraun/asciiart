@@ -33,7 +33,7 @@ Lines:
 
 Lines can be horizontal, vertical, or diagonal and can have arrows
 (<, >, ^, v) in one or two directions.
-Lines must be at least to cells long.
+Lines must be at least two cells long.
 
 Dotted lines:
 
@@ -44,6 +44,7 @@ Dotted lines:
 
 Lines can also be dotted by using (=) instead of (-) horizontally or by using
 (:) instead of (|) vertically.
+A line becomes dottes as soon as one cell on the line is dotted.
 Diagonal lines cannot be dotted.
 
 Polylines:

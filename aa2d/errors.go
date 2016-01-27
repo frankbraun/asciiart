@@ -51,6 +51,10 @@ var (
 	ErrRefTwice = errors.New("aa2d: reference defined twice on line starting")
 	// ErrRefMiddle is returned when a reference was defined in the middle of the document.
 	ErrRefMiddle = errors.New("aa2d: reference defined in the middle of document on line starting")
+	// ErrLineTooShort is returned when a line is too short.
+	ErrLineTooShort = errors.New("aa2d: line is too short")
+	// ErrLineLeftArrow is returned when an unexpected left error was encountered.
+	ErrLineLeftArrow = errors.New("aa2d: unexpected left error encountered")
 )
 
 // ParseError defines a ASCII art parsing error.

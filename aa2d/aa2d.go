@@ -48,18 +48,6 @@ type Rectangle struct {
 	Elems           []interface{} // contained elements
 }
 
-// The Line element.
-type Line struct {
-	X1         float64                // x-axis coordinate of the start of the line
-	Y1         float64                // y-axis coordinate of the start of the line
-	X2         float64                // x-axis coordinate of the end of the line
-	Y2         float64                // y-axis coordinate of the end of the line
-	ArrowStart bool                   // arrow at the start of the line
-	ArrowEnd   bool                   // arrow at the end of the line
-	Dotted     bool                   // line is dotted
-	Ref        map[string]interface{} // JSON reference of the line, if defined
-}
-
 // The Polyline element.
 type Polyline struct {
 	X      []float64              // x-axis coordinates of points on polyline
@@ -165,13 +153,6 @@ func removeEmptyTrailingLines(lines [][]byte) [][]byte {
 	}
 	return lines[:len(lines)-rem]
 }
-
-const (
-	lineChars   = `-|/\:=<>^v`
-	leftArrows  = `<^`
-	rightArrows = `>v`
-	dottedChars = `:=`
-)
 
 func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 	for ; y < h; y++ {
@@ -333,34 +314,6 @@ func (r *Rectangle) scale(p *Parser) {
 	r.Y = r.Y*p.yScale + p.yScale/2
 	r.W = r.W*p.xScale - p.xScale
 	r.H = r.H*p.yScale - p.yScale
-}
-
-// parseLine tries to parse a line starting at position (starX, startY).
-// Since the parsing runs from top to bottom and from left to right at this
-// stage we only have to consider 4 possible directions (starting from x):
-//
-//   x-
-//  /|\
-//
-func (p *Parser) parseLine(
-	parent elem,
-	lines [][]byte,
-	startX, startY int,
-) error {
-	var l Line
-	cell := string(lines[startY][startX])
-
-	switch {
-	case strings.ContainsAny(cell, leftArrows):
-		l.ArrowStart = true
-	case strings.ContainsAny(cell, rightArrows):
-		return &ParseError{X: startX, Y: startY, Err: ErrRightArrow}
-	}
-
-	// try to go to right
-	//if ylines[y]
-
-	return nil
 }
 
 var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)
