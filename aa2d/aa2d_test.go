@@ -261,10 +261,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1: 0,
-						Y1: 0,
-						X2: 1,
-						Y2: 0,
+						X1: 0.5,
+						Y1: 0.5,
+						X2: 1.5,
+						Y2: 0.5,
 					},
 				},
 			},
@@ -276,10 +276,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:     0,
-						Y1:     0,
-						X2:     1,
-						Y2:     0,
+						X1:     0.5,
+						Y1:     0.5,
+						X2:     1.5,
+						Y2:     0.5,
 						Dotted: true,
 					},
 				},
@@ -292,10 +292,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:     0,
-						Y1:     0,
-						X2:     1,
-						Y2:     0,
+						X1:     0.5,
+						Y1:     0.5,
+						X2:     1.5,
+						Y2:     0.5,
 						Dotted: true,
 					},
 				},
@@ -308,10 +308,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         0,
-						X2:         1,
-						Y2:         0,
+						X1:         0.5,
+						Y1:         0.5,
+						X2:         1.5,
+						Y2:         0.5,
 						ArrowStart: true,
 					},
 				},
@@ -324,10 +324,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         0,
-						X2:         1,
-						Y2:         0,
+						X1:         0.5,
+						Y1:         0.5,
+						X2:         1.5,
+						Y2:         0.5,
 						ArrowStart: true,
 						Dotted:     true,
 					},
@@ -341,10 +341,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:       0,
-						Y1:       0,
-						X2:       1,
-						Y2:       0,
+						X1:       0.5,
+						Y1:       0.5,
+						X2:       1.5,
+						Y2:       0.5,
 						ArrowEnd: true,
 					},
 				},
@@ -357,10 +357,10 @@ func testVectors() []vector {
 				H: 2,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         0,
-						X2:         2,
-						Y2:         0,
+						X1:         0.5,
+						Y1:         0.5,
+						X2:         2.5,
+						Y2:         0.5,
 						ArrowStart: true,
 						ArrowEnd:   true,
 						Dotted:     true,
@@ -378,10 +378,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1: 0,
-						Y1: 1,
-						X2: 0,
-						Y2: 2,
+						X1: 0.5,
+						Y1: 1.5,
+						X2: 0.5,
+						Y2: 2.5,
 					},
 				},
 			},
@@ -396,10 +396,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1:     0,
-						Y1:     1,
-						X2:     0,
-						Y2:     2,
+						X1:     0.5,
+						Y1:     1.5,
+						X2:     0.5,
+						Y2:     2.5,
 						Dotted: true,
 					},
 				},
@@ -415,10 +415,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         1,
-						X2:         0,
-						Y2:         2,
+						X1:         0.5,
+						Y1:         1.5,
+						X2:         0.5,
+						Y2:         2.5,
 						ArrowStart: true,
 					},
 				},
@@ -434,10 +434,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         1,
-						X2:         0,
-						Y2:         2,
+						X1:         0.5,
+						Y1:         1.5,
+						X2:         0.5,
+						Y2:         2.5,
 						ArrowStart: true,
 						Dotted:     true,
 					},
@@ -454,10 +454,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1: 1,
-						Y1: 1,
-						X2: 0,
-						Y2: 2,
+						X1: 1.5,
+						Y1: 1.5,
+						X2: 0.5,
+						Y2: 2.5,
 					},
 				},
 			},
@@ -472,10 +472,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1:         1,
-						Y1:         1,
-						X2:         0,
-						Y2:         2,
+						X1:         1.5,
+						Y1:         1.5,
+						X2:         0.5,
+						Y2:         2.5,
 						ArrowStart: true,
 					},
 				},
@@ -491,10 +491,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1: 0,
-						Y1: 1,
-						X2: 1,
-						Y2: 2,
+						X1: 0.5,
+						Y1: 1.5,
+						X2: 1.5,
+						Y2: 2.5,
 					},
 				},
 			},
@@ -509,10 +509,10 @@ func testVectors() []vector {
 				H: 4,
 				Elems: []interface{}{
 					&Line{
-						X1:         0,
-						Y1:         1,
-						X2:         1,
-						Y2:         2,
+						X1:         0.5,
+						Y1:         1.5,
+						X2:         1.5,
+						Y2:         2.5,
 						ArrowStart: true,
 					},
 				},
