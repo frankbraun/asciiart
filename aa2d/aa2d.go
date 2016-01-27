@@ -75,7 +75,6 @@ func NewParser() *Parser {
 	return &Parser{
 		xScale: XScale,
 		yScale: YScale,
-		refs:   make(map[string]map[string]interface{}),
 	}
 }
 
@@ -98,6 +97,7 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 // If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	var g Grid
+	p.refs = make(map[string]map[string]interface{}) // init/reset
 	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
 	lines = removeEmptyTrailingLines(lines)
 	for y, line := range lines {
