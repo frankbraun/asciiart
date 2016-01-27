@@ -122,6 +122,11 @@ const styleJSON = `
     "-fill": "white",
     "-stroke": "black",
     "-stroke-width": "2"
+  },
+  "line": {
+    "-fill": "none",
+    "-stroke": "black",
+    "-stroke-width": "2"
   }
 }`
 
@@ -135,17 +140,17 @@ func init() {
 	}
 }
 
-func rectStyle(blur bool) ([]string, error) {
-	paths, err := styleMap.ValuesForKey("rect")
+func getAttributes(key string) ([]string, error) {
+	paths, err := styleMap.ValuesForKey(key)
 	if err != nil {
 		return nil, err
 	}
 	if len(paths) > 1 {
-		return nil, errors.New("svg: just one rectangle style expected")
+		return nil, fmt.Errorf("svg: just one %s style expected", key)
 	}
 	p, ok := paths[0].(map[string]interface{})
 	if !ok {
-		return nil, errors.New("svg: could not cast rectangle map")
+		return nil, fmt.Errorf("svg: could not cast %s map", key)
 	}
 	var keys []string
 	for k := range p {
@@ -157,14 +162,30 @@ func rectStyle(blur bool) ([]string, error) {
 		}
 	}
 	sort.Strings(keys)
-	s := make([]string, len(keys)+1)
+	s := make([]string, len(keys))
 	for i, k := range keys {
 		s[i] = fmt.Sprintf("%s=%q", strings.TrimPrefix(k, "-"), p[k].(string))
 	}
+	return s, nil
+}
+
+func rectStyle(blur bool) ([]string, error) {
+	s, err := getAttributes("rect")
+	if err != nil {
+		return nil, err
+	}
 	if blur {
-		s[len(keys)] = `filter="url(#dsFilter)"`
+		s = append(s, `filter="url(#dsFilter)"`)
 	} else {
-		s[len(keys)] = `filter="url(#dsFilterNoBlur)"`
+		s = append(s, `filter="url(#dsFilterNoBlur)"`)
+	}
+	return s, nil
+}
+
+func lineStyle() ([]string, error) {
+	s, err := getAttributes("line")
+	if err != nil {
+		return nil, err
 	}
 	return s, nil
 }

@@ -26,6 +26,10 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	if err != nil {
 		return err
 	}
+	lineStyle, err := lineStyle()
+	if err != nil {
+		return err
+	}
 	s := svg.New(&buf) // generate SVG completely before we write it to w
 	s.Start(g.W, g.H)
 	s.Def()
@@ -34,7 +38,7 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	}
 	s.DefEnd()
 	// recursively draw elements
-	if err := drawElems(s, g.Elems, rectStyle); err != nil {
+	if err := drawElems(s, g.Elems, rectStyle, lineStyle); err != nil {
 		return err
 	}
 	s.End()
@@ -44,7 +48,11 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	return nil
 }
 
-func drawElems(s *svg.SVG, elems []interface{}, rectStyle []string) error {
+func drawElems(
+	s *svg.SVG,
+	elems []interface{},
+	rectStyle, lineStyle []string,
+) error {
 	for _, elem := range elems {
 		switch t := elem.(type) {
 		case *aa2d.Rectangle:
@@ -52,11 +60,11 @@ func drawElems(s *svg.SVG, elems []interface{}, rectStyle []string) error {
 				return err
 			}
 			// recursion
-			if err := drawElems(s, t.Elems, rectStyle); err != nil {
+			if err := drawElems(s, t.Elems, rectStyle, lineStyle); err != nil {
 				return err
 			}
 		case *aa2d.Line:
-			if err := drawLine(s, t); err != nil {
+			if err := drawLine(s, t, lineStyle); err != nil {
 				return err
 			}
 		case *aa2d.Polyline:
@@ -68,7 +76,7 @@ func drawElems(s *svg.SVG, elems []interface{}, rectStyle []string) error {
 				return err
 			}
 			// recursion
-			if err := drawElems(s, t.Elems, rectStyle); err != nil {
+			if err := drawElems(s, t.Elems, rectStyle, lineStyle); err != nil {
 				return err
 			}
 		case *aa2d.Textline:
@@ -87,7 +95,9 @@ func drawRectangle(s *svg.SVG, r *aa2d.Rectangle, style []string) error {
 	return nil
 }
 
-func drawLine(s *svg.SVG, l *aa2d.Line) error {
+func drawLine(s *svg.SVG, l *aa2d.Line, style []string) error {
+	// TODO: draw arrows, if necessary
+	s.Line(l.X1, l.Y1, l.X2, l.Y2, style...)
 	return nil
 }
 

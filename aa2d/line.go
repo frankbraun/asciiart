@@ -122,6 +122,11 @@ forLoop:
 	if l.X1 == l.X2 && l.Y1 == l.Y2 {
 		return &ParseError{X: startX, Y: startY, Err: ErrLineTooShort}
 	}
+	// scale
+	l.X1 = l.X1*p.xScale + p.xScale/2
+	l.Y1 = l.Y1*p.yScale + p.yScale/2
+	l.X2 = l.X2*p.xScale + p.xScale/2
+	l.Y2 = l.Y2*p.yScale + p.yScale/2
 	// add line to parent
 	parent.addElem(&l)
 	return nil
