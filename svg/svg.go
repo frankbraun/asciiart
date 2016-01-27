@@ -30,8 +30,8 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	if err != nil {
 		return err
 	}
-	s := svg.New(&buf) // generate SVG completely before we write it to w
-	s.Start(g.W, g.H)
+	s := svg.New(&buf)                  // generate complete SVG before writing
+	s.Start(g.W+g.XScale, g.H+g.YScale) // add extra space to sides for effects
 	s.Def()
 	if err := setFilter(s); err != nil {
 		return err

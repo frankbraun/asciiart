@@ -26,10 +26,12 @@ type Parser struct {
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
 // art which various elements.
 type Grid struct {
-	W     float64                           // size of grid in x-dimension (width)
-	H     float64                           // size of grid in y-dimension (height)
-	Refs  map[string]map[string]interface{} // JSON references
-	Elems []interface{}                     // list of elements on the grid
+	W      float64                           // size of grid in x-dimension (width)
+	H      float64                           // size of grid in y-dimension (height)
+	XScale float64                           // original scaling factor in x-dimension
+	YScale float64                           // original scaling factor in y-dimension
+	Refs   map[string]map[string]interface{} // JSON references
+	Elems  []interface{}                     // list of elements on the grid
 }
 
 // The Polyline element.
@@ -115,9 +117,8 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	}
 	g.W = p.xScale * float64(maxLen)
 	g.H = p.yScale * float64(len(lines))
-	// add some extra space at the side for effects
-	g.W += p.xScale
-	g.H += p.yScale
+	g.XScale = p.xScale
+	g.YScale = p.yScale
 	g.Elems = make([]interface{}, 0)
 	if err := p.parseContent(&g, lines, 0, 0, maxLen, len(lines)); err != nil {
 		return nil, err

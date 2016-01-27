@@ -142,8 +142,10 @@ func testVectors() []vector {
 #-#
 `,
 			res: &Grid{
-				W: 4,
-				H: 5,
+				W:      3,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Rectangle{
 						X: 0.5,
@@ -162,8 +164,10 @@ func testVectors() []vector {
 #-----#
 `,
 			res: &Grid{
-				W: 8,
-				H: 6,
+				W:      7,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Rectangle{
 						X: 0.5,
@@ -182,8 +186,10 @@ func testVectors() []vector {
 '-----'
 `,
 			res: &Grid{
-				W: 8,
-				H: 6,
+				W:      7,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Rectangle{
 						X:               0.5,
@@ -208,8 +214,10 @@ func testVectors() []vector {
 [_SVG]: {"blur": false}
 `,
 			res: &Grid{
-				W: 8,
-				H: 6,
+				W:      7,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
 				Refs: map[string]map[string]interface{}{
 					"_SVG": {
 						"blur": false,
@@ -234,8 +242,10 @@ func testVectors() []vector {
 #-----#
 `,
 			res: &Grid{
-				W: 8,
-				H: 7,
+				W:      7,
+				H:      6,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Rectangle{
 						X: 0.5,
@@ -257,8 +267,10 @@ func testVectors() []vector {
 		{
 			aa: `--`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1: 0.5,
@@ -272,8 +284,10 @@ func testVectors() []vector {
 		{
 			aa: `==`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:     0.5,
@@ -288,8 +302,10 @@ func testVectors() []vector {
 		{
 			aa: `=-`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:     0.5,
@@ -304,8 +320,10 @@ func testVectors() []vector {
 		{
 			aa: `<-`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
@@ -320,8 +338,10 @@ func testVectors() []vector {
 		{
 			aa: `<=`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
@@ -337,8 +357,10 @@ func testVectors() []vector {
 		{
 			aa: `->`,
 			res: &Grid{
-				W: 3,
-				H: 2,
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:       0.5,
@@ -353,8 +375,10 @@ func testVectors() []vector {
 		{
 			aa: `<=>`,
 			res: &Grid{
-				W: 4,
-				H: 2,
+				W:      3,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
@@ -374,8 +398,10 @@ func testVectors() []vector {
 |
 `,
 			res: &Grid{
-				W: 2,
-				H: 4,
+				W:      1,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1: 0.5,
@@ -392,8 +418,10 @@ func testVectors() []vector {
 :
 `,
 			res: &Grid{
-				W: 2,
-				H: 4,
+				W:      1,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:     0.5,
@@ -411,8 +439,10 @@ func testVectors() []vector {
 |
 `,
 			res: &Grid{
-				W: 2,
-				H: 4,
+				W:      1,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
@@ -430,8 +460,10 @@ func testVectors() []vector {
 :
 `,
 			res: &Grid{
-				W: 2,
-				H: 4,
+				W:      1,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
@@ -450,8 +482,10 @@ func testVectors() []vector {
 /
 `,
 			res: &Grid{
-				W: 3,
-				H: 4,
+				W:      2,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1: 1.5,
@@ -468,8 +502,10 @@ func testVectors() []vector {
 /
 `,
 			res: &Grid{
-				W: 3,
-				H: 4,
+				W:      2,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         1.5,
@@ -487,8 +523,10 @@ func testVectors() []vector {
  \
 `,
 			res: &Grid{
-				W: 3,
-				H: 4,
+				W:      2,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1: 0.5,
@@ -505,8 +543,10 @@ func testVectors() []vector {
  \
 `,
 			res: &Grid{
-				W: 3,
-				H: 4,
+				W:      2,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
 				Elems: []interface{}{
 					&Line{
 						X1:         0.5,
