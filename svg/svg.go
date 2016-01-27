@@ -33,10 +33,26 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 		return err
 	}
 	s.DefEnd()
-	for _, elem := range g.Elems {
+	// recursively draw elements
+	if err := drawElems(s, g.Elems, rectStyle); err != nil {
+		return err
+	}
+	s.End()
+	if _, err := io.Copy(w, &buf); err != nil {
+		return err
+	}
+	return nil
+}
+
+func drawElems(s *svg.SVG, elems []interface{}, rectStyle []string) error {
+	for _, elem := range elems {
 		switch t := elem.(type) {
 		case *aa2d.Rectangle:
 			if err := drawRectangle(s, t, rectStyle); err != nil {
+				return err
+			}
+			// recursion
+			if err := drawElems(s, t.Elems, rectStyle); err != nil {
 				return err
 			}
 		case *aa2d.Line:
@@ -51,6 +67,10 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 			if err := drawPolygon(s, t); err != nil {
 				return err
 			}
+			// recursion
+			if err := drawElems(s, t.Elems, rectStyle); err != nil {
+				return err
+			}
 		case *aa2d.Textline:
 			if err := drawTextline(s, t); err != nil {
 				return err
@@ -58,10 +78,6 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 		default:
 			return errors.New("svg: unknown type")
 		}
-	}
-	s.End()
-	if _, err := io.Copy(w, &buf); err != nil {
-		return err
 	}
 	return nil
 }
