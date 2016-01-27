@@ -20,7 +20,7 @@ func fatal(err error) {
 }
 
 func usage() {
-	fmt.Fprintln(os.Stderr, "usage: [arguments...]", os.Args[0])
+	fmt.Fprintf(os.Stderr, "usage: %s [arguments...]\n", os.Args[0])
 	flag.PrintDefaults()
 	os.Exit(1)
 }
