@@ -45,7 +45,7 @@ type Rectangle struct {
 	RoundUpperRight bool          // rounded upper-right corner
 	RoundLowerLeft  bool          // rounded lower-left corner
 	RoundLowerRight bool          // rounded lower-right corner
-	Ref             interface{}   // JSON reference of the rectangle, if def
+	Ref             interface{}   // JSON reference of the rectangle, if defined
 	Elems           []interface{} // contained elements
 }
 
