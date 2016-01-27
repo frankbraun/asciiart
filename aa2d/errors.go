@@ -39,6 +39,10 @@ var (
 	ErrNoRecLowLeftCorn = errors.New("aa2d: could not find lower left rectangle corner")
 	// ErrUnknownCharacter is returned when an unknown character was encountered.
 	ErrUnknownCharacter = errors.New("aa2d: unknown character encountered")
+	// ErrRightArrow is returned when an right arrow is encountered that doesn't make sense.
+	ErrRightArrow = errors.New("aa2d: right arrow doesn't make sense here")
+	// ErrLeftArrow is returned when an left arrow is encountered that doesn't make sense.
+	ErrLeftArrow = errors.New("aa2d: left arrow doesn't make sense here")
 )
 
 // ParseError defines a ASCII art parsing error.

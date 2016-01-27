@@ -167,6 +167,13 @@ func removeEmptyTrailingLines(lines [][]byte) [][]byte {
 	return lines[:len(lines)-rem]
 }
 
+const (
+	lineChars   = `-|/\:=<>^v`
+	leftArrows  = `<^`
+	rightArrows = `>v`
+	dottedChars = `:=`
+)
+
 func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 	for ; y < h; y++ {
 		line := lines[y]
@@ -181,11 +188,11 @@ func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 		for x := xo; x < w && x < len(line); x++ {
 			cell := line[x]
 			var roundUpperLeft bool
-			switch cell {
-			case '.':
+			switch {
+			case cell == '.':
 				roundUpperLeft = true
 				fallthrough
-			case '#':
+			case cell == '#':
 				r, err := p.parseRectangle(e, lines, x, y, roundUpperLeft)
 				if err != nil {
 					return err
@@ -199,7 +206,12 @@ func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 				// scale rectangle afterwards
 				r.scale(p)
 				goto innerLoop
-			case ' ':
+			case strings.ContainsAny(string(cell), lineChars):
+				err := p.parseLine(e, lines, x, y)
+				if err != nil {
+					return err
+				}
+			case cell == ' ':
 				continue
 			default:
 				return &ParseError{X: x, Y: y, Err: ErrUnknownCharacter}
@@ -323,6 +335,34 @@ func (r *Rectangle) scale(p *Parser) {
 	r.Y = r.Y*p.yScale + p.yScale/2
 	r.W = r.W*p.xScale - p.xScale
 	r.H = r.H*p.yScale - p.yScale
+}
+
+// parseLine tries to parse a line starting at position (starX, startY).
+// Since the parsing runs from top to bottom and from left to right at this
+// stage we only have to consider 4 possible directions (starting from x):
+//
+//   x-
+//  /|\
+//
+func (p *Parser) parseLine(
+	parent elem,
+	lines [][]byte,
+	startX, startY int,
+) error {
+	var l Line
+	cell := string(lines[startY][startX])
+
+	switch {
+	case strings.ContainsAny(cell, leftArrows):
+		l.ArrowStart = true
+	case strings.ContainsAny(cell, rightArrows):
+		return &ParseError{X: startX, Y: startY, Err: ErrRightArrow}
+	}
+
+	// try to go to right
+	//if ylines[y]
+
+	return nil
 }
 
 var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)

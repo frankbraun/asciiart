@@ -22,6 +22,7 @@ Rectangles:
 
 Rectangles can have 90 degree corners (#) or rounded corners (.) or (').
 The two corner types can be mixed.
+Rectangles must be at least three times three cells large.
 
 Lines:
 
@@ -32,6 +33,7 @@ Lines:
 
 Lines can be horizontal, vertical, or diagonal and can have arrows
 (<, >, ^, v) in one or two directions.
+Lines must be at least to cells long.
 
 Dotted lines:
 
@@ -41,7 +43,8 @@ Dotted lines:
   <=====>     :   :   v   :
 
 Lines can also be dotted by using (=) instead of (-) horizontally or by using
-(:) instead of (|) vertically. Diagonal lines can not be dotted.
+(:) instead of (|) vertically.
+Diagonal lines cannot be dotted.
 
 Polylines:
 
