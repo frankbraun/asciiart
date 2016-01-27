@@ -145,7 +145,7 @@ func testVectors() []vector {
 				W: 4,
 				H: 5,
 				Elems: []interface{}{
-					Rectangle{
+					&Rectangle{
 						X: 0.5,
 						Y: 1.5,
 						W: 2,
@@ -165,7 +165,7 @@ func testVectors() []vector {
 				W: 8,
 				H: 6,
 				Elems: []interface{}{
-					Rectangle{
+					&Rectangle{
 						X: 0.5,
 						Y: 1.5,
 						W: 6,
@@ -185,7 +185,7 @@ func testVectors() []vector {
 				W: 8,
 				H: 6,
 				Elems: []interface{}{
-					Rectangle{
+					&Rectangle{
 						X:               0.5,
 						Y:               1.5,
 						W:               6,
@@ -198,6 +198,7 @@ func testVectors() []vector {
 				},
 			},
 		},
+
 		{
 			aa: `
 #-----#
@@ -216,11 +217,40 @@ func testVectors() []vector {
 					},
 				},
 				Elems: []interface{}{
-					Rectangle{
+					&Rectangle{
 						X: 0.5,
 						Y: 1.5,
 						W: 6,
 						H: 3,
+					},
+				},
+			},
+		},
+		{
+			aa: `
+#-----#
+|#---#|
+||   ||
+|#---#|
+#-----#
+`,
+			res: &Grid{
+				W: 8,
+				H: 7,
+				Elems: []interface{}{
+					&Rectangle{
+						X: 0.5,
+						Y: 1.5,
+						W: 6,
+						H: 4,
+						Elems: []interface{}{
+							&Rectangle{
+								X: 1.5,
+								Y: 2.5,
+								W: 4,
+								H: 2,
+							},
+						},
 					},
 				},
 			},

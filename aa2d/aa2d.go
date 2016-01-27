@@ -93,6 +93,10 @@ func (g *Grid) addElem(e interface{}) {
 	g.Elems = append(g.Elems, e)
 }
 
+func (r *Rectangle) addElem(e interface{}) {
+	r.Elems = append(r.Elems, e)
+}
+
 // NewParser returns a new parser for two-dimensional hierarchical ASCII art.
 func NewParser() *Parser {
 	return &Parser{
@@ -132,19 +136,19 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 		}
 	}
 	lines = removeEmptyTrailingLines(lines)
-	var maxLen float64
+	var maxLen int
 	for _, line := range lines {
-		if float64(len(line)) > maxLen {
-			maxLen = float64(len(line))
+		if len(line) > maxLen {
+			maxLen = len(line)
 		}
 	}
-	g.W = p.xScale * maxLen
+	g.W = p.xScale * float64(maxLen)
 	g.H = p.yScale * float64(len(lines))
 	// add some extra space at the side for effects
 	g.W += p.xScale
 	g.H += p.yScale
 	g.Elems = make([]interface{}, 0)
-	if err := p.parseGrid(&g, lines); err != nil {
+	if err := p.parseContent(&g, lines, 0, 0, maxLen, len(lines)); err != nil {
 		return nil, err
 	}
 	return &g, nil
@@ -163,8 +167,9 @@ func removeEmptyTrailingLines(lines [][]byte) [][]byte {
 	return lines[:len(lines)-rem]
 }
 
-func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
-	for y, line := range lines {
+func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
+	for ; y < h; y++ {
+		line := lines[y]
 		if len(line) > 0 {
 			switch line[0] {
 			case '[':
@@ -173,17 +178,26 @@ func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 			}
 		}
 	innerLoop:
-		for x, cell := range line {
+		for x := xo; x < w && x < len(line); x++ {
+			cell := line[x]
+			var roundUpperLeft bool
 			switch cell {
-			case '#':
-				if err := p.parseRectangle(g, lines, x, y, false); err != nil {
-					return err
-				}
-				goto innerLoop
 			case '.':
-				if err := p.parseRectangle(g, lines, x, y, true); err != nil {
+				roundUpperLeft = true
+				fallthrough
+			case '#':
+				r, err := p.parseRectangle(e, lines, x, y, roundUpperLeft)
+				if err != nil {
 					return err
 				}
+				// recursion
+				err = p.parseContent(r, lines,
+					int(r.X)+1, int(r.Y)+1, int(r.W)-2, int(r.H)-2)
+				if err != nil {
+					return err
+				}
+				// scale rectangle afterwards
+				r.scale(p)
 				goto innerLoop
 			case ' ':
 				continue
@@ -200,9 +214,9 @@ func (p *Parser) parseRectangle(
 	lines [][]byte,
 	startX, startY int,
 	roundUpperLeft bool,
-) error {
+) (*Rectangle, error) {
 	if startX+1 == len(lines[startY]) || lines[startY][startX+1] != '-' {
-		return &ParseError{X: startX + 1, Y: startY, Err: ErrExpRecLine}
+		return nil, &ParseError{X: startX + 1, Y: startY, Err: ErrExpRecLine}
 	}
 	var r Rectangle
 	r.X = float64(startX)
@@ -224,11 +238,11 @@ loopRight:
 			found = true
 			break loopRight
 		default:
-			return &ParseError{X: x, Y: startY, Err: ErrExpRecLineOrUpCorn}
+			return nil, &ParseError{X: x, Y: startY, Err: ErrExpRecLineOrUpCorn}
 		}
 	}
 	if !found {
-		return &ParseError{X: x, Y: startY, Err: ErrNoRecUpRightCorn}
+		return nil, &ParseError{X: x, Y: startY, Err: ErrNoRecUpRightCorn}
 	}
 	// go down
 	y := startY + 1
@@ -236,7 +250,7 @@ loopRight:
 loopDown:
 	for ; y < len(lines); y++ {
 		if len(lines[y]) < x {
-			return &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
+			return nil, &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
 		}
 		switch lines[y][x] {
 		case '|':
@@ -249,11 +263,11 @@ loopDown:
 			found = true
 			break loopDown
 		default:
-			return &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
+			return nil, &ParseError{X: x, Y: y, Err: ErrExpRecLineOrLowCorn}
 		}
 	}
 	if !found {
-		return &ParseError{X: x, Y: y, Err: ErrNoRecLowRightCorn}
+		return nil, &ParseError{X: x, Y: y, Err: ErrNoRecLowRightCorn}
 	}
 	// go left
 	x--
@@ -262,7 +276,7 @@ loopDown:
 		case '-':
 			continue
 		default:
-			return &ParseError{X: x, Y: y, Err: ErrExpRecHorizontalLine}
+			return nil, &ParseError{X: x, Y: y, Err: ErrExpRecHorizontalLine}
 		}
 	}
 	switch lines[y][x] {
@@ -272,7 +286,7 @@ loopDown:
 	case '#':
 		break
 	default:
-		return &ParseError{X: 0, Y: y, Err: ErrExpRecLowCorn}
+		return nil, &ParseError{X: 0, Y: y, Err: ErrExpRecLowCorn}
 	}
 	// go up
 	y--
@@ -281,19 +295,14 @@ loopDown:
 		case '|':
 			continue
 		default:
-			return &ParseError{X: x, Y: y, Err: ErrExpRecVerticalLine}
+			return nil, &ParseError{X: x, Y: y, Err: ErrExpRecVerticalLine}
 		}
 	}
 	// remove rectangle
 	r.remove(lines)
-	// scale
-	r.X = r.X*p.xScale + p.xScale/2
-	r.Y = r.Y*p.yScale + p.yScale/2
-	r.W = r.W*p.xScale - p.xScale
-	r.H = r.H*p.yScale - p.yScale
 	// add rectangle to parent
-	parent.addElem(r)
-	return nil
+	parent.addElem(&r)
+	return &r, nil
 }
 
 func (r *Rectangle) remove(lines [][]byte) {
@@ -307,6 +316,13 @@ func (r *Rectangle) remove(lines [][]byte) {
 		lines[y][int(r.X)] = ' '
 		lines[y][int(r.X)+int(r.W)-1] = ' '
 	}
+}
+
+func (r *Rectangle) scale(p *Parser) {
+	r.X = r.X*p.xScale + p.xScale/2
+	r.Y = r.Y*p.yScale + p.yScale/2
+	r.W = r.W*p.xScale - p.xScale
+	r.H = r.H*p.yScale - p.yScale
 }
 
 var matchReference = regexp.MustCompile(`^\[(.+)\]: (.*)$`)

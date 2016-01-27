@@ -35,24 +35,24 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	s.DefEnd()
 	for _, elem := range g.Elems {
 		switch t := elem.(type) {
-		case aa2d.Rectangle:
-			if err := drawRectangle(s, &t, rectStyle); err != nil {
+		case *aa2d.Rectangle:
+			if err := drawRectangle(s, t, rectStyle); err != nil {
 				return err
 			}
-		case aa2d.Line:
-			if err := drawLine(s, &t); err != nil {
+		case *aa2d.Line:
+			if err := drawLine(s, t); err != nil {
 				return err
 			}
-		case aa2d.Polyline:
-			if err := drawPolyline(s, &t); err != nil {
+		case *aa2d.Polyline:
+			if err := drawPolyline(s, t); err != nil {
 				return err
 			}
-		case aa2d.Polygon:
-			if err := drawPolygon(s, &t); err != nil {
+		case *aa2d.Polygon:
+			if err := drawPolygon(s, t); err != nil {
 				return err
 			}
-		case aa2d.Textline:
-			if err := drawTextline(s, &t); err != nil {
+		case *aa2d.Textline:
+			if err := drawTextline(s, t); err != nil {
 				return err
 			}
 		default:
