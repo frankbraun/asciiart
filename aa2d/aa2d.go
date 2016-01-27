@@ -112,26 +112,24 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 // Parse parses asciiArt with parser p and returns a grid.
 // If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
-	var (
-		g      Grid
-		maxLen float64
-	)
+	var g Grid
 	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
+	lines = removeEmptyTrailingLines(lines)
+	for y, line := range lines {
+		if len(line) > 0 && line[0] == '[' {
+			if err := p.parseReference(&g, lines, y); err != nil {
+				return nil, err
+			}
+			lines[y] = nil // remove reference line
+		}
+	}
+	lines = removeEmptyTrailingLines(lines)
+	var maxLen float64
 	for _, line := range lines {
 		if float64(len(line)) > maxLen {
 			maxLen = float64(len(line))
 		}
 	}
-	// remove empty lines at the end
-	var rem int
-	for i := len(lines) - 1; i >= 0; i-- {
-		if len(lines[i]) == 0 {
-			rem++
-		} else {
-			break
-		}
-	}
-	lines = lines[:len(lines)-rem]
 	g.W = p.xScale * maxLen
 	g.H = p.yScale * float64(len(lines))
 	// add some extra space at the side for effects
@@ -144,15 +142,26 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	return &g, nil
 }
 
+func removeEmptyTrailingLines(lines [][]byte) [][]byte {
+	// remove empty lines at the end
+	var rem int
+	for i := len(lines) - 1; i >= 0; i-- {
+		if len(lines[i]) == 0 {
+			rem++
+		} else {
+			break
+		}
+	}
+	return lines[:len(lines)-rem]
+}
+
 func (p *Parser) parseGrid(g *Grid, lines [][]byte) error {
 	for y, line := range lines {
 		if len(line) > 0 {
 			switch line[0] {
 			case '[':
-				if err := p.parseReference(g, lines, y); err != nil {
-					return err
-				}
-				continue
+				return fmt.Errorf("aa2d: reference on line %d defined in the "+
+					"middle of document: %s", y, line)
 			}
 		}
 	innerLoop:

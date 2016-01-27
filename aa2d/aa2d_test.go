@@ -199,6 +199,33 @@ func testVectors() []vector {
 				},
 			},
 		},
+		{
+			aa: `
+#-----#
+|     |
+|     |
+#-----#
+
+[_SVG]: {"blur": false}
+`,
+			res: &Grid{
+				W: 8,
+				H: 6,
+				Refs: map[string]map[string]interface{}{
+					"_SVG": {
+						"blur": false,
+					},
+				},
+				Elems: []interface{}{
+					Rectangle{
+						X: 0.5,
+						Y: 1.5,
+						W: 6,
+						H: 3,
+					},
+				},
+			},
+		},
 	}
 }
 

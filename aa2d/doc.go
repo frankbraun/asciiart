@@ -81,7 +81,8 @@ by providing it at the edge of the element and defining the reference
 somewhere in the document at the start of a line (usually at the bottom).
 
 Reference names are set between square brackets ([ and ]) and defined by
-referencing the same name followed by a colon (:). After the colon a JSON object is expected.
+referencing the same name followed by a colon (:) at the end of the document.
+After the colon a JSON object is expected.
 
 Example:
 
