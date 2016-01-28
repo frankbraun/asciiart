@@ -22,6 +22,7 @@ The vision is to allow [model-oriented programming](https://github.com/imatix/gs
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -48,13 +49,14 @@ func main() {
 		log.Fatal(err)
 	}
 	var traverse func(elems []interface{}, indent string)
+	fmtJsn := func(j map[string]interface{}) string { b, _ := json.Marshal(j); return string(b) }
 	fmtFlt := func(f float64) string { return strconv.FormatFloat(f, 'f', -1, 64) }
 	fmt.Println("grid", grid.W, grid.H)
 	traverse = func(elems []interface{}, indent string) {
 		for _, elem := range elems {
 			switch t := elem.(type) {
 			case *asciiart.Rectangle:
-				fmt.Println(indent, "rect", t.X, t.Y, t.W, t.H)
+				fmt.Println(indent, "rect", t.X, t.Y, t.W, t.H, fmtJsn(t.Ref))
 				traverse(t.Elems, indent+"  ") // recursion
 			case *asciiart.Line:
 				fmt.Println(indent, "line", t.X1, t.Y1, t.X2, t.Y2)
@@ -69,7 +71,7 @@ func main() {
 				for i := 0; i < len(t.X); i++ {
 					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
-				fmt.Println(indent, "polygon", strings.Join(p, " "))
+				fmt.Println(indent, "polygon", strings.Join(p, " "), fmtJsn(t.Ref))
 				traverse(t.Elems, indent+"  ") // recursion
 			case *asciiart.Textline:
 				fmt.Println(indent, "textline", t.X, t.Y, t.Text)
@@ -86,10 +88,10 @@ func main() {
 
 ```
 grid 19 8
-  rect 0.5 1.5 18 6
-    rect 2.5 3.5 4 2
+  rect 0.5 1.5 18 6 null
+    rect 2.5 3.5 4 2 null
       textline 3.5 4.5 foo
-    rect 12.5 3.5 4 2
+    rect 12.5 3.5 4 2 null
       textline 13.5 4.5 bar
     line 8.5 4.5 10.5 4.5
 ```
