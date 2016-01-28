@@ -101,14 +101,15 @@ func drawLine(s *svg.SVG, l *aa2d.Line, style []string) error {
 	return nil
 }
 
-func drawPolyline(s *svg.SVG, pl *aa2d.Polyline) error {
+func drawPolyline(s *svg.SVG, p *aa2d.Polyline) error {
 	return nil
 }
 
-func drawPolygon(s *svg.SVG, pg *aa2d.Polygon) error {
+func drawPolygon(s *svg.SVG, p *aa2d.Polygon) error {
 	return nil
 }
 
-func drawTextline(s *svg.SVG, pg *aa2d.Textline) error {
+func drawTextline(s *svg.SVG, t *aa2d.Textline) error {
+	s.Text(t.X, t.Y, t.Text)
 	return nil
 }

@@ -1,5 +1,5 @@
 [comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
-## Parsing two-dimensional hierarchical ASCII art
+## Parsing hierarchical ASCII art for fun and profit
 
 ### API example
 
@@ -66,7 +66,7 @@ func main() {
 
 ```
 
-Output:
+### Output
 
 ```
 grid 19 8
