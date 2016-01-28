@@ -683,5 +683,5 @@ func TestSetScale(t *testing.T) {
 
 func TestParseError(t *testing.T) {
 	err := &ParseError{X: 1, Y: 2, Err: ErrExpRecLine}
-	assert.Equal(t, "aa2d: expected rectangle line (-) at (1,2)", err.Error())
+	assert.Equal(t, "asciiart: expected rectangle line (-) at (1,2)", err.Error())
 }
