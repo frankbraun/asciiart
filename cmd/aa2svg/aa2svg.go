@@ -10,7 +10,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/frankbraun/asciiart/aa2d"
+	"github.com/frankbraun/asciiart"
 	"github.com/frankbraun/asciiart/convert"
 )
 
@@ -38,9 +38,9 @@ func main() {
 	flag.StringVar(&out, "o", "", "path to output SVG file. If unspecified or "+
 		"set to '-', stdout is used")
 	flag.BoolVar(&force, "f", false, "overwrite existing output file")
-	flag.Float64Var(&xScale, "x", aa2d.XScale,
+	flag.Float64Var(&xScale, "x", asciiart.XScale,
 		"number of pixels to scale each unit on the x-axis to")
-	flag.Float64Var(&yScale, "y", aa2d.YScale,
+	flag.Float64Var(&yScale, "y", asciiart.YScale,
 		"number of pixels to scale each unit on the y-axis to")
 	flag.Parse()
 	if flag.NArg() != 0 {

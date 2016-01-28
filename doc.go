@@ -3,8 +3,7 @@
 // license that can be found in the LICENSE file.
 
 /*
-Package aa2d parses two-dimensional hierarchical ASCII art into an abstract
-representation.
+Package asciiart parses hierarchical ASCII art into an abstract representation.
 The abstract representation is a two-dimensional grid containing the top-level
 elements with contained elements attached to them.
 
@@ -102,4 +101,4 @@ element (the grid). For example:
 
   [_SVG]: {"blur": false}
 */
-package aa2d
+package asciiart

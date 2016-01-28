@@ -5,7 +5,8 @@ templates/exampleart.svg: templates/exampleart.tmpl
 	aa2svg -i $< -o $@ -f
 
 .PHONY: generate test
-generate: all templates/*.tmpl templates/exampleart.svg
+generate: templates/*.tmpl templates/exampleart.svg
+	go install -v github.com/frankbraun/asciiart/util/cmd/aatmpl
 	aatmpl
 
 test: all

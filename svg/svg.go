@@ -12,11 +12,11 @@ import (
 	"io"
 
 	"github.com/ajstarks/svgo/float"
-	"github.com/frankbraun/asciiart/aa2d"
+	"github.com/frankbraun/asciiart"
 )
 
 // Generate generates a SVG from grid g and writes it to w.
-func Generate(w io.Writer, g *aa2d.Grid) error {
+func Generate(w io.Writer, g *asciiart.Grid) error {
 	var buf bytes.Buffer
 	blur, ok := g.Refs["_SVG"]["blur"].(bool)
 	if !ok {
@@ -62,7 +62,7 @@ func drawElems(
 ) error {
 	for _, elem := range elems {
 		switch t := elem.(type) {
-		case *aa2d.Rectangle:
+		case *asciiart.Rectangle:
 			if err := drawRectangle(s, t, rectStyle); err != nil {
 				return err
 			}
@@ -72,15 +72,15 @@ func drawElems(
 			if err != nil {
 				return err
 			}
-		case *aa2d.Line:
+		case *asciiart.Line:
 			if err := drawLine(s, t, lineStyle); err != nil {
 				return err
 			}
-		case *aa2d.Polyline:
+		case *asciiart.Polyline:
 			if err := drawPolyline(s, t); err != nil {
 				return err
 			}
-		case *aa2d.Polygon:
+		case *asciiart.Polygon:
 			if err := drawPolygon(s, t); err != nil {
 				return err
 			}
@@ -90,7 +90,7 @@ func drawElems(
 			if err != nil {
 				return err
 			}
-		case *aa2d.Textline:
+		case *asciiart.Textline:
 			if err := drawTextline(s, t, textStyle, xScale, yScale); err != nil {
 				return err
 			}
@@ -101,28 +101,28 @@ func drawElems(
 	return nil
 }
 
-func drawRectangle(s *svg.SVG, r *aa2d.Rectangle, style []string) error {
+func drawRectangle(s *svg.SVG, r *asciiart.Rectangle, style []string) error {
 	s.Rect(r.X, r.Y, r.W, r.H, style...)
 	return nil
 }
 
-func drawLine(s *svg.SVG, l *aa2d.Line, style []string) error {
+func drawLine(s *svg.SVG, l *asciiart.Line, style []string) error {
 	// TODO: draw arrows, if necessary
 	s.Line(l.X1, l.Y1, l.X2, l.Y2, style...)
 	return nil
 }
 
-func drawPolyline(s *svg.SVG, p *aa2d.Polyline) error {
+func drawPolyline(s *svg.SVG, p *asciiart.Polyline) error {
 	return nil
 }
 
-func drawPolygon(s *svg.SVG, p *aa2d.Polygon) error {
+func drawPolygon(s *svg.SVG, p *asciiart.Polygon) error {
 	return nil
 }
 
 func drawTextline(
 	s *svg.SVG,
-	t *aa2d.Textline,
+	t *asciiart.Textline,
 	style []string,
 	xScale, yScale float64,
 ) error {

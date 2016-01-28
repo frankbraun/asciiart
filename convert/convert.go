@@ -10,7 +10,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/frankbraun/asciiart/aa2d"
+	"github.com/frankbraun/asciiart"
 	"github.com/frankbraun/asciiart/svg"
 )
 
@@ -23,7 +23,7 @@ func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale float64) error {
 	if err != nil {
 		return err
 	}
-	p := aa2d.NewParser()
+	p := asciiart.NewParser()
 	if err := p.SetScale(xScale, yScale); err != nil {
 		return err
 	}
