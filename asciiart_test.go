@@ -686,6 +686,21 @@ func testVectors() []vector {
 		{
 			aa: `
 #-----#
+|     |
+|     |
+#-----#
+
+[REF]: { "foo": "bar" }
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   6,
+				Err: ErrRefUnused,
+			},
+		},
+		{
+			aa: `
+#-----#
 |[REF]|
 |     |
 #-----#
@@ -706,6 +721,60 @@ func testVectors() []vector {
 						Ref: map[string]interface{}{
 							"foo": "bar",
 						},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+#----#
+|foo |
+#----#
+`,
+			res: &Grid{
+				W:      6,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Rectangle{
+						X: 0.5,
+						Y: 1.5,
+						W: 5,
+						H: 2,
+						Elems: []interface{}{
+							&Textline{
+								X:    1.5,
+								Y:    2.5,
+								Text: "foo",
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+foo#---#
+   |   |
+   #---#
+`,
+			res: &Grid{
+				W:      8,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Textline{
+						X:    0.5,
+						Y:    1.5,
+						Text: "foo",
+					},
+					&Rectangle{
+						X: 3.5,
+						Y: 1.5,
+						W: 4,
+						H: 2,
 					},
 				},
 			},
