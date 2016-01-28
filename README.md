@@ -33,12 +33,15 @@ import (
 
 var asciiArt = `
 #-----------------#
+|[REF]            |
 |                 |
 | #---#     #---# |
 | |foo| --> |bar| |
 | #---#     #---# |
 |                 |
 #-----------------#
+
+[REF]: {"note":"outer"}
 `
 
 func main() {
@@ -87,13 +90,13 @@ func main() {
 #### Output
 
 ```
-grid 19 8
-  rect 0.5 1.5 18 6 null
-    rect 2.5 3.5 4 2 null
-      textline 3.5 4.5 foo
-    rect 12.5 3.5 4 2 null
-      textline 13.5 4.5 bar
-    line 8.5 4.5 10.5 4.5
+grid 19 9
+  rect 0.5 1.5 18 7 {"note":"outer"}
+    rect 2.5 4.5 4 2 null
+      textline 3.5 5.5 foo
+    rect 12.5 4.5 4 2 null
+      textline 13.5 5.5 bar
+    line 8.5 5.5 10.5 5.5
 ```
 
 
