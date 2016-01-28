@@ -127,6 +127,11 @@ const styleJSON = `
     "-fill": "none",
     "-stroke": "black",
     "-stroke-width": "2"
+  },
+  "text": {
+    "-fill": "black",
+    "-stroke": "none",
+    "-font-family": "Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace"
   }
 }`
 
@@ -187,6 +192,17 @@ func lineStyle() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	return s, nil
+}
+
+func textStyle(yScale float64) ([]string, error) {
+	s, err := getAttributes("text")
+	if err != nil {
+		return nil, err
+	}
+	// set font size "empirically", inspired by:
+	// https://github.com/dhobsd/asciitosvg/blob/05f2ac06918247a79561b026a6a8011a64a98317/ASCIIToSVG.php#L1729-L1741
+	s = append(s, fmt.Sprintf("font-size=\"%fpx\"", 0.95*yScale))
 	return s, nil
 }
 

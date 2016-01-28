@@ -30,6 +30,10 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	if err != nil {
 		return err
 	}
+	textStyle, err := textStyle(g.YScale)
+	if err != nil {
+		return err
+	}
 	s := svg.New(&buf)                  // generate complete SVG before writing
 	s.Start(g.W+g.XScale, g.H+g.YScale) // add extra space to sides for effects
 	s.Def()
@@ -38,7 +42,9 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 	}
 	s.DefEnd()
 	// recursively draw elements
-	if err := drawElems(s, g.Elems, rectStyle, lineStyle); err != nil {
+	err = drawElems(s, g.Elems, rectStyle, lineStyle, textStyle,
+		g.XScale, g.YScale)
+	if err != nil {
 		return err
 	}
 	s.End()
@@ -51,7 +57,8 @@ func Generate(w io.Writer, g *aa2d.Grid) error {
 func drawElems(
 	s *svg.SVG,
 	elems []interface{},
-	rectStyle, lineStyle []string,
+	rectStyle, lineStyle, textStyle []string,
+	xScale, yScale float64,
 ) error {
 	for _, elem := range elems {
 		switch t := elem.(type) {
@@ -60,7 +67,9 @@ func drawElems(
 				return err
 			}
 			// recursion
-			if err := drawElems(s, t.Elems, rectStyle, lineStyle); err != nil {
+			err := drawElems(s, t.Elems, rectStyle, lineStyle, textStyle,
+				xScale, yScale)
+			if err != nil {
 				return err
 			}
 		case *aa2d.Line:
@@ -76,11 +85,13 @@ func drawElems(
 				return err
 			}
 			// recursion
-			if err := drawElems(s, t.Elems, rectStyle, lineStyle); err != nil {
+			err := drawElems(s, t.Elems, rectStyle, lineStyle, textStyle,
+				xScale, yScale)
+			if err != nil {
 				return err
 			}
 		case *aa2d.Textline:
-			if err := drawTextline(s, t); err != nil {
+			if err := drawTextline(s, t, textStyle, xScale, yScale); err != nil {
 				return err
 			}
 		default:
@@ -109,7 +120,14 @@ func drawPolygon(s *svg.SVG, p *aa2d.Polygon) error {
 	return nil
 }
 
-func drawTextline(s *svg.SVG, t *aa2d.Textline) error {
-	s.Text(t.X, t.Y, t.Text)
+func drawTextline(
+	s *svg.SVG,
+	t *aa2d.Textline,
+	style []string,
+	xScale, yScale float64,
+) error {
+	// use "magic numbers" inspired by:
+	// https://github.com/dhobsd/asciitosvg/blob/05f2ac06918247a79561b026a6a8011a64a98317/ASCIIToSVG.php#L1757-L1758
+	s.Text(t.X-0.6*xScale, t.Y+0.3*yScale, t.Text, style...)
 	return nil
 }

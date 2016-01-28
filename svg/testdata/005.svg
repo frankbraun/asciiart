@@ -17,5 +17,5 @@
 </filter>
 </defs>
 <rect x="4.50" y="8.00" width="90.00" height="64.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
-<text x="22.50" y="40.00" >foo box</text>
+<text x="17.10" y="44.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >foo box</text>
 </svg>
