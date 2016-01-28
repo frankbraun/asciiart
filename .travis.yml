@@ -5,5 +5,6 @@ install:
   - go get -v github.com/golang/lint/golint
   - go get -v github.com/ajstarks/svgo
   - go get -v github.com/clbanning/mxj
+  - go get -v github.com/stretchr/testify
 script:
   - ./test.sh
