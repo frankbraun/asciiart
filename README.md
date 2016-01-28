@@ -1,6 +1,8 @@
 [comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
 ## Parsing hierarchical ASCII art for fun and profit
 
+This is **alpha** software and the API is still in flux.
+
 ### API example
 
 ```go
