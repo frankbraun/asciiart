@@ -79,3 +79,8 @@ grid 19 8
       textline 13.5 4.5 bar
     line 8.5 4.5 10.5 4.5
 ```
+
+### Credits
+
+This package was inspired by [ASCIIToSVG](https://github.com/dhobsd/asciitosvg/), the ASCII to SVG converter used to render the graphics in the
+[ZeroMQ guide](http://zguide.zeromq.org/).
