@@ -1,4 +1,7 @@
-Example:
+[comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
+## Parsing two-dimensional hierarchical ASCII art
+
+### API example
 
 ```go
 package main
@@ -16,7 +19,7 @@ var asciiArt = `
 #-----------------#
 |                 |
 | #---#     #---# |
-| |   | --> |   | |
+| |foo| --> |bar| |
 | #---#     #---# |
 |                 |
 #-----------------#
@@ -60,15 +63,8 @@ func main() {
 	}
 	traverse(grid.Elems, " ")
 }
-```
 
+```
 
 Output:
 
-```
-grid 19 8
-  rect 0.5 1.5 18 6
-    rect 2.5 3.5 4 2
-    rect 12.5 3.5 4 2
-    line 8.5 4.5 10.5 4.5
-```

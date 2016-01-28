@@ -57,5 +57,18 @@ func aatmplMain() error {
 		return err
 	}
 
+	// generate README.md
+	fp, err = os.Create("README.md")
+	if err != nil {
+		return err
+	}
+	defer fp.Close()
+	err = tmpl.ExecuteTemplate(fp, "readme.tmpl", map[string]string{
+		"MainFunc": "main()",
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
