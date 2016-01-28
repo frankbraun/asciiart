@@ -11,12 +11,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/frankbraun/asciiart/aa2d"
+	"github.com/frankbraun/asciiart"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGenerate(t *testing.T) {
-	p := aa2d.NewParser()
+	p := asciiart.NewParser()
 	fis, err := ioutil.ReadDir("testdata")
 	assert.NoError(t, err)
 	for _, fi := range fis {

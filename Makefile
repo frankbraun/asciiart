@@ -10,4 +10,4 @@ generate: templates/*.tmpl templates/exampleart.svg
 	aatmpl
 
 test: all
-	go test -v github.com/frankbraun/asciiart/aa2d
+	go test -v github.com/frankbraun/asciiart
