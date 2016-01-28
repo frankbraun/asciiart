@@ -37,10 +37,9 @@ type Grid struct {
 
 // The Polyline element.
 type Polyline struct {
-	X      []float64              // x-axis coordinates of points on polyline
-	Y      []float64              // y-axis coordinates of points on polyline
-	Dotted []bool                 // polyline segment is dotted (len(Dotted) == len(X)-1)
-	Ref    map[string]interface{} // JSON reference of the polyline, if defined
+	X      []float64 // x-axis coordinates of points on polyline
+	Y      []float64 // y-axis coordinates of points on polyline
+	Dotted []bool    // polyline segment is dotted (len(Dotted) == len(X)-1)
 }
 
 // The Polygon element.

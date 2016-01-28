@@ -6,16 +6,16 @@ package asciiart
 
 // The Rectangle element.
 type Rectangle struct {
-	X               float64       // x-axis coordinate
-	Y               float64       // y-axis coordinate
-	W               float64       // width of rectangle
-	H               float64       // height of rectangle
-	RoundUpperLeft  bool          // rounded upper-left corner
-	RoundUpperRight bool          // rounded upper-right corner
-	RoundLowerLeft  bool          // rounded lower-left corner
-	RoundLowerRight bool          // rounded lower-right corner
-	Ref             interface{}   // JSON reference of the rectangle, if defined
-	Elems           []interface{} // contained elements
+	X               float64                // x-axis coordinate
+	Y               float64                // y-axis coordinate
+	W               float64                // width of rectangle
+	H               float64                // height of rectangle
+	RoundUpperLeft  bool                   // rounded upper-left corner
+	RoundUpperRight bool                   // rounded upper-right corner
+	RoundLowerLeft  bool                   // rounded lower-left corner
+	RoundLowerRight bool                   // rounded lower-right corner
+	Ref             map[string]interface{} // JSON reference of the rectangle, if defined
+	Elems           []interface{}          // contained elements
 }
 
 func (p *Parser) parseRectangle(
