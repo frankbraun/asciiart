@@ -6,6 +6,7 @@ package aa2d
 
 import (
 	"bytes"
+	"errors"
 	"strings"
 )
 
@@ -49,13 +50,6 @@ type Polygon struct {
 	Dotted []bool                 // polygon segment is dotted (len(Dotted) == len(X))
 	Ref    map[string]interface{} // JSON reference of the polygon, if defined
 	Elems  []interface{}          // contained elements
-}
-
-// The Textline element.
-type Textline struct {
-	X    float64 // x-axis coordinate of the start of the text
-	Y    float64 // y-axis coordinate of the start of the text
-	Text string  // the actual text string
 }
 
 type elem interface {
@@ -139,8 +133,8 @@ func removeEmptyTrailingLines(lines [][]byte) [][]byte {
 	return lines[:len(lines)-rem]
 }
 
-func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
-	for ; y < h; y++ {
+func (p *Parser) parseContent(e elem, lines [][]byte, x0, y0, w, h int) error {
+	for y := y0; y < y0+h; y++ {
 		line := lines[y]
 		if len(line) > 0 {
 			switch line[0] {
@@ -149,7 +143,7 @@ func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 			}
 		}
 	innerLoop:
-		for x := xo; x < w && x < len(line); x++ {
+		for x := x0; x < x0+w && x < len(line); x++ {
 			cell := line[x]
 			var roundUpperLeft bool
 			switch {
@@ -175,10 +169,16 @@ func (p *Parser) parseContent(e elem, lines [][]byte, xo, y, w, h int) error {
 				if err != nil {
 					return err
 				}
-			case cell == ' ':
+			case cell == '+':
+				// TODO: polyline parsing
+				return errors.New("aa2g: '+' not implemented yet")
+			case cell == ' ' || cell == '\t' || cell == '\r':
 				continue
 			default:
-				return &ParseError{X: x, Y: y, Err: ErrUnknownCharacter}
+				err := p.parseTextline(e, lines, x, y)
+				if err != nil {
+					return err
+				}
 			}
 		}
 	}

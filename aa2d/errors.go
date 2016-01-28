@@ -37,8 +37,6 @@ var (
 	ErrNoRecLowRightCorn = errors.New("aa2d: could not find lower right rectangle corner")
 	// ErrNoRecLowLeftCorn is returned when the lower left corner of a rectangle could not be found.
 	ErrNoRecLowLeftCorn = errors.New("aa2d: could not find lower left rectangle corner")
-	// ErrUnknownCharacter is returned when an unknown character was encountered.
-	ErrUnknownCharacter = errors.New("aa2d: unknown character encountered")
 	// ErrRightArrow is returned when an right arrow is encountered that doesn't make sense.
 	ErrRightArrow = errors.New("aa2d: right arrow doesn't make sense here")
 	// ErrLeftArrow is returned when an left arrow is encountered that doesn't make sense.

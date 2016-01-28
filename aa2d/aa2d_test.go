@@ -21,10 +21,18 @@ func testVectors() []vector {
 			aa: `
 ?
 `,
-			res: &ParseError{
-				X:   0,
-				Y:   1,
-				Err: ErrUnknownCharacter,
+			res: &Grid{
+				W:      1,
+				H:      2,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Textline{
+						X:    0.5,
+						Y:    1.5,
+						Text: "?",
+					},
+				},
 			},
 		},
 		{
