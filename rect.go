@@ -107,14 +107,14 @@ loopDown:
 			return nil, &ParseError{X: x, Y: y, Err: ErrExpRecVerticalLine}
 		}
 	}
-	// remove rectangle
-	r.remove(lines)
-	// add rectangle to parent
-	parent.addElem(&r)
 	// try to parse reference
 	if err := r.parseReference(p, lines); err != nil {
 		return nil, err
 	}
+	// remove rectangle
+	r.remove(lines)
+	// add rectangle to parent
+	parent.addElem(&r)
 	return &r, nil
 }
 
@@ -159,6 +159,7 @@ func (r *Rectangle) parseReference(p *Parser, lines [][]byte) error {
 				for i := int(r.X) + 1; i <= x; i++ {
 					lines[y][i] = ' ' // nom nom nom
 				}
+				return nil
 			}
 		}
 	}

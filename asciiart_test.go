@@ -644,6 +644,72 @@ func testVectors() []vector {
 				Err: ErrRefJSONUnmarshal,
 			},
 		},
+		{
+			aa: `
+#-----#
+|[    |
+|     |
+#-----#
+`,
+			res: &ParseError{
+				X:   6,
+				Y:   2,
+				Err: ErrRefMissingBracket,
+			},
+		},
+		{
+			aa: `
+#-----#
+|[]   |
+|     |
+#-----#
+`,
+			res: &ParseError{
+				X:   2,
+				Y:   2,
+				Err: ErrRefKeyEmpty,
+			},
+		},
+		{
+			aa: `
+#-----#
+|[UN] |
+|     |
+#-----#
+`,
+			res: &ParseError{
+				X:   2,
+				Y:   2,
+				Err: ErrRefKeyUndefined,
+			},
+		},
+		{
+			aa: `
+#-----#
+|[REF]|
+|     |
+#-----#
+
+[REF]: { "foo": "bar" }
+`,
+			res: &Grid{
+				W:      7,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Rectangle{
+						X: 0.5,
+						Y: 1.5,
+						W: 6,
+						H: 3,
+						Ref: map[string]interface{}{
+							"foo": "bar",
+						},
+					},
+				},
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `
