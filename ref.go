@@ -34,6 +34,7 @@ func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 		return &ParseError{X: 0, Y: startY, Err: ErrRefJSONObj}
 	}
 	if strings.HasPrefix(key, "_") {
+		// global reference -> attach to grid
 		if g.Refs == nil {
 			g.Refs = make(map[string]map[string]interface{})
 		}
@@ -42,6 +43,7 @@ func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 		}
 		g.Refs[key] = refMap
 	} else {
+		// local reference -> store with parser for further processing
 		if p.refs[key] != nil {
 			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
 		}
