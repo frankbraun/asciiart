@@ -10,16 +10,32 @@ This is **alpha** software and the API is still in flux.
 {{template "exampleprog.tmpl" .}}```
 
 
-### Output
+#### Output
 
 ```
 {{.Output}}```
 
 
-## Converting to SVG with `aa2svg`
+### Converting to SVG with `aa2svg`
 
 This package also contains a tool `aa2svg` which uses the abstract
-representation delivered by the ASCII parser to generate SVGs like this:
+representation delivered by the ASCII parser to generate SVGs.
+
+
+#### Installation
+
+```
+go get -v github.com/frankbraun/asciiart/cmd/aa2svg
+```
+
+
+#### Usage
+
+```
+{{.Usage}}```
+
+
+#### Example output
 ![Example SVG](https://rawgit.com/frankbraun/asciiart/master/templates/exampleart.svg)
 
 

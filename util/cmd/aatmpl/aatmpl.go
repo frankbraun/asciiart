@@ -75,6 +75,7 @@ func aatmplMain() error {
 	err = tmpl.ExecuteTemplate(fp, "readme.tmpl", map[string]string{
 		"MainFunc": "main()",
 		"Output":   output,
+		"Usage":    getUsage(),
 	})
 	if err != nil {
 		return err
@@ -92,4 +93,12 @@ func runExample(example string) (string, error) {
 		return "", err
 	}
 	return buf.String(), nil
+}
+
+func getUsage() string {
+	cmd := exec.Command("aa2svg", "-h")
+	var buf bytes.Buffer
+	cmd.Stderr = &buf
+	cmd.Run() // ignore the error code (should be 2)
+	return buf.String()
 }

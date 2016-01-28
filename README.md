@@ -70,7 +70,7 @@ func main() {
 ```
 
 
-### Output
+#### Output
 
 ```
 grid 19 8
@@ -83,10 +83,36 @@ grid 19 8
 ```
 
 
-## Converting to SVG with `aa2svg`
+### Converting to SVG with `aa2svg`
 
 This package also contains a tool `aa2svg` which uses the abstract
-representation delivered by the ASCII parser to generate SVGs like this:
+representation delivered by the ASCII parser to generate SVGs.
+
+
+#### Installation
+
+```
+go get -v github.com/frankbraun/asciiart/cmd/aa2svg
+```
+
+
+#### Usage
+
+```
+Usage of aa2svg:
+  -f	overwrite existing output file
+  -i string
+    	path to input text file. If unspecified or set to '-', stdin is used
+  -o string
+    	path to output SVG file. If unspecified or set to '-', stdout is used
+  -x float
+    	number of pixels to scale each unit on the x-axis to (default 9)
+  -y float
+    	number of pixels to scale each unit on the y-axis to (default 16)
+```
+
+
+#### Example output
 ![Example SVG](https://rawgit.com/frankbraun/asciiart/master/templates/exampleart.svg)
 
 
