@@ -18,8 +18,8 @@
 </defs>
 <rect x="4.50" y="24.00" width="162.00" height="96.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 <rect x="22.50" y="56.00" width="36.00" height="32.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
-<text x="31.50" y="72.00" >foo</text>
+<text x="26.10" y="76.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >foo</text>
 <rect x="112.50" y="56.00" width="36.00" height="32.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
-<text x="121.50" y="72.00" >bar</text>
+<text x="116.10" y="76.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >bar</text>
 <line x1="76.50" y1="72.00" x2="94.50" y2="72.00" fill="none" stroke="black" stroke-width="2" />
 </svg>
