@@ -17,7 +17,7 @@ const (
 	YScale = 16
 )
 
-// A Parser for two-dimensional hierarchical ASCII art.
+// A Parser for hierarchical ASCII art.
 type Parser struct {
 	xScale  float64               // scaling factor in x-dimension
 	yScale  float64               // scaling factor in y-dimension
@@ -30,8 +30,8 @@ type reference struct {
 	ref map[string]interface{} // the actual reference
 }
 
-// A Grid is an abstract representation of two-dimensional hierarchical ASCII
-// art which various elements.
+// A Grid is an abstract representation of hierarchical ASCII art which
+// various elements.
 type Grid struct {
 	W      float64                           // size of grid in x-dimension (width)
 	H      float64                           // size of grid in y-dimension (height)
@@ -69,7 +69,7 @@ func (r *Rectangle) addElem(e interface{}) {
 	r.Elems = append(r.Elems, e)
 }
 
-// NewParser returns a new parser for two-dimensional hierarchical ASCII art.
+// NewParser returns a new parser for hierarchical ASCII art.
 func NewParser() *Parser {
 	return &Parser{
 		xScale: XScale,
