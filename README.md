@@ -3,6 +3,7 @@
 
 This is **alpha** software and the API is still in flux.
 
+
 ### API example
 
 ```go
@@ -68,6 +69,7 @@ func main() {
 
 ```
 
+
 ### Output
 
 ```
@@ -79,6 +81,14 @@ grid 19 8
       textline 13.5 4.5 bar
     line 8.5 4.5 10.5 4.5
 ```
+
+
+## Converting to SVG
+
+The tool `aa2svg` uses abstract representation delivered by the ASCII parser to generate SVGs like this:
+
+![Example SVG](https://rawgit.com/frankbraun/asciiart/master/templates/exampleart.svg)
+
 
 ### Credits
 
