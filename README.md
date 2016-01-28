@@ -134,3 +134,9 @@ Usage of aa2svg:
 
 This package was inspired by [ASCIIToSVG](https://github.com/dhobsd/asciitosvg/), the ASCII to SVG converter used to render the graphics in the
 [ZeroMQ guide](http://zguide.zeromq.org/).
+
+
+### Open research question
+
+How does one formally define a grammar for two-dimensional ASCII art?
+ENBF doesn't seem to be up for the job...
