@@ -33,6 +33,8 @@ forLoop:
 				break forLoop
 			}
 			space = true
+		default:
+			space = false
 		}
 	}
 	if space {
