@@ -111,6 +111,10 @@ loopDown:
 	r.remove(lines)
 	// add rectangle to parent
 	parent.addElem(&r)
+	// try to parse reference
+	if err := r.parseReference(p, lines); err != nil {
+		return nil, err
+	}
 	return &r, nil
 }
 
@@ -132,4 +136,31 @@ func (r *Rectangle) scale(p *Parser) {
 	r.Y = r.Y*p.yScale + p.yScale/2
 	r.W = r.W*p.xScale - p.xScale
 	r.H = r.H*p.yScale - p.yScale
+}
+
+func (r *Rectangle) parseReference(p *Parser, lines [][]byte) error {
+	if lines[int(r.Y)+1][int(r.X)+1] == '[' {
+		y := int(r.Y) + 1
+		line := lines[y]
+		for x := int(r.X) + 2; ; x++ {
+			switch line[x] {
+			case '|':
+				return &ParseError{X: x, Y: y, Err: ErrRefMissingBracket}
+			case ']':
+				key := string(line[int(r.X)+2 : x])
+				if key == "" {
+					return &ParseError{X: x, Y: y, Err: ErrRefKeyEmpty}
+				}
+				if p.refs[key] == nil {
+					return &ParseError{X: int(r.X) + 2, Y: y, Err: ErrRefKeyUndefined}
+				}
+				r.Ref = p.refs[key]
+				p.refUsed[key] = true
+				for i := int(r.X) + 1; i <= x; i++ {
+					lines[y][i] = ' ' // nom nom nom
+				}
+			}
+		}
+	}
+	return nil
 }

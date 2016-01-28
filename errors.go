@@ -51,6 +51,12 @@ var (
 	ErrRefTwice = errors.New("asciiart: reference defined twice on line starting")
 	// ErrRefMiddle is returned when a reference was defined in the middle of the document.
 	ErrRefMiddle = errors.New("asciiart: reference defined in the middle of document on line starting")
+	// ErrRefMissingBracket is returned when the closing bracket of a reference is missing.
+	ErrRefMissingBracket = errors.New("asciiart: closing bracket (]) of reference is missing")
+	// ErrRefKeyEmpty is returned when a reference key is empty.
+	ErrRefKeyEmpty = errors.New("asciiart: reference key is empty")
+	// ErrRefKeyUndefined is returned when a reference key is undefined.
+	ErrRefKeyUndefined = errors.New("asciiart: reference key is undefined")
 	// ErrLineTooShort is returned when a line is too short.
 	ErrLineTooShort = errors.New("asciiart: line is too short")
 	// ErrLineLeftArrow is returned when an unexpected left error was encountered.

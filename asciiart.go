@@ -19,9 +19,10 @@ const (
 
 // A Parser for two-dimensional hierarchical ASCII art.
 type Parser struct {
-	xScale float64
-	yScale float64
-	refs   map[string]map[string]interface{}
+	xScale  float64                           // scaling factor in x-dimension
+	yScale  float64                           // scaling factor in y-dimension
+	refs    map[string]map[string]interface{} // JSON references for non-grid elements
+	refUsed map[string]bool                   // records if given JSON reference was used at least once
 }
 
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
@@ -90,7 +91,9 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 // If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	var g Grid
-	p.refs = make(map[string]map[string]interface{}) // init/reset
+	// init/reset maps
+	p.refs = make(map[string]map[string]interface{})
+	p.refUsed = make(map[string]bool)
 	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
 	lines = removeEmptyTrailingLines(lines)
 	for y, line := range lines {
