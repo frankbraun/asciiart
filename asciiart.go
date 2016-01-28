@@ -19,10 +19,15 @@ const (
 
 // A Parser for two-dimensional hierarchical ASCII art.
 type Parser struct {
-	xScale  float64                           // scaling factor in x-dimension
-	yScale  float64                           // scaling factor in y-dimension
-	refs    map[string]map[string]interface{} // JSON references for non-grid elements
-	refUsed map[string]bool                   // records if given JSON reference was used at least once
+	xScale  float64               // scaling factor in x-dimension
+	yScale  float64               // scaling factor in y-dimension
+	refs    map[string]*reference // JSON references for non-grid elements
+	refUsed map[string]bool       // records if given JSON reference was used at least once
+}
+
+type reference struct {
+	Y   int                    // position of reference on y-axis
+	ref map[string]interface{} // the actual reference
 }
 
 // A Grid is an abstract representation of two-dimensional hierarchical ASCII
@@ -92,7 +97,7 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	var g Grid
 	// init/reset maps
-	p.refs = make(map[string]map[string]interface{})
+	p.refs = make(map[string]*reference)
 	p.refUsed = make(map[string]bool)
 	lines := bytes.Split([]byte(asciiArt), []byte("\n"))
 	lines = removeEmptyTrailingLines(lines)
@@ -118,6 +123,12 @@ func (p *Parser) Parse(asciiArt string) (*Grid, error) {
 	g.Elems = make([]interface{}, 0)
 	if err := p.parseContent(&g, lines, 0, 0, maxLen, len(lines)); err != nil {
 		return nil, err
+	}
+	// make sure all defined reference have been used
+	for key := range p.refs {
+		if !p.refUsed[key] {
+			return nil, &ParseError{X: 0, Y: p.refs[key].Y, Err: ErrRefUnused}
+		}
 	}
 	return &g, nil
 }

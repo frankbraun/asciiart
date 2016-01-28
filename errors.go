@@ -57,6 +57,8 @@ var (
 	ErrRefKeyEmpty = errors.New("asciiart: reference key is empty")
 	// ErrRefKeyUndefined is returned when a reference key is undefined.
 	ErrRefKeyUndefined = errors.New("asciiart: reference key is undefined")
+	// ErrRefUnused is returned when a reference has been defined but wasn't used.
+	ErrRefUnused = errors.New("ascii art: reference not used")
 	// ErrLineTooShort is returned when a line is too short.
 	ErrLineTooShort = errors.New("asciiart: line is too short")
 	// ErrLineLeftArrow is returned when an unexpected left error was encountered.

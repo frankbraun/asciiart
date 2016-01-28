@@ -45,7 +45,7 @@ func (p *Parser) parseReference(g *Grid, lines [][]byte, startY int) error {
 		if p.refs[key] != nil {
 			return &ParseError{X: 0, Y: startY, Err: ErrRefTwice}
 		}
-		p.refs[key] = refMap
+		p.refs[key] = &reference{Y: startY, ref: refMap}
 	}
 	return nil
 }

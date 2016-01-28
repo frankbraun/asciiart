@@ -154,7 +154,7 @@ func (r *Rectangle) parseReference(p *Parser, lines [][]byte) error {
 				if p.refs[key] == nil {
 					return &ParseError{X: int(r.X) + 2, Y: y, Err: ErrRefKeyUndefined}
 				}
-				r.Ref = p.refs[key]
+				r.Ref = p.refs[key].ref
 				p.refUsed[key] = true
 				for i := int(r.X) + 1; i <= x; i++ {
 					lines[y][i] = ' ' // nom nom nom
