@@ -97,8 +97,8 @@ grid 19 8
 
 ### Converting to SVG with `aa2svg`
 
-This package also contains a tool `aa2svg` which uses the abstract
-representation delivered by the ASCII parser to generate SVGs.
+This package also contains the tool `aa2svg` which uses the AST given by ASCII
+art parser to generate SVGs.
 
 
 #### Installation
