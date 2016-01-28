@@ -6,8 +6,10 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"text/template"
 )
@@ -57,6 +59,12 @@ func aatmplMain() error {
 		return err
 	}
 
+	// execute example.go and capture output for README.md
+	output, err := runExample()
+	if err != nil {
+		return err
+	}
+
 	// generate README.md
 	fp, err = os.Create("README.md")
 	if err != nil {
@@ -65,10 +73,22 @@ func aatmplMain() error {
 	defer fp.Close()
 	err = tmpl.ExecuteTemplate(fp, "readme.tmpl", map[string]string{
 		"MainFunc": "main()",
+		"Output":   output,
 	})
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func runExample() (string, error) {
+	cmd := exec.Command("go", "run", "example.go")
+	var buf bytes.Buffer
+	cmd.Stdout = &buf
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return "", err
+	}
+	return buf.String(), nil
 }

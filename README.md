@@ -68,3 +68,12 @@ func main() {
 
 Output:
 
+```
+grid 19 8
+  rect 0.5 1.5 18 6
+    rect 2.5 3.5 4 2
+      textline 3.5 4.5 foo
+    rect 12.5 3.5 4 2
+      textline 13.5 4.5 bar
+    line 8.5 4.5 10.5 4.5
+```
