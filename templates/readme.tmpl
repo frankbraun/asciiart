@@ -4,6 +4,18 @@
 This is **alpha** software and the API is still in flux.
 
 
+### Motivation
+
+All ASCII art converters I know combine the ASCII parser and the graphics
+generator into one package. This project started with the observation that
+some ASCII art artifacts are *hierarchical* (often they comprise a *tree*) and
+that it might be cool to have an abstract syntax tree (AST) of the parsed
+ASCII art to use in *different* backends, a SVG generator just being one of
+them.
+
+The vision is to allow [model-oriented programming](https://github.com/imatix/gsl#model-oriented-programming) with hierarchical ASCII art as the modeling language...
+
+
 ### API example
 
 ```go
