@@ -47,7 +47,8 @@ func aatmplMain() error {
 	}
 
 	// generate example.go
-	fp, err = os.Create("example.go")
+	example := filepath.Join("util", "cmd", "aaexample", "aaexample.go")
+	fp, err = os.Create(example)
 	if err != nil {
 		return err
 	}
@@ -60,7 +61,7 @@ func aatmplMain() error {
 	}
 
 	// execute example.go and capture output for README.md
-	output, err := runExample()
+	output, err := runExample(example)
 	if err != nil {
 		return err
 	}
@@ -82,8 +83,8 @@ func aatmplMain() error {
 	return nil
 }
 
-func runExample() (string, error) {
-	cmd := exec.Command("go", "run", "example.go")
+func runExample(example string) (string, error) {
+	cmd := exec.Command("go", "run", example)
 	var buf bytes.Buffer
 	cmd.Stdout = &buf
 	cmd.Stderr = os.Stderr
