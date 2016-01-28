@@ -83,10 +83,10 @@ grid 19 8
 ```
 
 
-## Converting to SVG
+## Converting to SVG with `aa2svg`
 
-The tool `aa2svg` uses abstract representation delivered by the ASCII parser to generate SVGs like this:
-
+This package also contains a tool `aa2svg` which uses the abstract
+representation delivered by the ASCII parser to generate SVGs like this:
 ![Example SVG](https://rawgit.com/frankbraun/asciiart/master/templates/exampleart.svg)
 
 
