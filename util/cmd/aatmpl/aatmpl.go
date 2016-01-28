@@ -31,12 +31,6 @@ func aatmplMain() error {
 		return err
 	}
 
-	/*
-		err = tmpl.ExecuteTemplate(os.Stdout, "aa2txt.tmpl", map[string]string{
-			"MainFunc": "main()",
-		})
-	*/
-
 	// generate cmd/aa2txt/aa2txt.go
 	fp, err := os.Create(filepath.Join("cmd", "aa2txt", "aa2txt.go"))
 	if err != nil {
@@ -49,5 +43,19 @@ func aatmplMain() error {
 	if err != nil {
 		return err
 	}
+
+	// generate example.go
+	fp, err = os.Create("example.go")
+	if err != nil {
+		return err
+	}
+	defer fp.Close()
+	err = tmpl.ExecuteTemplate(fp, "exampleprog.tmpl", map[string]string{
+		"MainFunc": "main()",
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
