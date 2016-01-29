@@ -39,6 +39,7 @@ var asciiArt = `
 | |foo| --> |bar| |
 | #---#     #---# |
 |                 |
+|                 |
 #-----------------#
 
 [REF]: {"note":"outer"}
@@ -90,8 +91,8 @@ func main() {
 #### Output
 
 ```
-grid 19 9
-  rect 0.5 1.5 18 7 {"note":"outer"}
+grid 19 10
+  rect 0.5 1.5 18 8 {"note":"outer"}
     rect 2.5 4.5 4 2 null
       textline 3.5 5.5 foo
     rect 12.5 4.5 4 2 null
