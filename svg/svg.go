@@ -102,7 +102,7 @@ func drawElems(
 func drawRectangle(s *svg.SVG, r *asciiart.Rectangle, style []string) error {
 	if r.RoundUpperLeft || r.RoundUpperRight || r.RoundLowerLeft || r.RoundLowerRight {
 		// we got rounded corners -> construct rectangle manually as path, also see:
-		// https://github.com/dhobsd/asciitosvg/blob/05f2ac06918247a79561b026a6a8011a64a98317/ASCIIToSVG.php#L968-L988
+		// https://github.com/dhobsd/asciitosvg/blob/05f2ac06918247a79561b026a6a8011a64a98317/ASCIIToSVG.php#L968-L1057
 		points := []struct {
 			x       float64
 			y       float64
