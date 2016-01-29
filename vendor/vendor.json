@@ -1,0 +1,38 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "github.com/ajstarks/svgo/float",
+			"revision": "71796db343b08d4c7459b3223ebecd736f779955",
+			"revisionTime": "2016-01-14T20:36:51-05:00"
+		},
+		{
+			"path": "github.com/clbanning/mxj",
+			"revision": "30eabb69a7666c7cb9c275d877417de4b59228a7",
+			"revisionTime": "2016-01-27T07:44:30-06:00"
+		},
+		{
+			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
+			"path": "github.com/davecgh/go-spew/spew",
+			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
+			"revisionTime": "2016-01-09T21:38:47+01:00"
+		},
+		{
+			"path": "github.com/fatih/structs",
+			"revision": "a924a2250d1033753512e95dce41dca3fd793ad9",
+			"revisionTime": "2016-01-23T12:59:39-05:00"
+		},
+		{
+			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
+			"revisionTime": "2016-01-09T21:38:47+01:00"
+		},
+		{
+			"path": "github.com/stretchr/testify/assert",
+			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
+			"revisionTime": "2016-01-09T21:38:47+01:00"
+		}
+	]
+}
