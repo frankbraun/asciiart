@@ -140,6 +140,31 @@ effect:
 ```		
 
 
+#### Elements in ASCII art
+
+```
+  Rectangles:
+  
+  #-----#     .-----.     #-----.
+  |     |     |     |     |     |
+  |     |     |     |     |     |
+  #-----#     '-----'     '-----#
+  
+  
+  Lines:
+  
+  -------     |   ^   |   ^        /     ^       =======     :   ^   :   ^
+  ------>     |   |   |   |       /       \      ======>     :   :   :   :
+  <------     |   |   |   |      /         \     <======     :   :   :   :
+  <----->     |   |   v   |     /           v    <=====>     :   :   v   V
+```
+
+
+#### Elements as SVG
+
+![Elements SVG](https://rawgit.com/frankbraun/asciiart/master/templates/elements.svg)
+
+
 ### Credits
 
 This package was inspired by [ASCIIToSVG](https://github.com/dhobsd/asciitosvg/), the ASCII to SVG converter used to render the graphics in the

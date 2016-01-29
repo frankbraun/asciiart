@@ -1,7 +1,7 @@
 all:
 	go install -v github.com/frankbraun/asciiart/...
 
-templates/exampleart.svg: templates/exampleart.tmpl
+templates/%.svg: templates/%.tmpl
 	aa2svg -i $< -o $@ -f
 
 .PHONY: generate test
