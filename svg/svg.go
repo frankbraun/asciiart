@@ -110,8 +110,15 @@ func drawRectangle(s *svg.SVG, r *asciiart.Rectangle, style []string) error {
 }
 
 func drawLine(s *svg.SVG, l *asciiart.Line, style []string) error {
-	// TODO: draw arrows, if necessary
-	s.Line(l.X1, l.Y1, l.X2, l.Y2, style...)
+	totalStyle := make([]string, len(style))
+	copy(totalStyle, style)
+	if l.ArrowStart {
+		totalStyle = append(totalStyle, `marker-start="url(#iPointer)"`)
+	}
+	if l.ArrowEnd {
+		totalStyle = append(totalStyle, `marker-end="url(#Pointer)"`)
+	}
+	s.Line(l.X1, l.Y1, l.X2, l.Y2, totalStyle...)
 	return nil
 }
 
