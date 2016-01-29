@@ -116,6 +116,8 @@ forLoop:
 			return errors.New("aa2g: '+' not implemented yet")
 		case '<', '^':
 			return &ParseError{X: x, Y: y, Err: ErrLineLeftArrow}
+		default:
+			break forLoop
 		}
 	}
 	// check minimum length

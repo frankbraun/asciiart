@@ -779,6 +779,23 @@ foo#---#
 				},
 			},
 		},
+		{
+			aa: `--- `,
+			res: &Grid{
+				W:      4,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Line{
+						X1: 0.5,
+						Y1: 0.5,
+						X2: 3.5,
+						Y2: 0.5,
+					},
+				},
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `
