@@ -2,10 +2,10 @@
 
 # compile everything
 echo "compile"
-go install -v ./...
+go install -v ./cmd/...
 
 # call source code checker for each directory
-dirs=`ls -d */`
+dirs=`ls -d */ | grep -v templates | grep -v vendor`
 echo "goimports"
 for dir in $dirs
 do
