@@ -54,8 +54,7 @@ func main() {
 				for i := 0; i < len(t.X); i++ {
 					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
-				fmt.Println(indent, "polygon", strings.Join(p, " "), fmtJsn(t.Ref))
-				traverse(t.Elems, indent+"  ") // recursion
+				fmt.Println(indent, "polygon", strings.Join(p, " "))
 			case *asciiart.Textline:
 				fmt.Println(indent, "textline", t.X, t.Y, t.Text)
 			}

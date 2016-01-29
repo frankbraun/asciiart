@@ -88,12 +88,6 @@ func drawElems(
 			if err := drawPolygon(s, t); err != nil {
 				return err
 			}
-			// recursion
-			err := drawElems(s, t.Elems, rectStyle, lineStyle, textStyle,
-				xScale, yScale)
-			if err != nil {
-				return err
-			}
 		case *asciiart.Textline:
 			if err := drawTextline(s, t, textStyle, xScale, yScale); err != nil {
 				return err

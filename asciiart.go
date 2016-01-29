@@ -50,11 +50,9 @@ type Polyline struct {
 
 // The Polygon element.
 type Polygon struct {
-	X      []float64              // x-axis coordinates of points on polygon
-	Y      []float64              // y-axis coordinates of points on polygon
-	Dotted []bool                 // polygon segment is dotted (len(Dotted) == len(X))
-	Ref    map[string]interface{} // JSON reference of the polygon, if defined
-	Elems  []interface{}          // contained elements
+	X      []float64 // x-axis coordinates of points on polygon
+	Y      []float64 // y-axis coordinates of points on polygon
+	Dotted []bool    // polygon segment is dotted (len(Dotted) == len(X))
 }
 
 type elem interface {
