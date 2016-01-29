@@ -79,9 +79,9 @@ A text line is a single line of text (without newlines).
 
 References
 
-All elements except text lines can have up to one reference attached to them
-by providing it at the edge of the element and defining the reference
-somewhere in the document at the start of a line (usually at the bottom).
+Rectangles and polygons can have up to one reference attached to them by
+providing it at the edge of the element and defining the reference at the end
+of the document.
 
 Reference names are set between square brackets ([ and ]) and defined by
 referencing the same name followed by a colon (:) at the end of the document.
@@ -96,8 +96,8 @@ Example:
 
   [XB]: {fill: "none", stroke-width: 2}
 
-Reference names starting with an underscore (_) are attached to the top-level
-element (the grid). For example:
+All reference names starting with an underscore (_) are attached to the top-
+level element (the grid). For example:
 
   [_SVG]: {"blur": false}
 */
