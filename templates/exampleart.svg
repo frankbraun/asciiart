@@ -27,5 +27,5 @@
 <text x="26.10" y="92.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >foo</text>
 <rect x="130.50" y="72.00" width="36.00" height="32.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 <text x="134.10" y="92.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >bar</text>
-<line x1="76.50" y1="88.00" x2="112.50" y2="88.00" fill="none" stroke="black" stroke-width="2" marker-end="url(#Pointer)" />
+<line x1="76.50" y1="88.00" x2="112.50" y2="88.00" fill="none" stroke="black" stroke-width="2" marker-end="url(#Pointer)" stroke-dasharray="5 5" />
 </svg>

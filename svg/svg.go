@@ -118,6 +118,9 @@ func drawLine(s *svg.SVG, l *asciiart.Line, style []string) error {
 	if l.ArrowEnd {
 		totalStyle = append(totalStyle, `marker-end="url(#Pointer)"`)
 	}
+	if l.Dotted {
+		totalStyle = append(totalStyle, `stroke-dasharray="5 5"`)
+	}
 	s.Line(l.X1, l.Y1, l.X2, l.Y2, totalStyle...)
 	return nil
 }
