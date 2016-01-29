@@ -132,7 +132,8 @@ Usage of aa2svg:
 #### Example output
 ![Example SVG](https://rawgit.com/frankbraun/asciiart/master/templates/exampleart.svg)
 
-Adding the following global reference to the ASCII art disables the blur effect:
+Appending the following global reference to the ASCII art disables the blur
+effect:
 
 ```
 [_SVG]: {"blur": false}
