@@ -15,6 +15,12 @@
 <feGaussianBlur in="matrixOut" result="blurOut"  stdDeviation="3 3" />
 <feBlend in="SourceGraphic" in2="blurOut"  mode="normal" />
 </filter>
+<marker id="iPointer" refX="5.00" refY="5.00" markerWidth="8.00" markerHeight="7.00" markerUnits="strokeWidth" orient="auto" viewBox="0 0 10 10" >
+<path d="M 10 0 L 10 10 L 0 5 z" />
+</marker>
+<marker id="Pointer" refX="5.00" refY="5.00" markerWidth="8.00" markerHeight="7.00" markerUnits="strokeWidth" orient="auto" viewBox="0 0 10 10" >
+<path d="M 0 0 L 10 5 L 0 10 z" />
+</marker>
 </defs>
 <rect x="4.50" y="8.00" width="90.00" height="64.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 <text x="17.10" y="44.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >foo box</text>

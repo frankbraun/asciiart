@@ -40,6 +40,9 @@ func Generate(w io.Writer, g *asciiart.Grid) error {
 	if err := setFilter(s); err != nil {
 		return err
 	}
+	if err := setMarker(s); err != nil {
+		return err
+	}
 	s.DefEnd()
 	// recursively draw elements
 	err = drawElems(s, g.Elems, rectStyle, lineStyle, textStyle,
