@@ -9,6 +9,7 @@ package svg
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 
 	"github.com/ajstarks/svgo/float"
@@ -105,7 +106,74 @@ func drawElems(
 }
 
 func drawRectangle(s *svg.SVG, r *asciiart.Rectangle, style []string) error {
-	s.Rect(r.X, r.Y, r.W, r.H, style...)
+	if r.RoundUpperLeft || r.RoundUpperRight || r.RoundLowerLeft || r.RoundLowerRight {
+		// we got rounded corners -> construct rectangle manually as path, also see:
+		// https://github.com/dhobsd/asciitosvg/blob/05f2ac06918247a79561b026a6a8011a64a98317/ASCIIToSVG.php#L968-L988
+		points := []struct {
+			x       float64
+			y       float64
+			rounded bool
+		}{
+			{x: r.X, y: r.Y, rounded: r.RoundUpperLeft},
+			{x: r.X + r.W, y: r.Y, rounded: r.RoundUpperRight},
+			{x: r.X + r.W, y: r.Y + r.H, rounded: r.RoundLowerRight},
+			{x: r.X, y: r.Y + r.H, rounded: r.RoundLowerLeft},
+		}
+		var d string
+		point := points[0]
+		if point.rounded {
+			cX := point.x
+			cY := point.y
+			sX := point.x
+			sY := point.y + 10
+			eX := point.x + 10
+			eY := point.y
+			d += fmt.Sprintf("M %f %f Q %f %f %f %f ", sX, sY, cX, cY, eX, eY)
+		} else {
+			d += fmt.Sprintf("M %f %f ", point.x, point.y)
+		}
+		point = points[1]
+		if point.rounded {
+			cX := point.x
+			cY := point.y
+			sX := point.x - 10
+			sY := point.y
+			eX := point.x
+			eY := point.y + 10
+			d += fmt.Sprintf("L %f %f Q %f %f %f %f ", sX, sY, cX, cY, eX, eY)
+		} else {
+			d += fmt.Sprintf("L %f %f ", point.x, point.y)
+		}
+		point = points[2]
+		if point.rounded {
+			cX := point.x
+			cY := point.y
+			sX := point.x
+			sY := point.y - 10
+			eX := point.x - 10
+			eY := point.y
+			d += fmt.Sprintf("L %f %f Q %f %f %f %f ", sX, sY, cX, cY, eX, eY)
+		} else {
+			d += fmt.Sprintf("L %f %f ", point.x, point.y)
+		}
+		point = points[3]
+		if point.rounded {
+			cX := point.x
+			cY := point.y
+			sX := point.x + 10
+			sY := point.y
+			eX := point.x
+			eY := point.y - 10
+			d += fmt.Sprintf("L %f %f Q %f %f %f %f ", sX, sY, cX, cY, eX, eY)
+		} else {
+			d += fmt.Sprintf("L %f %f ", point.x, point.y)
+		}
+
+		s.Path(d+"Z", style...)
+	} else {
+		// draw rect element
+		s.Rect(r.X, r.Y, r.W, r.H, style...)
+	}
 	return nil
 }
 
