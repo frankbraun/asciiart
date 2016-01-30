@@ -15,8 +15,8 @@
 		{
 			"origin": "github.com/stretchr/testify/vendor/github.com/davecgh/go-spew/spew",
 			"path": "github.com/davecgh/go-spew/spew",
-			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
-			"revisionTime": "2016-01-09T21:38:47+01:00"
+			"revision": "9f9027faeb0dad515336ed2f28317f9f8f527ab4",
+			"revisionTime": "2016-01-29T19:31:06Z"
 		},
 		{
 			"path": "github.com/fatih/structs",
@@ -24,15 +24,20 @@
 			"revisionTime": "2016-01-23T12:59:39-05:00"
 		},
 		{
+			"path": "github.com/frankbraun/kitchensink/bit",
+			"revision": "974b398dffb07f4a8bad5639214224f710dd8073",
+			"revisionTime": "2016-01-30T10:14:42Z"
+		},
+		{
 			"origin": "github.com/stretchr/testify/vendor/github.com/pmezard/go-difflib/difflib",
 			"path": "github.com/pmezard/go-difflib/difflib",
-			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
-			"revisionTime": "2016-01-09T21:38:47+01:00"
+			"revision": "9f9027faeb0dad515336ed2f28317f9f8f527ab4",
+			"revisionTime": "2016-01-29T19:31:06Z"
 		},
 		{
 			"path": "github.com/stretchr/testify/assert",
-			"revision": "f390dcf405f7b83c997eac1b06768bb9f44dec18",
-			"revisionTime": "2016-01-09T21:38:47+01:00"
+			"revision": "9f9027faeb0dad515336ed2f28317f9f8f527ab4",
+			"revisionTime": "2016-01-29T19:31:06Z"
 		}
 	]
 }
