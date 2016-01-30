@@ -5,6 +5,7 @@
 package asciiart
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -823,6 +824,46 @@ foo#---#
 				},
 			},
 		},
+		{
+			aa: `
+---+
+   :
+`,
+			res: &Grid{
+				W:      4,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5},
+						Y:      []float64{1.5, 1.5, 2.5},
+						Dotted: []bool{false, true},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
+   |
+   +=
+`,
+			res: &Grid{
+				W:      5,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5, 4.5},
+						Y:      []float64{1.5, 1.5, 4.5, 4.5},
+						Dotted: []bool{false, false, true},
+					},
+				},
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `
@@ -845,6 +886,7 @@ func TestParser(t *testing.T) {
 	for _, vector := range testVectors() {
 		g, err := p.Parse(vector.aa)
 		if err != nil {
+			fmt.Println(err)
 			assert.Equal(t, vector.res, err)
 		} else {
 			assert.Equal(t, vector.res, g)

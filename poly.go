@@ -324,7 +324,7 @@ func (pl *Polyline) procEdge(
 func outgoingEdges(lines [][]byte, x, y int) byte {
 	fmt.Println("outgoingEdges")
 	var edges byte
-	if y > 0 && len(lines[y-1]) > x && lines[y-1][x] == '|' {
+	if y > 0 && len(lines[y-1]) > x && (lines[y-1][x] == '|' || lines[y-1][x] == ':') {
 		fmt.Println("north")
 		edges |= nEdge
 	}
@@ -332,7 +332,7 @@ func outgoingEdges(lines [][]byte, x, y int) byte {
 		fmt.Println("northeast")
 		edges |= neEdge
 	}
-	if len(lines[y]) > x+1 && lines[y][x+1] == '-' {
+	if len(lines[y]) > x+1 && (lines[y][x+1] == '-' || lines[y][x+1] == '=') {
 		fmt.Println("east")
 		edges |= eEdge
 	}
@@ -340,7 +340,7 @@ func outgoingEdges(lines [][]byte, x, y int) byte {
 		fmt.Println("southeast")
 		edges |= swEdge
 	}
-	if len(lines) > y+1 && len(lines[y+1]) > x && lines[y+1][x] == '|' {
+	if len(lines) > y+1 && len(lines[y+1]) > x && (lines[y+1][x] == '|' || lines[y+1][x] == ':') {
 		fmt.Println("south")
 		edges |= sEdge
 	}
@@ -348,7 +348,7 @@ func outgoingEdges(lines [][]byte, x, y int) byte {
 		fmt.Println("southwest")
 		edges |= swEdge
 	}
-	if x > 0 && len(lines[y]) > x-1 && lines[y][x-1] == '-' {
+	if x > 0 && len(lines[y]) > x-1 && (lines[y][x-1] == '-' || lines[y][x-1] == '=') {
 		fmt.Println("west")
 		edges |= wEdge
 	}
