@@ -7,6 +7,7 @@ package asciiart
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"strings"
 )
 
@@ -39,20 +40,6 @@ type Grid struct {
 	YScale float64                           // original scaling factor in y-dimension
 	Refs   map[string]map[string]interface{} // JSON references
 	Elems  []interface{}                     // list of elements on the grid
-}
-
-// The Polyline element.
-type Polyline struct {
-	X      []float64 // x-axis coordinates of points on polyline
-	Y      []float64 // y-axis coordinates of points on polyline
-	Dotted []bool    // polyline segment is dotted (len(Dotted) == len(X)-1)
-}
-
-// The Polygon element.
-type Polygon struct {
-	X      []float64 // x-axis coordinates of points on polygon
-	Y      []float64 // y-axis coordinates of points on polygon
-	Dotted []bool    // polygon segment is dotted (len(Dotted) == len(X))
 }
 
 type elem interface {
@@ -93,6 +80,7 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 // Parse parses asciiArt with parser p and returns a grid.
 // If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
+	fmt.Println("-------------------------")
 	var g Grid
 	// init/reset maps
 	p.refs = make(map[string]*reference)

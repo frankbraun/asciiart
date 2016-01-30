@@ -63,6 +63,8 @@ var (
 	ErrLineTooShort = errors.New("asciiart: line is too short")
 	// ErrLineLeftArrow is returned when an unexpected left error was encountered.
 	ErrLineLeftArrow = errors.New("asciiart: unexpected left error encountered")
+	// ErrPolyCornerOneEdge is returned when a poly corner has only one edge
+	ErrPolyCornerOneEdge = errors.New("asciiart: poly corner (+) has only one edge")
 )
 
 // ParseError defines an ASCII art parsing error.

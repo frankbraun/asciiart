@@ -796,6 +796,33 @@ foo#---#
 				},
 			},
 		},
+		{
+			aa: `-+`,
+			res: &ParseError{
+				X:   1,
+				Y:   0,
+				Err: ErrPolyCornerOneEdge,
+			},
+		},
+		{
+			aa: `
+---+
+   |
+`,
+			res: &Grid{
+				W:      4,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5},
+						Y:      []float64{1.5, 1.5, 2.5},
+						Dotted: []bool{false, false},
+					},
+				},
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `

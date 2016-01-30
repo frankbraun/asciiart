@@ -5,7 +5,6 @@
 package asciiart
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -112,8 +111,8 @@ forLoop:
 			l.ArrowEnd = true
 			break forLoop
 		case '+':
-			// TODO: switch to polyline parsing
-			return errors.New("aa2g: '+' not implemented yet")
+			// switch to polyline parsing
+			return p.parsePoly(parent, lines, &l)
 		case '<', '^':
 			return &ParseError{X: x, Y: y, Err: ErrLineLeftArrow}
 		default:
@@ -125,11 +124,15 @@ forLoop:
 		return &ParseError{X: startX, Y: startY, Err: ErrLineTooShort}
 	}
 	// scale
+	l.scale(p)
+	// add line to parent
+	parent.addElem(&l)
+	return nil
+}
+
+func (l *Line) scale(p *Parser) {
 	l.X1 = l.X1*p.xScale + p.xScale/2
 	l.Y1 = l.Y1*p.yScale + p.yScale/2
 	l.X2 = l.X2*p.xScale + p.xScale/2
 	l.Y2 = l.Y2*p.yScale + p.yScale/2
-	// add line to parent
-	parent.addElem(&l)
-	return nil
 }
