@@ -910,6 +910,360 @@ foo#---#
 				},
 			},
 		},
+		{
+			aa: `
+---+
+   :
+   :
+   v
+`,
+			res: &Grid{
+				W:      4,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 3.5},
+						Y:        []float64{1.5, 1.5, 4.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, true},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+===+
+  /
+ /
+v
+`,
+			res: &Grid{
+				W:      4,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 0.5},
+						Y:        []float64{1.5, 1.5, 4.5},
+						ArrowEnd: true,
+						Dotted:   []bool{true, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+===+
+  /
+ /
++==>
+`,
+			res: &Grid{
+				W:      4,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 0.5, 3.5},
+						Y:        []float64{1.5, 1.5, 4.5, 4.5},
+						ArrowEnd: true,
+						Dotted:   []bool{true, false, true},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+  /
+ /
+`,
+			res: &Grid{
+				W:      4,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 1.5},
+						Y:      []float64{1.5, 1.5, 3.5},
+						Dotted: []bool{false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
+<--+
+`,
+			res: &Grid{
+				W:      4,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 3.5, 0.5},
+						Y:        []float64{1.5, 1.5, 3.5, 3.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
+=--+
+`,
+			res: &Grid{
+				W:      4,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5, 0.5},
+						Y:      []float64{1.5, 1.5, 3.5, 3.5},
+						Dotted: []bool{false, false, true},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+-+
+  \
+`,
+			res: &Grid{
+				W:      3,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 1.5, 2.5},
+						Y:      []float64{1.5, 1.5, 2.5},
+						Dotted: []bool{false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+-+
+  \
+   +=
+`,
+			res: &Grid{
+				W:      5,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 1.5, 3.5, 4.5},
+						Y:      []float64{1.5, 1.5, 3.5, 3.5},
+						Dotted: []bool{false, false, true},
+					},
+				},
+			},
+		},
+
+		{
+			aa: `
+<--+
+   |
++--+
+| ^
+|/
++
+`,
+			res: &Grid{
+				W:      4,
+				H:      7,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:          []float64{0.5, 3.5, 3.5, 0.5, 0.5, 2.5},
+						Y:          []float64{1.5, 1.5, 3.5, 3.5, 6.5, 4.5},
+						ArrowStart: true,
+						ArrowEnd:   true,
+						Dotted:     []bool{false, false, false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+ +->
+   | :
++--+ :
+|    :
+|    :
++----+
+`,
+			res: &Grid{
+				W:      8,
+				H:      7,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 3.5, 0.5, 0.5, 5.5, 5.5, 7.5},
+						Y:        []float64{1.5, 1.5, 3.5, 3.5, 6.5, 6.5, 1.5, 1.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, false, false, false, false, true, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
++==+
+|
+|  ^
+|   \
++----+
+`,
+			res: &Grid{
+				W:      6,
+				H:      8,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 3.5, 0.5, 0.5, 5.5, 3.5},
+						Y:        []float64{1.5, 1.5, 3.5, 3.5, 7.5, 7.5, 5.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, false, true, false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `<--+ /
+   |/
+   +`,
+			res: &Grid{
+				W:      6,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:          []float64{0.5, 3.5, 3.5, 5.5},
+						Y:          []float64{0.5, 0.5, 2.5, 0.5},
+						ArrowStart: true,
+						Dotted:     []bool{false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `-+ |
+ | |
+ +-+`,
+			res: &Grid{
+				W:      4,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 1.5, 1.5, 3.5, 3.5},
+						Y:      []float64{0.5, 0.5, 2.5, 2.5, 0.5},
+						Dotted: []bool{false, false, false, false},
+					},
+				},
+			},
+		},
+
+		{
+			aa: `-+ \
+ |  \
+ +---+`,
+			res: &Grid{
+				W:      6,
+				H:      3,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 1.5, 1.5, 5.5, 3.5},
+						Y:      []float64{0.5, 0.5, 2.5, 2.5, 0.5},
+						Dotted: []bool{false, false, false, false},
+					},
+				},
+			},
+		},
+
+		{
+			aa: `
+---+
+   :
++--+
+ \
+  \
+   v
+`,
+			res: &Grid{
+				W:      4,
+				H:      7,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 3.5, 3.5, 0.5, 3.5},
+						Y:        []float64{1.5, 1.5, 3.5, 3.5, 6.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, true, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+----------+
+          :
++--------=+
+:
+:       ^ 
+:       |
+:       |
+:       +
+:      /
+:     /
+:    + 
+:     \ 
+:      \ 
++-------+  
+`,
+			res: &Grid{
+				W:      11,
+				H:      15,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:        []float64{0.5, 10.5, 10.5, 0.5, 0.5, 8.5, 5.5, 8.5, 8.5},
+						Y:        []float64{1.5, 1.5, 3.5, 3.5, 14.5, 14.5, 11.5, 8.5, 5.5},
+						ArrowEnd: true,
+						Dotted:   []bool{false, true, true, true, false, false, false, false},
+					},
+				},
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `

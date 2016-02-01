@@ -86,41 +86,37 @@ func (p *Parser) parsePoly(
 			case 1:
 				// follow edge
 				switch {
-				case outEdges&nEdge > 1:
+				case outEdges&nEdge > 0:
 					edge = sEdge
 					y--
-				case outEdges&neEdge > 1:
+				case outEdges&neEdge > 0:
 					edge = swEdge
 					x++
 					y--
-				case outEdges&eEdge > 1:
+				case outEdges&eEdge > 0:
 					edge = wEdge
 					x++
-				case outEdges&seEdge > 1:
+				case outEdges&seEdge > 0:
 					edge = nwEdge
 					x++
 					y++
-				case outEdges&sEdge > 1:
+				case outEdges&sEdge > 0:
 					edge = nEdge
 					y++
-				case outEdges&swEdge > 1:
+				case outEdges&swEdge > 0:
 					edge = neEdge
 					x--
 					y++
-				case outEdges&wEdge > 1:
+				case outEdges&wEdge > 0:
 					edge = eEdge
 					x--
-				case outEdges&nwEdge > 1:
+				case outEdges&nwEdge > 0:
 					edge = seEdge
 					x--
 					y--
 				}
 				dotted = startsDotted(lines, x, y, edge)
-				next, _, d := pl.procEdge(lines, &x, &y, edge)
-				if d {
-					dotted = true
-				}
-				state = next
+				state = edgeState
 			default:
 				// TODO: split
 				return errors.New("poly split not implemented")
@@ -148,8 +144,6 @@ func (p *Parser) parsePoly(
 			return nil
 		}
 	}
-
-	return nil
 }
 
 func startsDotted(lines [][]byte, x, y int, incomingEdge byte) bool {
@@ -390,7 +384,7 @@ func outgoingEdges(lines [][]byte, x, y int) byte {
 		edges |= eEdge
 	}
 	if len(lines) > y+1 && len(lines[y+1]) > x+1 && lines[y+1][x+1] == '\\' {
-		edges |= swEdge
+		edges |= seEdge
 	}
 	if len(lines) > y+1 && len(lines[y+1]) > x && (lines[y+1][x] == '|' || lines[y+1][x] == ':') {
 		edges |= sEdge
