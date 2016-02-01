@@ -809,6 +809,27 @@ foo#---#
 			aa: `
 ---+
    |
+    
+`,
+			res: &Grid{
+				W:      4,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5},
+						Y:      []float64{1.5, 1.5, 2.5},
+						Dotted: []bool{false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
+
 `,
 			res: &Grid{
 				W:      4,
@@ -860,6 +881,31 @@ foo#---#
 						X:      []float64{0.5, 3.5, 3.5, 4.5},
 						Y:      []float64{1.5, 1.5, 4.5, 4.5},
 						Dotted: []bool{false, false, true},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+---+
+   |
+   ?
+`,
+			res: &Grid{
+				W:      4,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polyline{
+						X:      []float64{0.5, 3.5, 3.5},
+						Y:      []float64{1.5, 1.5, 2.5},
+						Dotted: []bool{false, false},
+					},
+					&Textline{
+						X:    3.5,
+						Y:    3.5,
+						Text: "?",
 					},
 				},
 			},

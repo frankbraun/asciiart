@@ -67,7 +67,10 @@ func (p *Parser) parsePoly(
 	y := int(l.Y2)
 	dotted := l.Dotted
 	state := cornerState
-	var edge byte
+	var (
+		edge     byte
+		arrowEnd bool
+	)
 	for {
 		switch state {
 		case cornerState:
@@ -116,8 +119,9 @@ func (p *Parser) parsePoly(
 					x--
 					y--
 				}
+				dotted = startsDotted(lines, x, y, edge)
 				fmt.Println("call procEdge", x, y)
-				next, d := pl.procEdge(lines, &x, &y, edge)
+				next, _, d := pl.procEdge(lines, &x, &y, edge)
 				if d {
 					dotted = true
 				}
@@ -127,7 +131,10 @@ func (p *Parser) parsePoly(
 				return errors.New("poly split not implemented")
 			}
 		case edgeState:
-			next, d := pl.procEdge(lines, &x, &y, edge)
+			next, a, d := pl.procEdge(lines, &x, &y, edge)
+			if a {
+				arrowEnd = true
+			}
 			if d {
 				dotted = true
 			}
@@ -137,6 +144,7 @@ func (p *Parser) parsePoly(
 			// add final segment
 			pl.X = append(pl.X, float64(x))
 			pl.Y = append(pl.Y, float64(y))
+			pl.ArrowEnd = arrowEnd
 			pl.Dotted = append(pl.Dotted, dotted)
 			// scale
 			pl.scale(p)
@@ -149,175 +157,230 @@ func (p *Parser) parsePoly(
 	return nil
 }
 
+func startsDotted(lines [][]byte, x, y int, incomingEdge byte) bool {
+	cell := lines[y][x]
+	if (incomingEdge == nEdge || incomingEdge == sEdge) && cell == ':' {
+		return true
+	}
+	if (incomingEdge == eEdge || incomingEdge == wEdge) && cell == '=' {
+		return true
+	}
+	return false
+}
+
 // procEdge processes an edge at position x,y and returns the next state.
 // Three possible outcomes:
 //   1. we can continue the line:
 //      - nextState = edgeState
 //      - x and y changed accordingly
-//      - cell eaten
 //   2. we hit a corner:
 //      - nextState = cornerState
-//      - x and y unchanged
-//      - cell unmodified
+//      - x and y changed accordingly
 //   3. we reach the corner of the grid or cannot continue the line:
 //      - nextState = endState,
 //      - x and y unchanged
-//      - cell unmodified
 func (pl *Polyline) procEdge(
 	lines [][]byte,
 	x, y *int,
 	incomingEdge byte,
-) (nextState int, dotted bool) {
+) (nextState int, arrowEnd, dotted bool) {
 	fmt.Println("procEdge", *x, *y)
-	cell := lines[*y][*x]
-
+	lines[*y][*x] = ' ' // nom nom nom
 	switch incomingEdge {
-
 	case nEdge:
-		switch cell {
-		case ':':
-			dotted = true
-			fallthrough
-		case '|':
-			if len(lines) > *y+1 && len(lines[*y+1]) > *x {
-				lines[*y][*x] = ' ' // nom nom nom
+		if len(lines) > *y+1 && len(lines[*y+1]) > *x {
+			cell := lines[*y+1][*x]
+			switch cell {
+			case ':':
+				dotted = true
+				fallthrough
+			case '|':
 				*y++
 				nextState = edgeState
-			} else {
+			case '+':
+				*y++
+				nextState = cornerState
+			case 'v':
+				arrowEnd = true
+				*y++
+				nextState = cornerState
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case neEdge:
-		switch cell {
-		case '/':
-			if *x > 0 && len(lines) > *y+1 && len(lines[*y+1]) > *x-1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if *x > 0 && len(lines) > *y+1 && len(lines[*y+1]) > *x-1 {
+			cell := lines[*y+1][*x-1]
+			switch cell {
+			case '/':
 				*x--
 				*y++
 				nextState = edgeState
-			} else {
+			case '+':
+				*x--
+				*y++
+				nextState = cornerState
+			case 'v':
+				arrowEnd = true
+				*x--
+				*y++
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case eEdge:
-		switch cell {
-		case '=':
-			dotted = true
-			fallthrough
-		case '-':
-			if *x > 0 && len(lines[*y]) > *x-1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if *x > 0 && len(lines[*y]) > *x-1 {
+			cell := lines[*y][*x-1]
+			switch cell {
+			case '=':
+				dotted = true
+				fallthrough
+			case '-':
 				*x--
 				nextState = edgeState
-			} else {
+			case '+':
+				*x--
+				nextState = cornerState
+			case '<':
+				arrowEnd = true
+				*x--
+				fallthrough
+			default:
 				nextState = endState
+
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case seEdge:
-		switch cell {
-		case '\\':
-			if *x > 0 && *y > 0 && len(lines[*y-1]) > *x-1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if *x > 0 && *y > 0 && len(lines[*y-1]) > *x-1 {
+			cell := lines[*y-1][*x-1]
+			switch cell {
+			case '\\':
 				*x--
 				*y--
 				nextState = edgeState
-			} else {
+			case '+':
+				*x--
+				*y--
+				nextState = cornerState
+			case '^':
+				arrowEnd = true
+				*x--
+				*y--
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case sEdge:
-		switch cell {
-		case ':':
-			dotted = true
-			fallthrough
-		case '|':
-			if *y > 0 && len(lines[*y-1]) > *x {
-				lines[*y][*x] = ' ' // nom nom nom
+		if *y > 0 && len(lines[*y-1]) > *x {
+			cell := lines[*y-1][*x]
+			switch cell {
+			case ':':
+				dotted = true
+				fallthrough
+			case '|':
 				*y--
 				nextState = edgeState
-			} else {
+			case '+':
+				*y--
+				nextState = cornerState
+			case '^':
+				arrowEnd = true
+				*y--
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case swEdge:
-		switch cell {
-		case '/':
-			if *y > 0 && len(lines[*y-1]) > *x+1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if *y > 0 && len(lines[*y-1]) > *x+1 {
+			cell := lines[*y-1][*x+1]
+			switch cell {
+			case '/':
 				*x++
 				*y--
 				nextState = edgeState
-			} else {
+			case '+':
+				*x++
+				*y--
+				nextState = cornerState
+			case '^':
+				arrowEnd = true
+				*x++
+				*y--
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case wEdge:
-		switch cell {
-		case '=':
-			dotted = true
-			fallthrough
-		case '-':
-			if len(lines[*y]) > *x+1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if len(lines[*y]) > *x+1 {
+			cell := lines[*y][*x+1]
+			switch cell {
+			case '=':
+				dotted = true
+				fallthrough
+			case '-':
 				*x++
 				nextState = edgeState
-			} else {
+			case '+':
+				*x++
+				nextState = cornerState
+			case '>':
+				arrowEnd = true
+				*x++
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 
 	case nwEdge:
-		switch cell {
-		case '\\':
-			if len(lines) > *y+1 && len(lines[*y+1]) > *x+1 {
-				lines[*y][*x] = ' ' // nom nom nom
+		if len(lines) > *y+1 && len(lines[*y+1]) > *x+1 {
+			cell := lines[*y+1][*x+1]
+			switch cell {
+			case '\\':
 				*x++
 				*y++
 				nextState = edgeState
-			} else {
+			case '+':
+				*x++
+				*y++
+				nextState = cornerState
+			case 'v':
+				arrowEnd = true
+				*x++
+				*y++
+				fallthrough
+			default:
 				nextState = endState
 			}
-		case '+':
-			nextState = cornerState
-		default:
+		} else {
 			nextState = endState
 		}
 	}
-
 	return
 }
 
