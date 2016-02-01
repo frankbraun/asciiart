@@ -61,8 +61,8 @@ func (p *Parser) parsePolyline(
 	pl.Y = append(pl.Y, l.Y1)
 	pl.ArrowStart = l.ArrowStart
 
-	x, y, arrowEnd, dotted, err := followLine(&pl, lines, int(l.X2), int(l.Y2),
-		cornerState, 0, l.Dotted, false)
+	x, y, arrowEnd, dotted, _, err := followLine(&pl, lines, int(l.X2),
+		int(l.Y2), cornerState, 0, l.Dotted, false)
 	if err != nil {
 		return err
 	}
@@ -115,20 +115,69 @@ func (p *Parser) parsePolygon(
 		y++
 	}
 
-	endX, endY, _, dotted, err := followLine(&pg, lines, x, y,
+	endX, endY, arrowEnd, dotted, endCorner, err := followLine(&pg, lines, x, y,
 		edgeState, edge, false, true)
 	if err != nil {
 		return err
 	}
 	// check final point
-	if endX != startX || endY != startY {
-		return &ParseError{X: startX, Y: startY, Err: ErrPolygonNotClosed}
+	if endCorner {
+		if endX != startX || endY != startY {
+			return &ParseError{X: startX, Y: startY, Err: ErrPolygonNotClosed}
+		}
+		pg.Dotted = append(pg.Dotted, dotted)
+		// scale
+		pg.scale(p)
+		// add polygon to parent
+		parent.addElem(&pg)
+	} else {
+		// we got a polyline and not a polygon, this is the end
+		var (
+			pls Polyline // start
+			ple Polyline // end
+			pl  Polyline // final
+		)
+		ple.X = pg.X
+		ple.Y = pg.Y
+		ple.X = append(ple.X, float64(endX))
+		ple.Y = append(ple.Y, float64(endY))
+		ple.ArrowEnd = arrowEnd
+		ple.Dotted = pg.Dotted
+		ple.Dotted = append(ple.Dotted, dotted)
+
+		// go into other direction to get start
+		x, y, arrowEnd, dotted, _, err := followLine(&pls, lines, startX,
+			startY, cornerState, 0, false, false)
+		if err != nil {
+			return err
+		}
+		pls.ArrowEnd = arrowEnd
+		pls.X = append(pls.X, float64(x))
+		pls.Y = append(pls.Y, float64(y))
+		pls.Dotted = append(pls.Dotted, dotted)
+
+		pl.ArrowStart = pls.ArrowEnd
+		pl.ArrowEnd = ple.ArrowEnd
+		for i := len(pls.X) - 1; i >= 0; i-- {
+			pl.X = append(pl.X, pls.X[i])
+			pl.Y = append(pl.Y, pls.Y[i])
+		}
+		for i := len(pls.Dotted) - 1; i >= 0; i-- {
+			pl.Dotted = append(pl.Dotted, pls.Dotted[i])
+		}
+		for i := 0; i < len(ple.X); i++ {
+			pl.X = append(pl.X, ple.X[i])
+			pl.Y = append(pl.Y, ple.Y[i])
+		}
+		for i := 0; i < len(ple.Dotted); i++ {
+			pl.Dotted = append(pl.Dotted, ple.Dotted[i])
+		}
+
+		// scale
+		pl.scale(p)
+		// add polygon to parent
+		parent.addElem(&pl)
 	}
-	pg.Dotted = append(pg.Dotted, dotted)
-	// scale
-	pg.scale(p)
-	// add polygon to parent
-	parent.addElem(&pg)
 	return nil
 }
 
@@ -154,7 +203,7 @@ func followLine(
 	x, y int,
 	state, edge byte,
 	dotted, endEmptyCorner bool,
-) (outX, outY int, arrowEnd, outDotted bool, err error) {
+) (outX, outY int, arrowEnd, outDotted, endCorner bool, err error) {
 	for {
 		switch state {
 		case cornerState:
@@ -164,9 +213,10 @@ func followLine(
 			switch bit.Count(outEdges) {
 			case 0:
 				if !endEmptyCorner {
-					return 0, 0, false, false,
+					return 0, 0, false, false, false,
 						&ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
 				}
+				endCorner = true
 				state = endState
 			case 1:
 				// add segement
@@ -207,7 +257,7 @@ func followLine(
 				state = edgeState
 			default:
 				// TODO: split
-				return 0, 0, false, false,
+				return 0, 0, false, false, false,
 					errors.New("poly split not implemented")
 			}
 		case edgeState:
