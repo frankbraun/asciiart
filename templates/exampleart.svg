@@ -28,6 +28,7 @@
 <path d="M 130.500000 82.000000 Q 130.500000 72.000000 140.500000 72.000000 L 166.500000 72.000000 L 166.500000 94.000000 Q 166.500000 104.000000 156.500000 104.000000 L 130.500000 104.000000 Z" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 <text x="134.10" y="92.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >bar</text>
 <line x1="76.50" y1="88.00" x2="112.50" y2="88.00" fill="none" stroke="black" stroke-width="2" marker-end="url(#Pointer)" stroke-dasharray="5 5" />
+<polyline points="184.50,88.00 220.50,88.00 220.50,120.00" fill="none" stroke="black" stroke-width="2" />
 <rect x="202.50" y="136.00" width="36.00" height="32.00" fill="white" stroke="black" stroke-width="2" filter="url(#dsFilter)" />
 <text x="206.10" y="156.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >baz</text>
 </svg>

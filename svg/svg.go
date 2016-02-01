@@ -81,7 +81,7 @@ func drawElems(
 				return err
 			}
 		case *asciiart.Polyline:
-			if err := drawPolyline(s, t); err != nil {
+			if err := drawPolyline(s, t, lineStyle); err != nil {
 				return err
 			}
 		case *asciiart.Polygon:
@@ -171,23 +171,41 @@ func drawRectangle(s *svg.SVG, r *asciiart.Rectangle, style []string) error {
 	return nil
 }
 
-func drawLine(s *svg.SVG, l *asciiart.Line, style []string) error {
+func totalStyle(style []string, arrowStart, arrowEnd, dotted bool) []string {
 	totalStyle := make([]string, len(style))
 	copy(totalStyle, style)
-	if l.ArrowStart {
+	if arrowStart {
 		totalStyle = append(totalStyle, `marker-start="url(#iPointer)"`)
 	}
-	if l.ArrowEnd {
+	if arrowEnd {
 		totalStyle = append(totalStyle, `marker-end="url(#Pointer)"`)
 	}
-	if l.Dotted {
+	if dotted {
 		totalStyle = append(totalStyle, `stroke-dasharray="5 5"`)
 	}
+	return totalStyle
+}
+
+func drawLine(s *svg.SVG, l *asciiart.Line, style []string) error {
+	totalStyle := totalStyle(style, l.ArrowStart, l.ArrowEnd, l.Dotted)
 	s.Line(l.X1, l.Y1, l.X2, l.Y2, totalStyle...)
 	return nil
 }
 
-func drawPolyline(s *svg.SVG, p *asciiart.Polyline) error {
+func drawPolyline(s *svg.SVG, p *asciiart.Polyline, style []string) error {
+	var mixed bool
+	for i := 1; i < len(p.Dotted); i++ {
+		if p.Dotted[i] != p.Dotted[0] {
+			mixed = true
+			break
+		}
+	}
+	if mixed {
+		// draw mixed dotted and non-dotted segments as separate lines
+		return errors.New("svg: mixed segments not implemented")
+	}
+	totalStyle := totalStyle(style, p.ArrowStart, p.ArrowEnd, p.Dotted[0])
+	s.Polyline(p.X, p.Y, totalStyle...)
 	return nil
 }
 
