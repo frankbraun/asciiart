@@ -202,10 +202,28 @@ func drawPolyline(s *svg.SVG, p *asciiart.Polyline, style []string) error {
 	}
 	if mixed {
 		// draw mixed dotted and non-dotted segments as separate lines
-		return errors.New("svg: mixed segments not implemented")
+		for i := 0; i < len(p.Dotted); i++ {
+			l := &asciiart.Line{
+				X1:     p.X[i],
+				Y1:     p.Y[i],
+				X2:     p.X[i+1],
+				Y2:     p.Y[i+1],
+				Dotted: p.Dotted[i],
+			}
+			if i == 0 {
+				l.ArrowStart = p.ArrowStart
+			}
+			if i == len(p.Dotted)-1 {
+				l.ArrowEnd = p.ArrowEnd
+			}
+			if err := drawLine(s, l, style); err != nil {
+				return err
+			}
+		}
+	} else {
+		totalStyle := totalStyle(style, p.ArrowStart, p.ArrowEnd, p.Dotted[0])
+		s.Polyline(p.X, p.Y, totalStyle...)
 	}
-	totalStyle := totalStyle(style, p.ArrowStart, p.ArrowEnd, p.Dotted[0])
-	s.Polyline(p.X, p.Y, totalStyle...)
 	return nil
 }
 
