@@ -6,7 +6,6 @@ package asciiart
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/frankbraun/kitchensink/bit"
 )
@@ -56,7 +55,6 @@ func (p *Parser) parsePoly(
 	lines [][]byte,
 	l *Line,
 ) error {
-	fmt.Println("parsePoly")
 	var pl Polyline
 	// take stuff over from parsed line
 	pl.X = append(pl.X, l.X1)
@@ -74,7 +72,6 @@ func (p *Parser) parsePoly(
 	for {
 		switch state {
 		case cornerState:
-			fmt.Println("cornerState", x, y)
 			lines[y][x] = ' ' // nom nom nom
 			// add segement
 			pl.X = append(pl.X, float64(x))
@@ -87,7 +84,6 @@ func (p *Parser) parsePoly(
 			case 0:
 				return &ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
 			case 1:
-				fmt.Println("follow edge", x, y)
 				// follow edge
 				switch {
 				case outEdges&nEdge > 1:
@@ -120,7 +116,6 @@ func (p *Parser) parsePoly(
 					y--
 				}
 				dotted = startsDotted(lines, x, y, edge)
-				fmt.Println("call procEdge", x, y)
 				next, _, d := pl.procEdge(lines, &x, &y, edge)
 				if d {
 					dotted = true
@@ -184,7 +179,6 @@ func (pl *Polyline) procEdge(
 	x, y *int,
 	incomingEdge byte,
 ) (nextState int, arrowEnd, dotted bool) {
-	fmt.Println("procEdge", *x, *y)
 	lines[*y][*x] = ' ' // nom nom nom
 	switch incomingEdge {
 	case nEdge:
@@ -385,38 +379,29 @@ func (pl *Polyline) procEdge(
 }
 
 func outgoingEdges(lines [][]byte, x, y int) byte {
-	fmt.Println("outgoingEdges")
 	var edges byte
 	if y > 0 && len(lines[y-1]) > x && (lines[y-1][x] == '|' || lines[y-1][x] == ':') {
-		fmt.Println("north")
 		edges |= nEdge
 	}
 	if y > 0 && len(lines[y-1]) > x+1 && lines[y-1][x+1] == '/' {
-		fmt.Println("northeast")
 		edges |= neEdge
 	}
 	if len(lines[y]) > x+1 && (lines[y][x+1] == '-' || lines[y][x+1] == '=') {
-		fmt.Println("east")
 		edges |= eEdge
 	}
 	if len(lines) > y+1 && len(lines[y+1]) > x+1 && lines[y+1][x+1] == '\\' {
-		fmt.Println("southeast")
 		edges |= swEdge
 	}
 	if len(lines) > y+1 && len(lines[y+1]) > x && (lines[y+1][x] == '|' || lines[y+1][x] == ':') {
-		fmt.Println("south")
 		edges |= sEdge
 	}
 	if x > 0 && len(lines) > y+1 && len(lines[y+1]) > x-1 && lines[y+1][x-1] == '/' {
-		fmt.Println("southwest")
 		edges |= swEdge
 	}
 	if x > 0 && len(lines[y]) > x-1 && (lines[y][x-1] == '-' || lines[y][x-1] == '=') {
-		fmt.Println("west")
 		edges |= wEdge
 	}
 	if x > 0 && y > 0 && len(lines[y-1]) > x-1 && lines[y-1][x-1] == '\\' {
-		fmt.Println("northwest")
 		edges |= nwEdge
 	}
 	return edges

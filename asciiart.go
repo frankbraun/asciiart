@@ -7,7 +7,6 @@ package asciiart
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"strings"
 )
 
@@ -80,7 +79,6 @@ func (p *Parser) SetScale(xScale, yScale float64) error {
 // Parse parses asciiArt with parser p and returns a grid.
 // If there is an error, it will be of type *ParseError.
 func (p *Parser) Parse(asciiArt string) (*Grid, error) {
-	fmt.Println("-------------------------")
 	var g Grid
 	// init/reset maps
 	p.refs = make(map[string]*reference)
