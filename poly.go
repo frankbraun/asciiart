@@ -97,6 +97,7 @@ func (p *Parser) parsePolygon(
 	case 1:
 		return &ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
 	case 2:
+		// nothing
 	default:
 		return &ParseError{X: x, Y: y, Err: ErrPolyCornerTooManyEdges}
 	}
@@ -112,10 +113,6 @@ func (p *Parser) parsePolygon(
 	} else if outEdges&sEdge > 0 {
 		edge = nEdge
 		y++
-	} else if outEdges&swEdge > 0 {
-		edge = neEdge
-		x--
-		y++
 	}
 
 	endX, endY, _, dotted, err := followLine(&pg, lines, x, y,
@@ -125,7 +122,7 @@ func (p *Parser) parsePolygon(
 	}
 	// check final point
 	if endX != startX || endY != startY {
-		return &ParseError{X: x, Y: y, Err: ErrPolygonNotClosed}
+		return &ParseError{X: startX, Y: startY, Err: ErrPolygonNotClosed}
 	}
 	pg.Dotted = append(pg.Dotted, dotted)
 	// scale

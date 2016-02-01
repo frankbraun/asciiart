@@ -1264,6 +1264,106 @@ v
 				},
 			},
 		},
+		{
+			aa: `
++--+
+|  |
++--+
+		`,
+			res: &Grid{
+				W:      4,
+				H:      5,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polygon{
+						X:      []float64{0.5, 3.5, 3.5, 0.5},
+						Y:      []float64{1.5, 1.5, 3.5, 3.5},
+						Dotted: []bool{false, false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
++
+|\ 
++-+
+`,
+			res: &Grid{
+				W:      3,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polygon{
+						X:      []float64{0.5, 2.5, 0.5},
+						Y:      []float64{1.5, 3.5, 3.5},
+						Dotted: []bool{false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
+  +
+ /|
++-+
+`,
+			res: &Grid{
+				W:      3,
+				H:      4,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Polygon{
+						X:      []float64{2.5, 2.5, 0.5},
+						Y:      []float64{1.5, 3.5, 3.5},
+						Dotted: []bool{false, false, false},
+					},
+				},
+			},
+		},
+		{
+			aa: `
++--+
+|  |
+   |
++--+
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   1,
+				Err: ErrPolygonNotClosed,
+			},
+		},
+		{
+			aa: `+`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrPolyCornerNoEdge,
+			},
+		},
+		{
+			aa: `
++-
+|\
+`,
+			res: &ParseError{
+				X:   0,
+				Y:   1,
+				Err: ErrPolyCornerTooManyEdges,
+			},
+		},
+		{
+			aa: `+-`,
+			res: &ParseError{
+				X:   0,
+				Y:   0,
+				Err: ErrPolyCornerOneEdge,
+			},
+		},
 		/* TODO: fix test
 		   		{
 		   			aa: `
