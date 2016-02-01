@@ -236,7 +236,29 @@ func drawPolygon(s *svg.SVG, p *asciiart.Polygon, style []string) error {
 		}
 	}
 	if mixed {
-		return errors.New("not implemented")
+		// draw mixed dotted and non-dotted segments as separate lines
+		for i := 0; i < len(p.Dotted)-1; i++ {
+			l := &asciiart.Line{
+				X1:     p.X[i],
+				Y1:     p.Y[i],
+				X2:     p.X[i+1],
+				Y2:     p.Y[i+1],
+				Dotted: p.Dotted[i],
+			}
+			if err := drawLine(s, l, style); err != nil {
+				return err
+			}
+		}
+		l := &asciiart.Line{
+			X1:     p.X[len(p.Dotted)-1],
+			Y1:     p.Y[len(p.Dotted)-1],
+			X2:     p.X[0],
+			Y2:     p.Y[0],
+			Dotted: p.Dotted[len(p.Dotted)-1],
+		}
+		if err := drawLine(s, l, style); err != nil {
+			return err
+		}
 	} else {
 		totalStyle := totalStyle(style, false, false, p.Dotted[0])
 		s.Polygon(p.X, p.Y, totalStyle...)
