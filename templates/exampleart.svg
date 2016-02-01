@@ -29,5 +29,6 @@
 <text x="134.10" y="92.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >bar</text>
 <line x1="76.50" y1="88.00" x2="112.50" y2="88.00" fill="none" stroke="black" stroke-width="2" marker-end="url(#Pointer)" />
 <polyline points="184.50,88.00 220.50,88.00 220.50,120.00" fill="none" stroke="black" stroke-width="2" stroke-dasharray="5 5" />
+<polygon points="202.50,136.00 238.50,136.00 256.50,168.00 238.50,200.00 202.50,200.00 184.50,168.00" fill="none" stroke="black" stroke-width="2" />
 <text x="206.10" y="172.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >bam</text>
 </svg>

@@ -85,7 +85,7 @@ func drawElems(
 				return err
 			}
 		case *asciiart.Polygon:
-			if err := drawPolygon(s, t); err != nil {
+			if err := drawPolygon(s, t, lineStyle); err != nil {
 				return err
 			}
 		case *asciiart.Textline:
@@ -227,7 +227,20 @@ func drawPolyline(s *svg.SVG, p *asciiart.Polyline, style []string) error {
 	return nil
 }
 
-func drawPolygon(s *svg.SVG, p *asciiart.Polygon) error {
+func drawPolygon(s *svg.SVG, p *asciiart.Polygon, style []string) error {
+	var mixed bool
+	for i := 1; i < len(p.Dotted); i++ {
+		if p.Dotted[i] != p.Dotted[0] {
+			mixed = true
+			break
+		}
+	}
+	if mixed {
+		return errors.New("not implemented")
+	} else {
+		totalStyle := totalStyle(style, false, false, p.Dotted[0])
+		s.Polygon(p.X, p.Y, totalStyle...)
+	}
 	return nil
 }
 
