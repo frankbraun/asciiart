@@ -63,8 +63,14 @@ var (
 	ErrLineTooShort = errors.New("asciiart: line is too short")
 	// ErrLineLeftArrow is returned when an unexpected left error was encountered.
 	ErrLineLeftArrow = errors.New("asciiart: unexpected left error encountered")
-	// ErrPolyCornerOneEdge is returned when a poly corner has only one edge
+	// ErrPolyCornerNoEdge is returned when a poly corner has no outgoing edges.
+	ErrPolyCornerNoEdge = errors.New("asciiart: poly corner (+) has no outgoing edges")
+	// ErrPolyCornerOneEdge is returned when a poly corner has only one edge.
 	ErrPolyCornerOneEdge = errors.New("asciiart: poly corner (+) has only one edge")
+	// ErrPolyCornerTooManyEdges is returned when a poly corner has too many edges.
+	ErrPolyCornerTooManyEdges = errors.New("asciiart: poly corner (+) has too many edges")
+	// ErrPolygonNotClosed is returned when polygon is not closed.
+	ErrPolygonNotClosed = errors.New("asciiart: non-closed polygon starting")
 )
 
 // ParseError defines an ASCII art parsing error.

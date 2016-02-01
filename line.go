@@ -112,7 +112,7 @@ forLoop:
 			break forLoop
 		case '+':
 			// switch to polyline parsing
-			return p.parsePoly(parent, lines, &l)
+			return p.parsePolyline(parent, lines, &l)
 		case '<', '^':
 			return &ParseError{X: x, Y: y, Err: ErrLineLeftArrow}
 		default:

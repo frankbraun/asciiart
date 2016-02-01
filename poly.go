@@ -44,13 +44,13 @@ const (
 	endState
 )
 
-// parsePoly parses a polyline or polygon.
+// parsePolyline parses a polyline.
 //
 //  \|/
 //  -+-
 //  /|\
 //
-func (p *Parser) parsePoly(
+func (p *Parser) parsePolyline(
 	parent elem,
 	lines [][]byte,
 	l *Line,
@@ -61,29 +61,120 @@ func (p *Parser) parsePoly(
 	pl.Y = append(pl.Y, l.Y1)
 	pl.ArrowStart = l.ArrowStart
 
-	x := int(l.X2)
-	y := int(l.Y2)
-	dotted := l.Dotted
-	state := cornerState
-	var (
-		edge     byte
-		arrowEnd bool
-	)
+	x, y, arrowEnd, dotted, err := followLine(&pl, lines, int(l.X2), int(l.Y2),
+		cornerState, 0, l.Dotted, false)
+	if err != nil {
+		return err
+	}
+	// add final segment
+	pl.X = append(pl.X, float64(x))
+	pl.Y = append(pl.Y, float64(y))
+	pl.ArrowEnd = arrowEnd
+	pl.Dotted = append(pl.Dotted, dotted)
+	// scale
+	pl.scale(p)
+	// add polyline to parent
+	parent.addElem(&pl)
+	return nil
+}
+
+// parsePolygon parses a polygon.
+func (p *Parser) parsePolygon(
+	parent elem,
+	lines [][]byte,
+	x, y int,
+) error {
+	var pg Polygon
+	pg.X = append(pg.X, float64(x))
+	pg.Y = append(pg.Y, float64(y))
+
+	startX := x
+	startY := y
+	outEdges := outgoingEdges(lines, x, y)
+	switch bit.Count(outEdges) {
+	case 0:
+		return &ParseError{X: x, Y: y, Err: ErrPolyCornerNoEdge}
+	case 1:
+		return &ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
+	case 2:
+	default:
+		return &ParseError{X: x, Y: y, Err: ErrPolyCornerTooManyEdges}
+	}
+
+	var edge byte
+	if outEdges&eEdge > 0 {
+		edge = wEdge
+		x++
+	} else if outEdges&seEdge > 0 {
+		edge = nwEdge
+		x++
+		y++
+	} else if outEdges&sEdge > 0 {
+		edge = nEdge
+		y++
+	} else if outEdges&swEdge > 0 {
+		edge = neEdge
+		x--
+		y++
+	}
+
+	endX, endY, _, dotted, err := followLine(&pg, lines, x, y,
+		edgeState, edge, false, true)
+	if err != nil {
+		return err
+	}
+	// check final point
+	if endX != startX || endY != startY {
+		return &ParseError{X: x, Y: y, Err: ErrPolygonNotClosed}
+	}
+	pg.Dotted = append(pg.Dotted, dotted)
+	// scale
+	pg.scale(p)
+	// add polygon to parent
+	parent.addElem(&pg)
+	return nil
+}
+
+type appender interface {
+	appendPoint(x, y float64, dotted bool)
+}
+
+func (pl *Polyline) appendPoint(x, y float64, dotted bool) {
+	pl.X = append(pl.X, x)
+	pl.Y = append(pl.Y, y)
+	pl.Dotted = append(pl.Dotted, dotted)
+}
+
+func (pg *Polygon) appendPoint(x, y float64, dotted bool) {
+	pg.X = append(pg.X, x)
+	pg.Y = append(pg.Y, y)
+	pg.Dotted = append(pg.Dotted, dotted)
+}
+
+func followLine(
+	poly appender,
+	lines [][]byte,
+	x, y int,
+	state, edge byte,
+	dotted, endEmptyCorner bool,
+) (outX, outY int, arrowEnd, outDotted bool, err error) {
 	for {
 		switch state {
 		case cornerState:
 			lines[y][x] = ' ' // nom nom nom
-			// add segement
-			pl.X = append(pl.X, float64(x))
-			pl.Y = append(pl.Y, float64(y))
-			pl.Dotted = append(pl.Dotted, dotted)
-			dotted = false
 			// process corner (+)
 			outEdges := outgoingEdges(lines, x, y)
 			switch bit.Count(outEdges) {
 			case 0:
-				return &ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
+				if !endEmptyCorner {
+					return 0, 0, false, false,
+						&ParseError{X: x, Y: y, Err: ErrPolyCornerOneEdge}
+				}
+				state = endState
 			case 1:
+				// add segement
+				poly.appendPoint(float64(x), float64(y), dotted)
+				dotted = false
 				// follow edge
 				switch {
 				case outEdges&nEdge > 0:
@@ -119,10 +210,11 @@ func (p *Parser) parsePoly(
 				state = edgeState
 			default:
 				// TODO: split
-				return errors.New("poly split not implemented")
+				return 0, 0, false, false,
+					errors.New("poly split not implemented")
 			}
 		case edgeState:
-			next, a, d := pl.procEdge(lines, &x, &y, edge)
+			next, a, d := procEdge(lines, &x, &y, edge)
 			if a {
 				arrowEnd = true
 			}
@@ -132,16 +224,10 @@ func (p *Parser) parsePoly(
 			state = next
 		case endState:
 			lines[y][x] = ' ' // nom nom nom
-			// add final segment
-			pl.X = append(pl.X, float64(x))
-			pl.Y = append(pl.Y, float64(y))
-			pl.ArrowEnd = arrowEnd
-			pl.Dotted = append(pl.Dotted, dotted)
-			// scale
-			pl.scale(p)
-			// add polyline to parent
-			parent.addElem(&pl)
-			return nil
+			outX = x
+			outY = y
+			outDotted = dotted
+			return
 		}
 	}
 }
@@ -168,11 +254,11 @@ func startsDotted(lines [][]byte, x, y int, incomingEdge byte) bool {
 //   3. we reach the corner of the grid or cannot continue the line:
 //      - nextState = endState,
 //      - x and y unchanged
-func (pl *Polyline) procEdge(
+func procEdge(
 	lines [][]byte,
 	x, y *int,
 	incomingEdge byte,
-) (nextState int, arrowEnd, dotted bool) {
+) (nextState byte, arrowEnd, dotted bool) {
 	lines[*y][*x] = ' ' // nom nom nom
 	switch incomingEdge {
 	case nEdge:
@@ -405,5 +491,12 @@ func (pl *Polyline) scale(p *Parser) {
 	for i := 0; i < len(pl.X); i++ {
 		pl.X[i] = pl.X[i]*p.xScale + p.xScale/2
 		pl.Y[i] = pl.Y[i]*p.yScale + p.yScale/2
+	}
+}
+
+func (pg *Polygon) scale(p *Parser) {
+	for i := 0; i < len(pg.X); i++ {
+		pg.X[i] = pg.X[i]*p.xScale + p.xScale/2
+		pg.Y[i] = pg.Y[i]*p.yScale + p.yScale/2
 	}
 }

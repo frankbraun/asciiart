@@ -6,7 +6,6 @@ package asciiart
 
 import (
 	"bytes"
-	"errors"
 	"strings"
 )
 
@@ -167,8 +166,10 @@ func (p *Parser) parseContent(e elem, lines [][]byte, x0, y0, w, h int) error {
 					return err
 				}
 			case cell == '+':
-				// TODO: polyline parsing
-				return errors.New("aa2g: '+' not implemented yet")
+				err := p.parsePolygon(e, lines, x, y)
+				if err != nil {
+					return err
+				}
 			case cell == ' ' || cell == '\t' || cell == '\r':
 				continue
 			default:
