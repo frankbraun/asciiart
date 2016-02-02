@@ -49,4 +49,5 @@
 <text x="368.10" y="268.80" fill="black" font-family="Consolas,Monaco,Anonymous Pro,Anonymous,Bitstream Sans Mono,monospace" stroke="none" font-size="15.200000px" >Polygons:</text>
 <polyline points="22.50,296.00 76.50,296.00 76.50,360.00 130.50,360.00 130.50,328.00 184.50,328.00" fill="none" stroke="black" stroke-width="2" marker-end="url(#Pointer)" />
 <polygon points="409.50,296.00 445.50,296.00 445.50,328.00 481.50,328.00 481.50,360.00 373.50,360.00 373.50,328.00 409.50,328.00" fill="none" stroke="black" stroke-width="2" />
+<polygon points="535.50,296.00 661.50,296.00 661.50,328.00 571.50,328.00 571.50,360.00 535.50,360.00" fill="none" stroke="black" stroke-width="2" stroke-dasharray="5 5" />
 </svg>
