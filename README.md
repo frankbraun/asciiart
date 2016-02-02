@@ -1,5 +1,5 @@
 [comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
-## Parsing hierarchical ASCII art for fun and profit [![GoDoc](https://godoc.org/github.com/frankbraun/asciiart?status.png)](http://godoc.org/github.com/frankbraun/asciiart) [![Build Status](https://travis-ci.org/frankbraun/asciiart.png)](https://travis-ci.org/frankbraun/asciiart)
+## Parsing hierarchical ASCII art for fun and profit [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/frankbraun/asciiart) [![Build Status](http://img.shields.io/travis/frankbraun/asciiart.svg?style=flat-square)](https://travis-ci.org/frankbraun/asciiart)
 
 This is **alpha** software and the API is still in flux.
 

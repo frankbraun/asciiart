@@ -1,8 +1,7 @@
 language: go
 go: 1.5
 env: GO15VENDOREXPERIMENT=1
-install:
-  - go get -v golang.org/x/tools/cmd/goimports
-  - go get -v github.com/golang/lint/golint
+before_install:
+  - go get github.com/frankbraun/gocheck
 script:
-  - ./test.sh
+  - gocheck -g -c
