@@ -1,5 +1,5 @@
 [comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
-## Parsing hierarchical ASCII art for fun and profit [![GoDoc](http://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](http://godoc.org/github.com/frankbraun/asciiart) [![Build Status](http://img.shields.io/travis/frankbraun/asciiart.svg?style=flat-square)](https://travis-ci.org/frankbraun/asciiart)
+## Parsing hierarchical ASCII art [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/frankbraun/asciiart) [![Build Status](https://img.shields.io/travis/frankbraun/asciiart.svg?style=flat-square)](https://travis-ci.org/frankbraun/asciiart) [![License](https://img.shields.io/badge/license-ISC-brightgreen.svg?style=flat-square)](https://github.com/frankbraun/asciiart/blob/master/LICENSE)
 
 This is **alpha** software and the API is still in flux.
 
