@@ -10,14 +10,13 @@ import (
 
 // The Line element.
 type Line struct {
-	X1         float64                // x-axis coordinate of the start of the line
-	Y1         float64                // y-axis coordinate of the start of the line
-	X2         float64                // x-axis coordinate of the end of the line
-	Y2         float64                // y-axis coordinate of the end of the line
-	ArrowStart bool                   // arrow at the start of the line
-	ArrowEnd   bool                   // arrow at the end of the line
-	Dotted     bool                   // line is dotted
-	Ref        map[string]interface{} // JSON reference of the line, if defined
+	X1         float64 // x-axis coordinate of the start of the line
+	Y1         float64 // y-axis coordinate of the start of the line
+	X2         float64 // x-axis coordinate of the end of the line
+	Y2         float64 // y-axis coordinate of the end of the line
+	ArrowStart bool    // arrow at the start of the line
+	ArrowEnd   bool    // arrow at the end of the line
+	Dotted     bool    // line is dotted
 }
 
 const (
