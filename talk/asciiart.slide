@@ -1,0 +1,238 @@
+Parsing hierarchical ASCII art
+17 Feb 2016
+
+Frank Braun
+frank@cryptogroup.net
+https://github.com/frankbraun/asciiart
+
+* Motivation
+
+- all graphics in the [[http://zguide.zeromq.org/][ZeroMQ guide]] are generated from ASCII art → _awesome_
+- ASCII art converters usually combine parser and graphics generator in one package
+- observation: ASCII art is often hierarchical (even a tree)
+- idea: abstract syntax tree (AST) of the parsed ASCII art → _cool_
+- allows different backends, a SVG generator just being one of them
+
+The vision is to allow [[https://github.com/imatix/gsl#model-oriented-programming][model-oriented programming]] with hierarchical ASCII art as the modeling language.
+
+A reusable ASCII art parser would be an important building block for that, let's build one in Go...
+
+
+* Examples
+
+.code asciiart/zguide/fig3.txt
+.image asciiart/zguide/fig3.svg
+
+* Examples (cont.)
+
+.code asciiart/zguide/fig2.txt
+
+* Examples (cont.)
+
+.image asciiart/zguide/fig2.svg
+
+* Examples (cont.)
+
+.code asciiart/zguide/fig8.txt
+
+* Examples (cont.)
+
+.image asciiart/zguide/fig8.svg
+
+* Examples (cont.)
+
+.code asciiart/zguide/fig25.txt
+
+* Examples (cont.)
+
+.image asciiart/zguide/fig25.svg
+
+* History of ASCII art tools
+
+- the ZeroMQ guide uses the [[https://github.com/dhobsd/asciitosvg/][ASCIIToSVG]] converter (written in PHP)
+
+- was inspired by [[http://ditaa.sourceforge.net/][ditaa]] (DIagrams Through Ascii Art), converts to PNG (written in Java)
+
+
+- [[http://search.cpan.org/dist/App-Asciio/lib/App/Asciio.pm][App::Asciio]] allows to programmatically draw ASCII diagrams (written in Perl)
+- [[http://www.asciiflow.com/][Asciiflow]] is a web front-end to designing ASCII flowcharts.
+
+- [[http://www.figlet.org/][FIGlet]] generates ASCII art text banners, first release in 1991 (written in C)
+
+.code asciiart/go_is_awesome.txt
+
+* Let's take the idea and Go with it...
+
+.image asciiart/gopherbw.png 500 _
+
+
+
+
+* ASCII art elements
+
+.code asciiart/elements.txt
+
+* Elements as SVG
+
+.image asciiart/elements.svg
+
+* Hierarchical ASCII art example
+
+.code asciiart/exampleart.txt
+
+* Example as SVG
+
+.image asciiart/exampleart.svg
+
+* API
+
+.code asciiart/asciiart.go /^type Grid/,/^}/
+
+* API (cont.)
+
+.code asciiart/rect.go /^type Rectangle/,/^}/
+.code asciiart/line.go /^type Line/,/^}/
+
+* API (cont.)
+
+.code asciiart/poly.go /^type Polyline/,/^}/
+.code asciiart/poly.go /^type Polygon/,/^}/
+.code asciiart/text.go /^type Textline/,/^}/
+
+* API (cont.)
+
+	// A Parser for hierarchical ASCII art. 
+	type Parser struct {
+		// contains filtered or unexported fields
+	}
+	
+	// NewParser returns a new parser for hierarchical ASCII art.
+	func NewParser() *Parser
+
+	// SetScale sets the grid scale for parser p.
+	func (p *Parser) SetScale(xScale, yScale float64) error
+
+	// Parse parses asciiArt with parser p and returns a grid.
+	// If there is an error, it will be of type *ParseError.
+	func (p *Parser) Parse(asciiArt string) (*Grid, error)
+
+	// ParseError defines an ASCII art parsing error.
+	type ParseError struct {
+		X   int   // x-axis coordinate where the error occurred
+		Y   int   // y-axis coordinate where the error occurred
+		Err error // the actual error
+	}
+
+[[https://godoc.org/github.com/frankbraun/asciiart]]
+
+* Implementation
+
+- parses line by line
+- removes parsed elements
+- priority: simple implementation
+- efficiency is not a concern
+- recursive:
+
+	r, err := p.parseRectangle(e, lines, x, y, roundUpperLeft)
+	if err != nil {
+		return err
+	}
+	// recursion
+	err = p.parseContent(r, lines, int(r.X)+1, int(r.Y)+1, int(r.W)-2, int(r.H)-2)
+	if err != nil {
+		return err
+	}
+
+* Example
+
+.code asciiart/aaexample.go /STARTASCIIART OMIT/,/ENDASCIIART OMIT/
+
+* Example (cont.)
+
+.code asciiart/aaexample.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+
+  /* ... */
+
+.code asciiart/aaexample.go /STARTMAIN2 OMIT/,/ENDMAIN2 OMIT/
+
+
+* Example (cont.)
+
+.play asciiart/aaexample.go /STARTTRAVERSE OMIT/,/ENDTRAVERSE OMIT/
+
+
+* SVG backend
+
+Traverse `asciiart.Grid` to generate SVGs:
+
+	// Generate generates a SVG from grid g and writes it to w.
+	func Generate(w io.Writer, g *asciiart.Grid) error
+
+- uses [[https://github.com/ajstarks/svgo/]]
+- the SVG backend was used to implement the `aa2svg` tool:
+
+.code asciiart/004.txt
+.image asciiart/004.svg
+
+
+* ASCII example with <path> object
+
+.code asciiart/mute/keyserver.txt
+
+* SVG example with <path> object
+
+.image asciiart/mute/keyserver.svg
+
+* parsing <path> data
+
+`storage.path` file:
+
+.code asciiart/mute/storage.path
+
+`computer.path` file:
+
+.code asciiart/mute/computer.path
+
+- we have to _translate_ and _scale_ the `<path>`
+- it turns out: parsing the data attribute of a SVG [[https://www.w3.org/TR/SVG/paths.html][path]] is non-trivial
+
+
+* BNF for SVG paths → 😱
+
+.iframe asciiart/pathbnf.html 600 1000
+
+* Two possible approaches
+
+- roll own parser by hand (like [[https://github.com/dhobsd/asciitosvg/][ASCIIToSVG]] did)
+
+- generate SVG parser from grammar definition (computer science FTW)
+
+Use parsing expression grammar (PEG):
+
+- PEGs cannot be ambiguous; if a string parses, it has exactly one valid parse tree
+
+- use grammar definition from [[https://github.com/hughsk/svg-path-parser][svg-path-parser]] (written for [[http://pegjs.org/][PEG.js]])
+
+- adapt it for [[https://github.com/PuerkitoBio/pigeon][pigeon]] — a PEG parser generator for Go (→ _awesome_ package)
+
+Still non-trivial, but _the_right_way_to_do_things_ (™)
+
+* PEG grammar for SVG paths
+
+.iframe asciiart/grammar.peg 600 1000
+
+
+* Future work
+
+- debug path parser
+- make polygons hierarchical
+- allow (poly-)lines to intersect with rectangles and polygons
+- split constructs like this into (poly-)lines: 
+
+.code asciiart/weirdline.txt
+
+- use AST for different backends
+
+Pull requests welcome 😎
+
+Open research question: How does one formally define a grammar for two-dimensional ASCII art? EBNF doesn't seem to be up for the job...

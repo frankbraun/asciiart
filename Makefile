@@ -1,5 +1,7 @@
 all:
-	go install -v github.com/frankbraun/asciiart/...
+	go install -v github.com/frankbraun/asciiart
+	go install -v github.com/frankbraun/asciiart/cmd/...
+	go install -v github.com/frankbraun/asciiart/svg/...
 
 templates/%.svg: templates/%.tmpl
 	aa2svg -i $< -o $@ -f
@@ -12,4 +14,4 @@ generate: templates/*.tmpl templates/exampleart.svg
 	aatmpl
 
 test: all
-	go test -v github.com/frankbraun/asciiart/...
+	gocheck -g -c -e talk

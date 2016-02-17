@@ -76,7 +76,7 @@ var (
 // ParseError defines an ASCII art parsing error.
 type ParseError struct {
 	X   int   // x-axis coordinate where the error occurred
-	Y   int   // y-axis coordinate where the error occured
+	Y   int   // y-axis coordinate where the error occurred
 	Err error // the actual error
 }
 
