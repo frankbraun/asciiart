@@ -1,0 +1,303 @@
+{
+// This code is generated from grammar.peg, do not edit!
+
+package path
+
+var cmds = map[string]string {
+  "m": "moveto",
+  "l": "lineto",
+  "h": "horizontal lineto",
+  "v": "vertical lineto",
+  "c": "curveto",
+  "s": "smooth curveto",
+  "q": "quadratic curveto",
+  "t": "smooth quadratic curveto",
+  "a": "elliptical arc",
+  "z": "closepath",
+}
+
+func init() {
+  var keys []string  
+  for k := range cmds {
+    keys = append(keys, k) 
+  }
+  for _, k := range keys {
+    cmds[strings.ToUpper(k)] = cmds[k] 
+  }
+}
+
+func merge(first interface{}, more []interface{}) ([]interface{}, error) {
+/*
+  fmt.Println("merge")
+  jsn, err := json.MarshalIndent(first, "", "  ")
+  if err != nil {
+    return nil, err
+  }
+  fmt.Println("JSON:", string(jsn))
+  jsn, err = json.MarshalIndent(more, "", "  ")
+  if err != nil {
+    return nil, err
+  }
+  fmt.Println("JSON:", string(jsn))
+*/
+
+
+  res := first.([]interface{})
+  if len(more) > 0 {
+    res = append(res, more...) 
+  }
+  return res, nil
+}
+
+func commands(c string, args []interface{}) ([]interface{}, error) {
+  var res []interface{} 
+  if len(args) == 0 {
+    cmd := map[string]interface{}{
+       "code": c,
+       "command": cmds[c],
+    }  
+    res = append(res, cmd)
+  } else {
+    for _, arg := range args {
+      cmd := map[string]interface{}{
+        "code": c,         
+        "command": cmds[c],
+      } 
+      if c == strings.ToLower(c) {
+        cmd["relative"] = true 
+      }
+      m := arg.(map[string]interface{})
+      for k, v := range m {
+        cmd[k] = v 
+      }
+      res = append(res, cmd)
+    }
+  }   
+  return res, nil
+}
+
+}
+
+svg_path = wsp* data:moveTo_drawTo_commandGroups? wsp* {
+    // according to the specification the first moveto is never relative
+    if data == nil {
+      return nil, nil
+    }
+    d := data.([]interface{})
+    if len(d) > 0 {
+      m := d[0].(map[string]interface{})
+      r, ok := m["relative"]
+      if ok && r.(bool) {
+        delete(m, "relative")      
+      }    
+      m["code"] = "M"
+    }
+    return d, nil
+}
+
+moveTo_drawTo_commandGroups = first:moveTo_drawTo_commandGroup more:(wsp* moveTo_drawTo_commandGroup)* {
+  return merge(first, more.([]interface{}))
+}
+
+moveTo_drawTo_commandGroup = first:moveto more:(wsp* drawto_command)* {
+  return merge(first, more.([]interface{}))
+}
+
+drawto_command = closepath
+               / lineto
+               / horizontal_lineto
+               / vertical_lineto
+               / curveto
+               / smooth_curveto
+               / quadratic_bezier_curveto
+               / smooth_quadratic_bezier_curveto
+               / elliptical_arc
+
+moveto = cc:[Mm] wsp* first:coordinate_pair more:(comma_wsp? lineto_argument_sequence)? {
+  firstCmd, err := commands(string(cc.([]byte)), []interface{}{first})
+  if err != nil {
+    return nil, err 
+  }
+  if more == nil {
+    return firstCmd, nil 
+  }
+  moreCmds, err := commands(string(cc.([]byte)), more.([]interface{}))
+  if err != nil {
+    return nil, err
+  }
+  var code string
+  if cc == "M" {
+      code = "L" 
+  } else {
+      code = "l" 
+  }
+  for _, cmd := range moreCmds {
+    c := cmd.(map[string]interface{})
+    c["code"] = code
+  }
+  return merge(firstCmd, moreCmds)
+}
+
+closepath = [Zz] {
+  return commands("Z", nil)
+}
+
+lineto = cc:[Ll] wsp* args:lineto_argument_sequence {
+  return commands(string(cc.([]byte)), args.([]interface{}))
+}
+
+lineto_argument_sequence = first:coordinate_pair more:(comma_wsp? coordinate_pair)* {
+  return merge([]interface{}{first}, []interface{}{more})
+}
+
+horizontal_lineto = cc:[Hh] wsp* args:coordinate_sequence {
+  var mArgs []interface{}
+  for _, x := range args.([]interface{}) {
+    mArgs = append(mArgs, map[string]interface{}{"x": x}) 
+  }
+  return commands(string(cc.([]byte)), mArgs)
+}
+
+coordinate_sequence = first:number more:(comma_wsp? number)* {
+  return merge(first, more.([]interface{}))
+}
+
+vertical_lineto = cc:[Vv] wsp* args:coordinate_sequence {
+  var mArgs []interface{}
+  for _, y := range args.([]interface{}) {
+    mArgs = append(mArgs, map[string]interface{}{"y": y})   
+  }
+  return commands(cc.(string), mArgs)
+}
+
+curveto = cc:[Cc] wsp* args:curveto_argument_sequence {
+  return commands(cc.(string), args.([]interface{}))
+}
+
+curveto_argument_sequence = first:curveto_argument more:(comma_wsp? curveto_argument)* {
+  return merge(first, more.([]interface{}))
+}
+
+curveto_argument = a:coordinate_pair comma_wsp? b:coordinate_pair comma_wsp? cc:coordinate_pair {
+  aMap := a.(map[string]interface{})
+  bMap := b.(map[string]interface{})
+  ccMap := cc.(map[string]interface{})
+  m := map[string]interface{}{
+    "x1": aMap["x"],
+    "y1": aMap["y"],
+    "x2": bMap["x"],
+    "y2": bMap["y"],
+    "x": ccMap["x"],
+    "y": ccMap["y"],
+  }
+  return m, nil
+}
+
+smooth_curveto = cc:[Ss] wsp* args:smooth_curveto_argument_sequence {
+  return commands(cc.(string), args.([]interface{}))
+}
+
+smooth_curveto_argument_sequence = first:smooth_curveto_argument more:(comma_wsp? smooth_curveto_argument)* {
+  return merge(first, more.([]interface{}))
+}
+
+smooth_curveto_argument = b:coordinate_pair comma_wsp? cp:coordinate_pair {
+  bMap := b.(map[string]interface{})
+  cpMap := cp.(map[string]interface{})
+  m := map[string]interface{}{
+    "x2": bMap["x"],
+    "y2": bMap["y"],
+    "x": cpMap["x"],
+    "y": cpMap["y"],
+  }
+  return m, nil
+}
+
+quadratic_bezier_curveto = cc:[Qq] wsp* args:quadratic_bezier_curveto_argument_sequence {
+  return commands(cc.(string), args.([]interface{}))
+}
+
+quadratic_bezier_curveto_argument_sequence = first:quadratic_bezier_curveto_argument more:(comma_wsp? quadratic_bezier_curveto_argument)* {
+  return merge(first, more.([]interface{}))
+}
+
+quadratic_bezier_curveto_argument = a:coordinate_pair comma_wsp? b:coordinate_pair {
+  aMap := a.(map[string]interface{})
+  bMap := b.(map[string]interface{})
+  m := map[string]interface{}{
+    "x1": aMap["x"],
+    "y1": aMap["y"],
+    "x": bMap["x"],
+    "y": bMap["y"],
+  }
+  return m, nil
+}
+
+smooth_quadratic_bezier_curveto = cc:[Tt] wsp* args:smooth_quadratic_bezier_curveto_argument_sequence {
+  return commands(cc.(string), args.([]interface{}))
+}
+
+smooth_quadratic_bezier_curveto_argument_sequence = first:coordinate_pair more:(comma_wsp? coordinate_pair)* {
+  return merge(first, more.([]interface{}))
+}
+
+elliptical_arc = cc:[Aa] wsp* args:elliptical_arc_argument_sequence {
+  return commands(cc.(string), args.([]interface{}))
+}
+
+elliptical_arc_argument_sequence = first:elliptical_arc_argument more:(comma_wsp? elliptical_arc_argument)* {
+  return merge(first, more.([]interface{}))
+}
+
+elliptical_arc_argument = rx:nonnegative_number comma_wsp? ry:nonnegative_number comma_wsp? xrot:number comma_wsp large:flag comma_wsp? sweep:flag comma_wsp? xy:coordinate_pair {
+  xyMap := xy.(map[string]interface{})
+  m := map[string]interface{}{
+    "rx": rx,
+    "ry": ry,
+    "xAxisRotation": xrot,
+    "largeArc": large,
+    "sweep": sweep,
+    "x": xyMap["x"],
+    "y": xyMap["y"],
+  }
+  return m, nil
+}
+
+coordinate_pair = x:number comma_wsp? y:number {
+  m := map[string]interface{}{
+    "x": x,
+    "y": y,
+  }
+  return m, nil
+}
+
+nonnegative_number = floating_point_constant / digit_sequence {
+  return strconv.ParseFloat(string(c.text), 64)  
+}
+
+number = sign? floating_point_constant / sign? digit_sequence {
+  return strconv.ParseFloat(string(c.text), 64)  
+}
+
+flag = [01] {
+  if string(c.text) == "1" {
+    return true, nil
+  }
+  return false, nil
+}
+
+comma_wsp = (wsp+ comma? wsp*) / (comma wsp*)
+
+comma = ','
+
+floating_point_constant = fractional_constant exponent? / digit_sequence exponent
+
+fractional_constant = digit_sequence? '.' digit_sequence / digit_sequence '.'
+
+exponent = [eE] sign? digit_sequence
+
+sign = [+-]
+
+digit_sequence = [0-9]+
+
+wsp = [ \t\n\r]

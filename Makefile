@@ -6,8 +6,10 @@ templates/%.svg: templates/%.tmpl
 
 .PHONY: generate test
 generate: templates/*.tmpl templates/exampleart.svg
+	go generate -v github.com/frankbraun/asciiart/svg/path
+	goimports -w svg/path/grammar.go
 	go install -v github.com/frankbraun/asciiart/util/cmd/aatmpl
 	aatmpl
 
 test: all
-	go test -v github.com/frankbraun/asciiart
+	go test -v github.com/frankbraun/asciiart/...
