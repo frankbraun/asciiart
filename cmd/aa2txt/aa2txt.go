@@ -40,6 +40,7 @@ func toTxt(asciiArt string) {
 	fmt.Println("grid", grid.W, grid.H)
 	traverse = func(elems []interface{}, indent string) {
 		for _, elem := range elems {
+			var p []string
 			switch t := elem.(type) {
 			case *asciiart.Rectangle:
 				fmt.Println(indent, "rect", t.X, t.Y, t.W, t.H, fmtJsn(t.Ref))
@@ -47,13 +48,11 @@ func toTxt(asciiArt string) {
 			case *asciiart.Line:
 				fmt.Println(indent, "line", t.X1, t.Y1, t.X2, t.Y2)
 			case *asciiart.Polyline:
-				var p []string
 				for i := 0; i < len(t.X); i++ {
 					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
 				fmt.Println(indent, "polyline", strings.Join(p, " "))
 			case *asciiart.Polygon:
-				var p []string
 				for i := 0; i < len(t.X); i++ {
 					p = append(p, fmtFlt(t.X[i]), fmtFlt(t.Y[i]))
 				}
