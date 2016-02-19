@@ -6,8 +6,6 @@ package asciiart
 
 import (
 	"errors"
-
-	"github.com/frankbraun/kitchensink/bit"
 )
 
 // The Polyline element.
@@ -91,7 +89,7 @@ func (p *Parser) parsePolygon(
 	startX := x
 	startY := y
 	outEdges := outgoingEdges(lines, x, y)
-	switch bit.Count(outEdges) {
+	switch bitCount(outEdges) {
 	case 0:
 		return &ParseError{X: x, Y: y, Err: ErrPolyCornerNoEdge}
 	case 1:
@@ -210,7 +208,7 @@ func followLine(
 			lines[y][x] = ' ' // nom nom nom
 			// process corner (+)
 			outEdges := outgoingEdges(lines, x, y)
-			switch bit.Count(outEdges) {
+			switch bitCount(outEdges) {
 			case 0:
 				if !endEmptyCorner {
 					return 0, 0, false, false, false,
