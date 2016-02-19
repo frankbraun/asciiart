@@ -1325,6 +1325,54 @@ v
 			},
 		},
 		{
+			aa: `<T`,
+			res: &Grid{
+				W:      2,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Textline{
+						X:    0.5,
+						Y:    0.5,
+						Text: "<T",
+					},
+				},
+			},
+		},
+		{
+			aa: `<`,
+			res: &Grid{
+				W:      1,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Textline{
+						X:    0.5,
+						Y:    0.5,
+						Text: "<",
+					},
+				},
+			},
+		},
+		{
+			aa: `^`,
+			res: &Grid{
+				W:      1,
+				H:      1,
+				XScale: 1,
+				YScale: 1,
+				Elems: []interface{}{
+					&Textline{
+						X:    0.5,
+						Y:    0.5,
+						Text: "^",
+					},
+				},
+			},
+		},
+		{
 			aa: `
 +--+
 |  |

@@ -81,6 +81,11 @@ func (p *Parser) parseLine(
 			}
 		}
 	}
+	if y >= len(lines) || x >= len(lines[y]) ||
+		!strings.ContainsAny(string(lines[y][x]), lineChars) {
+		// line starting with arrow is too short, ignore it and parse it as text
+		return p.parseTextline(parent, lines, startX, startY)
+	}
 forLoop:
 	for x >= 0 && y < len(lines) && x < len(lines[y]) {
 		cell := lines[y][x]
