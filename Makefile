@@ -14,4 +14,4 @@ generate: templates/*.tmpl templates/exampleart.svg
 	aatmpl
 
 test: all
-	gocheck -g -c -e talk
+	go test -v github.com/frankbraun/asciiart/...

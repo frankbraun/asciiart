@@ -20,32 +20,32 @@ A reusable ASCII art parser would be an important building block for that, let's
 
 * Examples
 
-.code asciiart/zguide/fig3.txt
-.image asciiart/zguide/fig3.svg
+.code _asciiart/zguide/fig3.txt
+.image _asciiart/zguide/fig3.svg
 
 * Examples (cont.)
 
-.code asciiart/zguide/fig2.txt
+.code _asciiart/zguide/fig2.txt
 
 * Examples (cont.)
 
-.image asciiart/zguide/fig2.svg
+.image _asciiart/zguide/fig2.svg
 
 * Examples (cont.)
 
-.code asciiart/zguide/fig8.txt
+.code _asciiart/zguide/fig8.txt
 
 * Examples (cont.)
 
-.image asciiart/zguide/fig8.svg
+.image _asciiart/zguide/fig8.svg
 
 * Examples (cont.)
 
-.code asciiart/zguide/fig25.txt
+.code _asciiart/zguide/fig25.txt
 
 * Examples (cont.)
 
-.image asciiart/zguide/fig25.svg
+.image _asciiart/zguide/fig25.svg
 
 * History of ASCII art tools
 
@@ -59,45 +59,45 @@ A reusable ASCII art parser would be an important building block for that, let's
 
 - [[http://www.figlet.org/][FIGlet]] generates ASCII art text banners, first release in 1991 (written in C)
 
-.code asciiart/go_is_awesome.txt
+.code _asciiart/go_is_awesome.txt
 
 * Let's take the idea and Go with it...
 
-.image asciiart/gopherbw.png 500 _
+.image _asciiart/gopherbw.png 500 _
 
 
 
 
 * ASCII art elements
 
-.code asciiart/elements.txt
+.code _asciiart/elements.txt
 
 * Elements as SVG
 
-.image asciiart/elements.svg
+.image _asciiart/elements.svg
 
 * Hierarchical ASCII art example
 
-.code asciiart/exampleart.txt
+.code _asciiart/exampleart.txt
 
 * Example as SVG
 
-.image asciiart/exampleart.svg
+.image _asciiart/exampleart.svg
 
 * API
 
-.code asciiart/asciiart.go /^type Grid/,/^}/
+.code _asciiart/asciiart.go /^type Grid/,/^}/
 
 * API (cont.)
 
-.code asciiart/rect.go /^type Rectangle/,/^}/
-.code asciiart/line.go /^type Line/,/^}/
+.code _asciiart/rect.go /^type Rectangle/,/^}/
+.code _asciiart/line.go /^type Line/,/^}/
 
 * API (cont.)
 
-.code asciiart/poly.go /^type Polyline/,/^}/
-.code asciiart/poly.go /^type Polygon/,/^}/
-.code asciiart/text.go /^type Textline/,/^}/
+.code _asciiart/poly.go /^type Polyline/,/^}/
+.code _asciiart/poly.go /^type Polygon/,/^}/
+.code _asciiart/text.go /^type Textline/,/^}/
 
 * API (cont.)
 
@@ -145,20 +145,20 @@ A reusable ASCII art parser would be an important building block for that, let's
 
 * Example
 
-.code asciiart/aaexample.go /STARTASCIIART OMIT/,/ENDASCIIART OMIT/
+.code _asciiart/aaexample.go /STARTASCIIART OMIT/,/ENDASCIIART OMIT/
 
 * Example (cont.)
 
-.code asciiart/aaexample.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
+.code _asciiart/aaexample.go /STARTMAIN OMIT/,/ENDMAIN OMIT/
 
   /* ... */
 
-.code asciiart/aaexample.go /STARTMAIN2 OMIT/,/ENDMAIN2 OMIT/
+.code _asciiart/aaexample.go /STARTMAIN2 OMIT/,/ENDMAIN2 OMIT/
 
 
 * Example (cont.)
 
-.play asciiart/aaexample.go /STARTTRAVERSE OMIT/,/ENDTRAVERSE OMIT/
+.play _asciiart/aaexample.go /STARTTRAVERSE OMIT/,/ENDTRAVERSE OMIT/
 
 
 * SVG backend
@@ -171,27 +171,27 @@ Traverse `asciiart.Grid` to generate SVGs:
 - uses [[https://github.com/ajstarks/svgo/]]
 - the SVG backend was used to implement the `aa2svg` tool:
 
-.code asciiart/004.txt
-.image asciiart/004.svg
+.code _asciiart/004.txt
+.image _asciiart/004.svg
 
 
 * ASCII example with <path> object
 
-.code asciiart/mute/keyserver.txt
+.code _asciiart/mute/keyserver.txt
 
 * SVG example with <path> object
 
-.image asciiart/mute/keyserver.svg
+.image _asciiart/mute/keyserver.svg
 
 * parsing <path> data
 
 `storage.path` file:
 
-.code asciiart/mute/storage.path
+.code _asciiart/mute/storage.path
 
 `computer.path` file:
 
-.code asciiart/mute/computer.path
+.code _asciiart/mute/computer.path
 
 - we have to _translate_ and _scale_ the `<path>`
 - it turns out: parsing the data attribute of a SVG [[https://www.w3.org/TR/SVG/paths.html][path]] is non-trivial
@@ -199,7 +199,7 @@ Traverse `asciiart.Grid` to generate SVGs:
 
 * BNF for SVG paths → 😱
 
-.iframe asciiart/pathbnf.html 600 1000
+.iframe _asciiart/pathbnf.html 600 1000
 
 * Two possible approaches
 
@@ -219,7 +219,7 @@ Still non-trivial, but _the_right_way_to_do_things_ (™)
 
 * PEG grammar for SVG paths
 
-.iframe asciiart/grammar.peg 600 1000
+.iframe _asciiart/grammar.peg 600 1000
 
 
 * Future work
@@ -229,7 +229,7 @@ Still non-trivial, but _the_right_way_to_do_things_ (™)
 - allow (poly-)lines to intersect with rectangles and polygons
 - split constructs like this into (poly-)lines: 
 
-.code asciiart/weirdline.txt
+.code _asciiart/weirdline.txt
 
 - use AST for different backends
 
