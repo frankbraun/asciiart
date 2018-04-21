@@ -31,8 +31,5 @@ func ASCIIArt2SVG(w io.Writer, r io.Reader, xScale, yScale float64) error {
 	if err != nil {
 		return err
 	}
-	if err := svg.Generate(w, grid); err != nil {
-		return err
-	}
-	return nil
+	return svg.Generate(w, grid)
 }
