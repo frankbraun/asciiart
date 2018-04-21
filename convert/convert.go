@@ -1,7 +1,3 @@
-// Copyright (c) 2016 Frank Braun <frank@cryptogroup.net>
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-
 // Package convert implements converters for two-dimensional hierarchical
 // ASCII art.
 package convert

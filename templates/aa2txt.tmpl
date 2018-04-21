@@ -1,7 +1,3 @@
-// Copyright (c) 2016 Frank Braun <frank@cryptogroup.net>
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-//
 // This code is generated, do not edit!
 
 // aa2svg converts ASCII diagrams to ASCII trees.

@@ -1,7 +1,3 @@
-// Copyright (c) 2016 Frank Braun <frank@cryptogroup.net>
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-
 // aa2svg converts ASCII diagrams to SVGs.
 package main
 
