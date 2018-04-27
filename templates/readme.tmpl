@@ -1,5 +1,7 @@
 [comment]: # (This file is generated from templates/readme.tmpl, do not edit!)
-## Parsing hierarchical ASCII art [![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/frankbraun/asciiart) [![Build Status](https://img.shields.io/travis/frankbraun/asciiart.svg?style=flat-square)](https://travis-ci.org/frankbraun/asciiart)
+## Parsing hierarchical ASCII art
+
+[![GoDoc](https://img.shields.io/badge/go-documentation-blue.svg?style=flat-square)](https://godoc.org/github.com/frankbraun/asciiart) [![Build Status](https://img.shields.io/travis/frankbraun/asciiart.svg?style=flat-square)](https://travis-ci.org/frankbraun/asciiart) [![Go Report Card](https://goreportcard.com/badge/github.com/frankbraun/asciiart?style=flat-square)](https://goreportcard.com/report/github.com/frankbraun/asciiart)
 
 This is **alpha** software and the API is still in flux.
 
