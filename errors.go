@@ -41,7 +41,7 @@ var (
 	ErrRefParseError = errors.New("asciiart: cannot parse reference on line starting")
 	// ErrRefJSONObj is returned when a reference definition is not a JSON object.
 	ErrRefJSONObj = errors.New("asciiart: cannot parse reference JSON object on line starting")
-	// ErrRefJSONUnmarshal is returned when an error occured during JSON unmarshalling.
+	// ErrRefJSONUnmarshal is returned when an error occurred during JSON unmarshalling.
 	ErrRefJSONUnmarshal = errors.New("asciiart: cannot unmarshal JSON object")
 	// ErrRefTwice is returned when a reference was defined twice.
 	ErrRefTwice = errors.New("asciiart: reference defined twice on line starting")
